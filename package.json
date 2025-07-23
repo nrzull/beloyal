@@ -1,0 +1,7 @@
+{
+  "name": "@beloyal/beloyal",
+  "engines": {
+    "node": "22"
+  },
+  "workspaces": []
+}
