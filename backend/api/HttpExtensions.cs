@@ -1,3 +1,5 @@
+using Beloyal.API.Auth;
+
 namespace Beloyal.API;
 
 public static class HttpExtensions
@@ -35,20 +37,20 @@ public static class HttpExtensions
     app.UseCors("generic");
   }
 
-  // public static void SetAccessTokenCookie(this HttpContext httpContext, EncodedToken token)
-  // {
-  //   httpContext.Response.Cookies.Append(
-  //     AuthContext.GetAccessTokenName(),
-  //     token.Token,
-  //     new CookieOptions
-  //     {
-  //       Path = "/",
-  //       SameSite = SameSiteMode.None,
-  //       Expires = token.ExpiredAt,
-  //       HttpOnly = true,
-  //       Secure = true,
-  //       Domain = httpContext.Request.Host.Host,
-  //     }
-  //   );
-  // }
+  public static void SetAccessTokenCookie(this HttpContext httpContext, EncodedToken token)
+  {
+    httpContext.Response.Cookies.Append(
+      AuthContext.GetAccessTokenName(),
+      token.Token,
+      new CookieOptions
+      {
+        Path = "/",
+        SameSite = SameSiteMode.None,
+        Expires = token.ExpiredAt,
+        HttpOnly = true,
+        Secure = true,
+        Domain = httpContext.Request.Host.Host,
+      }
+    );
+  }
 }

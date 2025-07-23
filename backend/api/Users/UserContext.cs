@@ -1,0 +1,24 @@
+using Beloyal.API.Types;
+using Microsoft.EntityFrameworkCore;
+
+namespace Beloyal.API.Users;
+
+public class UserContext(ApplicationDbContext dbContext)
+{
+  public async Task<User> EnsureUser(Email email)
+  {
+    var user = await dbContext.Users.Where(v => v.Email == email.Value).FirstOrDefaultAsync();
+
+    if (user is { })
+    {
+      return user;
+    }
+
+    user = new User() { Email = email.Value };
+
+    dbContext.Add(user);
+    await dbContext.SaveChangesAsync();
+
+    return user;
+  }
+}

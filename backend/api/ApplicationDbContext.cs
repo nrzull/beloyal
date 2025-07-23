@@ -1,10 +1,15 @@
 using System.Globalization;
+using Beloyal.API.Auth;
+using Beloyal.API.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API;
 
 public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 {
+  public DbSet<AuthEmailOTP> AuthEmailOTPs { get; set; }
+  public DbSet<User> Users { get; set; }
+
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
     base.OnConfiguring(builder);

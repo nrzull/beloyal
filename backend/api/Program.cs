@@ -1,3 +1,6 @@
+using Beloyal.API.Auth;
+using Beloyal.API.Users;
+
 namespace Beloyal.API;
 
 public class Program
@@ -10,6 +13,9 @@ public class Program
     builder.SetupHttp();
     builder.SetupCors();
     builder.Services.AddControllers();
+
+    builder.Services.AddScoped<AuthContext>();
+    builder.Services.AddScoped<UserContext>();
 
     var app = builder.Build();
 

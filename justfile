@@ -7,6 +7,9 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @api-test *args:
   cd backend/api-test && {{args}}
 
+@db *args:
+  cd backend/api && dotnet ef {{args}}
+
 @devops:
   docker compose up -d
 
