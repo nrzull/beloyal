@@ -24,6 +24,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @test:
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database drop --force
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database update
+  POSTGRES_DATABASE=beloyal_test API_USE_SEEDING=1 just api dotnet ef database update
   POSTGRES_DATABASE=beloyal_test just api-test dotnet test
 
 @retest:

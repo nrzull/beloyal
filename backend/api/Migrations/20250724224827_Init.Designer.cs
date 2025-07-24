@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Beloyal.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250724201104_AddWhiteCompanies")]
-    partial class AddWhiteCompanies
+    [Migration("20250724224827_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,57 @@ namespace Beloyal.API.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Beloyal.API.Admin.AdminAccess", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_admin_accesses");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_admin_accesses_role_id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_admin_accesses_user_id");
+
+                    b.ToTable("admin_accesses", (string)null);
+                });
+
+            modelBuilder.Entity("Beloyal.API.Admin.AdminRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.PrimitiveCollection<List<string>>("Permissions")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("permissions");
+
+                    b.HasKey("Id")
+                        .HasName("pk_admin_roles");
+
+                    b.ToTable("admin_roles", (string)null);
+                });
 
             modelBuilder.Entity("Beloyal.API.Auth.AuthEmailOTP", b =>
                 {
@@ -191,6 +242,27 @@ namespace Beloyal.API.Migrations
                     b.ToTable("users", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Admin.AdminAccess", b =>
+                {
+                    b.HasOne("Beloyal.API.Admin.AdminRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_admin_accesses_admin_roles_role_id");
+
+                    b.HasOne("Beloyal.API.Users.User", "User")
+                        .WithOne("AdminAccess")
+                        .HasForeignKey("Beloyal.API.Admin.AdminAccess", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_admin_accesses_users_user_id");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
@@ -242,6 +314,8 @@ namespace Beloyal.API.Migrations
 
             modelBuilder.Entity("Beloyal.API.Users.User", b =>
                 {
+                    b.Navigation("AdminAccess");
+
                     b.Navigation("CompanyAccesses");
                 });
 #pragma warning restore 612, 618

@@ -2,6 +2,7 @@ using System.Globalization;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
+using Beloyal.API.Seeds;
 using Beloyal.API.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,11 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   {
     base.OnConfiguring(builder);
     builder.UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
+
+    if (Environment.GetEnvironmentVariable("API_USE_SEEDING") == "1")
+    {
+      builder.UseSeeding((dbContext, _) => SeedAdminUser.Run(dbContext));
+    }
   }
 
   protected override void OnModelCreating(ModelBuilder builder)
