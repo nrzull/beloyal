@@ -1,5 +1,6 @@
 using System.Globalization;
 using Beloyal.API.Auth;
+using Beloyal.API.Companies;
 using Beloyal.API.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,9 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 {
   public DbSet<AuthEmailOTP> AuthEmailOTPs { get; set; }
   public DbSet<User> Users { get; set; }
+  public DbSet<Company> Companies { get; set; }
+  public DbSet<CompanyAccess> CompanyAccesses { get; set; }
+  public DbSet<CompanyRole> CompanyRoles { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -19,6 +23,48 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   protected override void OnModelCreating(ModelBuilder builder)
   {
     base.OnModelCreating(builder);
+
+    builder.Entity<User>(user =>
+    {
+      user.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
+      user.HasIndex(v => v.Email).IsUnique();
+    });
+
+    builder.Entity<Company>(company =>
+    {
+      company.Property(v => v.Tin).HasMaxLength(12);
+      company.HasIndex(v => v.Tin).IsUnique();
+    });
+
+    builder.Entity<CompanyAccess>(companyAccess =>
+    {
+      companyAccess
+        .HasOne(v => v.Company)
+        .WithMany(v => v.Accesses)
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      companyAccess
+        .HasOne(v => v.Role)
+        .WithMany()
+        .HasForeignKey(v => v.RoleId)
+        .HasPrincipalKey(v => v.Id);
+
+      companyAccess
+        .HasOne(v => v.User)
+        .WithMany(v => v.CompanyAccesses)
+        .HasForeignKey(v => v.UserId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<CompanyRole>(companyRole =>
+    {
+      companyRole
+        .HasOne(v => v.Company)
+        .WithMany(v => v.Roles)
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+    });
   }
 
   public static string GetConnectionString()

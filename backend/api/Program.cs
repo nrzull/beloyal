@@ -1,4 +1,5 @@
 using Beloyal.API.Auth;
+using Beloyal.API.Companies;
 using Beloyal.API.Users;
 
 namespace Beloyal.API;
@@ -16,6 +17,7 @@ public class Program
 
     builder.Services.AddScoped<AuthContext>();
     builder.Services.AddScoped<UserContext>();
+    builder.Services.AddScoped<CompanyContext>();
 
     var app = builder.Build();
 
