@@ -15,6 +15,8 @@ public static class CompanyFixture
     var userContext = scope.Get<UserContext>();
     var companyContext = scope.Get<CompanyContext>();
 
+    await companyContext.CreateWhiteCompany(new(tin), DateTimeOffset.UtcNow.AddMonths(1));
+
     var user = await userContext.EnsureUser(new(email));
     (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
       user,

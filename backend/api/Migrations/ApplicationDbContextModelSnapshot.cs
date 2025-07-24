@@ -138,6 +138,33 @@ namespace Beloyal.API.Migrations
                     b.ToTable("company_roles", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Companies.WhiteCompany", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("ExpiredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expired_at");
+
+                    b.Property<string>("Tin")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)")
+                        .HasColumnName("tin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_white_companies");
+
+                    b.HasIndex("Tin")
+                        .IsUnique()
+                        .HasDatabaseName("ix_white_companies_tin");
+
+                    b.ToTable("white_companies", (string)null);
+                });
+
             modelBuilder.Entity("Beloyal.API.Users.User", b =>
                 {
                     b.Property<Guid>("Id")

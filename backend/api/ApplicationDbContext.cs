@@ -10,6 +10,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 {
   public DbSet<AuthEmailOTP> AuthEmailOTPs { get; set; }
   public DbSet<User> Users { get; set; }
+  public DbSet<WhiteCompany> WhiteCompanies { get; set; }
   public DbSet<Company> Companies { get; set; }
   public DbSet<CompanyAccess> CompanyAccesses { get; set; }
   public DbSet<CompanyRole> CompanyRoles { get; set; }
@@ -28,6 +29,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       user.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
       user.HasIndex(v => v.Email).IsUnique();
+    });
+
+    builder.Entity<WhiteCompany>(whiteCompany =>
+    {
+      whiteCompany.Property(v => v.Tin).HasMaxLength(12);
+      whiteCompany.HasIndex(v => v.Tin).IsUnique();
     });
 
     builder.Entity<Company>(company =>
