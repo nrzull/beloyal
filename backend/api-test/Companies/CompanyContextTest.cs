@@ -38,4 +38,48 @@ public class CompanyContextTest : TestLifetime
         await Assert.ThrowsAnyAsync<Exception>(() => CompanyFixture.Company(scope));
       }
     );
+
+  [Fact]
+  public Task UpdateWhiteCompany() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var user = await UserFixture.User(scope);
+        var companyContext = scope.Get<CompanyContext>();
+        var tin = new Tin("0123456789");
+
+        var whiteCompany = await companyContext.CreateWhiteCompany(
+          tin,
+          DateTimeOffset.UtcNow.AddMonths(1)
+        );
+
+        await companyContext.UpdateWhiteCompany(whiteCompany, DateTimeOffset.UtcNow.AddMonths(-2));
+
+        await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
+
+        await companyContext.UpdateWhiteCompany(whiteCompany, DateTimeOffset.UtcNow.AddYears(1));
+
+        await companyContext.CreateCompany(user, tin);
+      }
+    );
+
+  [Fact]
+  public Task RemoveWhiteCompany() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var user = await UserFixture.User(scope);
+        var companyContext = scope.Get<CompanyContext>();
+        var tin = new Tin("0123456789");
+
+        var whiteCompany = await companyContext.CreateWhiteCompany(
+          tin,
+          DateTimeOffset.UtcNow.AddMonths(1)
+        );
+
+        await companyContext.RemoveWhiteCompany(tin);
+
+        await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
+      }
+    );
 }

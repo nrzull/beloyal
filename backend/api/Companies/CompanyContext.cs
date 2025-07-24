@@ -16,6 +16,18 @@ public class CompanyContext(ApplicationDbContext dbContext)
     return whiteCompany;
   }
 
+  public async Task UpdateWhiteCompany(WhiteCompany whiteCompany, DateTimeOffset expiredAt)
+  {
+    dbContext.Update(whiteCompany);
+    whiteCompany.ExpiredAt = expiredAt;
+    await dbContext.SaveChangesAsync();
+  }
+
+  public async Task RemoveWhiteCompany(Tin tin)
+  {
+    await dbContext.WhiteCompanies.Where(v => v.Tin == tin.Value).ExecuteDeleteAsync();
+  }
+
   public async Task<(Company, CompanyRole, CompanyAccess)> CreateCompany(User user, Tin tin)
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
