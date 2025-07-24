@@ -82,4 +82,19 @@ public class CompanyContextTest : TestLifetime
         await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
       }
     );
+
+  [Fact]
+  public Task CreateCompanyAccess() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task UpdateCompanyAccess() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task RemoveCompanyAccess() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task CreateCompanyRole() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task UpdateCompanyRole() => WithScope(async (scope, _) => { });
 }

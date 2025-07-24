@@ -1,4 +1,5 @@
 using System.Globalization;
+using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
 using Beloyal.API.Users;
@@ -10,6 +11,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 {
   public DbSet<AuthEmailOTP> AuthEmailOTPs { get; set; }
   public DbSet<User> Users { get; set; }
+  public DbSet<AdminAccess> AdminAccesses { get; set; }
+  public DbSet<AdminRole> AdminRoles { get; set; }
   public DbSet<WhiteCompany> WhiteCompanies { get; set; }
   public DbSet<Company> Companies { get; set; }
   public DbSet<CompanyAccess> CompanyAccesses { get; set; }
@@ -29,6 +32,21 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       user.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
       user.HasIndex(v => v.Email).IsUnique();
+    });
+
+    builder.Entity<AdminAccess>(adminAccess =>
+    {
+      adminAccess
+        .HasOne(v => v.Role)
+        .WithMany()
+        .HasForeignKey(v => v.RoleId)
+        .HasPrincipalKey(v => v.Id);
+
+      adminAccess
+        .HasOne(v => v.User)
+        .WithOne(v => v.AdminAccess)
+        .HasForeignKey<AdminAccess>(v => v.UserId)
+        .HasPrincipalKey<User>(v => v.Id);
     });
 
     builder.Entity<WhiteCompany>(whiteCompany =>

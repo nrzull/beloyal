@@ -1,3 +1,4 @@
+using Beloyal.API.Admin;
 using Beloyal.API.Companies;
 
 namespace Beloyal.API.Users;
@@ -8,5 +9,6 @@ public class User
   public DateTimeOffset CreatedAt { get; } = DateTimeOffset.UtcNow;
   public required string Email { get; set; }
 
+  public AdminAccess? AdminAccess { get; set; }
   public List<CompanyAccess> CompanyAccesses { get; set; } = [];
 }
