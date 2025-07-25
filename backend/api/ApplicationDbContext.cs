@@ -18,6 +18,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<Company> Companies { get; set; }
   public DbSet<CompanyAccess> CompanyAccesses { get; set; }
   public DbSet<CompanyRole> CompanyRoles { get; set; }
+  public DbSet<CompanyAccessInvitation> CompanyAccessInvitations { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -96,6 +97,27 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasOne(v => v.Company)
         .WithMany(v => v.Roles)
         .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<CompanyAccessInvitation>(companyAccessInvitation =>
+    {
+      companyAccessInvitation.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
+
+      companyAccessInvitation.HasIndex(v => new { v.Email, v.CompanyId }).IsUnique();
+
+      companyAccessInvitation.Property(v => v.Status).HasConversion<string>();
+
+      companyAccessInvitation
+        .HasOne(v => v.Company)
+        .WithMany(v => v.AccessInvitations)
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      companyAccessInvitation
+        .HasOne(v => v.Role)
+        .WithMany()
+        .HasForeignKey(v => v.RoleId)
         .HasPrincipalKey(v => v.Id);
     });
   }

@@ -140,4 +140,47 @@ public class CompanyContext(ApplicationDbContext dbContext)
 
   public async Task<List<CompanyAccess>> GetCompanyAccesses(User user) =>
     await dbContext.CompanyAccesses.Where(v => v.UserId == user.Id).ToListAsync();
+
+  public async Task<CompanyAccessInvitation> CreateCompanyAccessInvitation(
+    Company company,
+    CompanyRole role,
+    Email email
+  )
+  {
+    if (role.CompanyId != company.Id)
+    {
+      throw new Exception("invalid role");
+    }
+
+    var invitation = new CompanyAccessInvitation
+    {
+      Company = company,
+      Role = role,
+      Email = email.Value,
+    };
+
+    dbContext.Add(invitation);
+    await dbContext.SaveChangesAsync();
+
+    return invitation;
+  }
+
+  public async Task UpdateCompanyAccessInvitation(
+    CompanyAccessInvitation invitation,
+    CompanyAccessInvitationStatus status
+  )
+  {
+    dbContext.Update(invitation);
+    invitation.Status = status;
+    invitation.UpdatedAt = DateTimeOffset.UtcNow;
+    await dbContext.SaveChangesAsync();
+  }
+
+  public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(
+    Company company,
+    Email email
+  ) =>
+    await dbContext.CompanyAccessInvitations.SingleOrDefaultAsync(v =>
+      v.CompanyId == company.Id && v.Email == email.Value
+    );
 }

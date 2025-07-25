@@ -161,4 +161,13 @@ public class CompanyContextTest : TestLifetime
         Assert.Equal("qweqwe", newRole.Name);
       }
     );
+
+  [Fact]
+  public Task CreateCompanyAccessInvitation() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task UpdateCompanyAccessInvitation() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task GetCompanyAccessInvitation() => WithScope(async (scope, _) => { });
 }

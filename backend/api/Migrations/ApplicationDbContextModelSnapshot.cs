@@ -160,6 +160,52 @@ namespace Beloyal.API.Migrations
                     b.ToTable("company_accesses", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Companies.CompanyAccessInvitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("citext")
+                        .HasColumnName("email");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_company_access_invitations");
+
+                    b.HasIndex("CompanyId")
+                        .HasDatabaseName("ix_company_access_invitations_company_id");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_company_access_invitations_role_id");
+
+                    b.HasIndex("Email", "CompanyId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_company_access_invitations_email_company_id");
+
+                    b.ToTable("company_access_invitations", (string)null);
+                });
+
             modelBuilder.Entity("Beloyal.API.Companies.CompanyRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -291,6 +337,27 @@ namespace Beloyal.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Companies.CompanyAccessInvitation", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.Company", "Company")
+                        .WithMany("AccessInvitations")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_company_access_invitations_companies_company_id");
+
+                    b.HasOne("Beloyal.API.Companies.CompanyRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_company_access_invitations_company_roles_role_id");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Beloyal.API.Companies.CompanyRole", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
@@ -305,6 +372,8 @@ namespace Beloyal.API.Migrations
 
             modelBuilder.Entity("Beloyal.API.Companies.Company", b =>
                 {
+                    b.Navigation("AccessInvitations");
+
                     b.Navigation("Accesses");
 
                     b.Navigation("Roles");
