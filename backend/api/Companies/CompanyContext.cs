@@ -161,6 +161,16 @@ public class CompanyContext(ApplicationDbContext dbContext)
       throw new Exception("invalid role");
     }
 
+    if (
+      await dbContext
+        .CompanyAccesses.Include(v => v.User)
+        .FirstOrDefaultAsync(v => v.User.Email == email.Value && v.CompanyId == company.Id) is
+      { }
+    )
+    {
+      throw new Exception("company access already exists");
+    }
+
     var invitation = new CompanyAccessInvitation
     {
       Company = company,
@@ -203,5 +213,11 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext
       .CompanyAccessInvitations.Where(v => v.Email == email.Value)
       .OrderByDescending(v => v.UpdatedAt)
+      .ToListAsync();
+
+  public async Task<List<CompanyRole>> GetCompanyRoles(Company company) =>
+    await dbContext
+      .CompanyRoles.Where(v => v.CompanyId == company.Id)
+      .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 }
