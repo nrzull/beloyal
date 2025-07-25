@@ -170,4 +170,16 @@ public class CompanyContextTest : TestLifetime
 
   [Fact]
   public Task GetCompanyAccessInvitation() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task GetCompanyAccessesByUser() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task GetCompanyAccessesByCompany() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task GetCompanyAccessInvitationsByCompany() => WithScope(async (scope, _) => { });
+
+  [Fact]
+  public Task GetCompanyAccessInvitationsByEmail() => WithScope(async (scope, _) => { });
 }

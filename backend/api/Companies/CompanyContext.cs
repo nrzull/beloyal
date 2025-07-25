@@ -138,8 +138,17 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
+  public async Task<List<CompanyAccess>> GetCompanyAccesses(Company company) =>
+    await dbContext
+      .CompanyAccesses.Where(v => v.CompanyId == company.Id)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
+
   public async Task<List<CompanyAccess>> GetCompanyAccesses(User user) =>
-    await dbContext.CompanyAccesses.Where(v => v.UserId == user.Id).ToListAsync();
+    await dbContext
+      .CompanyAccesses.Where(v => v.UserId == user.Id)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
 
   public async Task<CompanyAccessInvitation> CreateCompanyAccessInvitation(
     Company company,
@@ -183,4 +192,16 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.CompanyAccessInvitations.SingleOrDefaultAsync(v =>
       v.CompanyId == company.Id && v.Email == email.Value
     );
+
+  public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(Company company) =>
+    await dbContext
+      .CompanyAccessInvitations.Where(v => v.CompanyId == company.Id)
+      .OrderByDescending(v => v.UpdatedAt)
+      .ToListAsync();
+
+  public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(Email email) =>
+    await dbContext
+      .CompanyAccessInvitations.Where(v => v.Email == email.Value)
+      .OrderByDescending(v => v.UpdatedAt)
+      .ToListAsync();
 }

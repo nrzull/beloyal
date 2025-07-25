@@ -5,7 +5,7 @@ namespace Beloyal.API.Companies;
 public class CompanyAccess
 {
   public Guid Id { get; set; }
-  public DateTimeOffset CreatedAt { get; } = DateTimeOffset.UtcNow;
+  public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public Guid UserId { get; set; }
   public required User User { get; set; }

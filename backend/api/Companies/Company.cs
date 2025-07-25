@@ -3,7 +3,7 @@ namespace Beloyal.API.Companies;
 public class Company
 {
   public Guid Id { get; set; }
-  public DateTimeOffset CreatedAt { get; } = DateTimeOffset.UtcNow;
+  public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public required string Tin { get; set; }
 
