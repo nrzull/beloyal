@@ -44,18 +44,16 @@ public class AdminContext(ApplicationDbContext dbContext)
     return adminAccess;
   }
 
-  public async Task UpdateAdminAccess(User user, AdminRole role)
+  public async Task UpdateAdminAccess(AdminAccess adminAccess, AdminRole role)
   {
-    var adminAccess = await dbContext.AdminAccesses.SingleAsync(v => v.UserId == user.Id);
-
     dbContext.Update(adminAccess);
     adminAccess.Role = role;
-
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task RemoveAdminAccess(User user)
+  public async Task RemoveAdminAccess(AdminAccess adminAccess)
   {
-    await dbContext.AdminAccesses.Where(v => v.UserId == user.Id).ExecuteDeleteAsync();
+    dbContext.Remove(adminAccess);
+    await dbContext.SaveChangesAsync();
   }
 }

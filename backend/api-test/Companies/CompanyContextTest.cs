@@ -84,17 +84,81 @@ public class CompanyContextTest : TestLifetime
     );
 
   [Fact]
-  public Task CreateCompanyAccess() => WithScope(async (scope, _) => { });
+  public Task CreateCompanyAccess() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var user = await UserFixture.User(scope, "qwewe@gma.com");
+        var (company, access, _) = await CompanyFixture.Company(scope);
+        var companyContext = scope.Get<CompanyContext>();
+
+        var access2 = await companyContext.CreateCompanyAccess(company, user, access.Role);
+
+        Assert.Equal(access.RoleId, access2.RoleId);
+        Assert.Equal(access.CompanyId, access.CompanyId);
+      }
+    );
 
   [Fact]
-  public Task UpdateCompanyAccess() => WithScope(async (scope, _) => { });
+  public Task UpdateCompanyAccess() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var (company, access, _) = await CompanyFixture.Company(scope);
+        var companyContext = scope.Get<CompanyContext>();
+
+        var newRole = await companyContext.CreateCompanyRole(company, "qwe", []);
+
+        await companyContext.UpdateCompanyAccess(access, newRole);
+
+        Assert.Equal(access.RoleId, newRole.Id);
+      }
+    );
 
   [Fact]
-  public Task RemoveCompanyAccess() => WithScope(async (scope, _) => { });
+  public Task RemoveCompanyAccess() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var (company, access, user) = await CompanyFixture.Company(scope);
+        var companyContext = scope.Get<CompanyContext>();
+
+        await companyContext.RemoveCompanyAccess(access);
+
+        Assert.DoesNotContain(
+          await companyContext.GetCompanyAccesses(user),
+          (v) => v.Id == access.Id
+        );
+      }
+    );
 
   [Fact]
-  public Task CreateCompanyRole() => WithScope(async (scope, _) => { });
+  public Task CreateCompanyRole() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var (company, access, _) = await CompanyFixture.Company(scope);
+        var companyContext = scope.Get<CompanyContext>();
+
+        var newRole = await companyContext.CreateCompanyRole(company, "qwe", []);
+
+        Assert.Equal("qwe", newRole.Name);
+      }
+    );
 
   [Fact]
-  public Task UpdateCompanyRole() => WithScope(async (scope, _) => { });
+  public Task UpdateCompanyRole() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var (company, access, _) = await CompanyFixture.Company(scope);
+        var companyContext = scope.Get<CompanyContext>();
+
+        var newRole = await companyContext.CreateCompanyRole(company, "qwe", []);
+
+        await companyContext.UpdateCompanyRole(newRole, "qweqwe", newRole.Permissions);
+
+        Assert.Equal("qweqwe", newRole.Name);
+      }
+    );
 }

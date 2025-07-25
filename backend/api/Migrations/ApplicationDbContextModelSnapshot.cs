@@ -153,8 +153,9 @@ namespace Beloyal.API.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_company_accesses_role_id");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_company_accesses_user_id");
+                    b.HasIndex("UserId", "CompanyId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_company_accesses_user_id_company_id");
 
                     b.ToTable("company_accesses", (string)null);
                 });

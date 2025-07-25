@@ -86,6 +86,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany(v => v.CompanyAccesses)
         .HasForeignKey(v => v.UserId)
         .HasPrincipalKey(v => v.Id);
+
+      companyAccess.HasIndex(v => new { v.UserId, v.CompanyId }).IsUnique();
     });
 
     builder.Entity<CompanyRole>(companyRole =>

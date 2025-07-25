@@ -99,18 +99,45 @@ public class CompanyContext(ApplicationDbContext dbContext)
     return (company, role, access);
   }
 
-  public async Task CreateCompanyAccess(Company company, User user, CompanyRole role)
+  public async Task<CompanyAccess> CreateCompanyAccess(Company company, User user, CompanyRole role)
   {
-    throw new NotImplementedException();
+    if (role.CompanyId != company.Id)
+    {
+      throw new Exception("invalid role");
+    }
+
+    var access = new CompanyAccess
+    {
+      Company = company,
+      Role = role,
+      User = user,
+    };
+
+    dbContext.Add(access);
+    await dbContext.SaveChangesAsync();
+
+    return access;
   }
 
-  public async Task UpdateCompanyAccess(Company company, User user, CompanyRole role)
+  public async Task UpdateCompanyAccess(CompanyAccess access, CompanyRole role)
   {
-    throw new NotImplementedException();
+    if (role.CompanyId != access.CompanyId)
+    {
+      throw new Exception("invalid role");
+    }
+
+    dbContext.Update(access);
+    access.Role = role;
+
+    await dbContext.SaveChangesAsync();
   }
 
-  public async Task RemoveCompanyAccess(Company company, User user)
+  public async Task RemoveCompanyAccess(CompanyAccess access)
   {
-    throw new NotImplementedException();
+    dbContext.Remove(access);
+    await dbContext.SaveChangesAsync();
   }
+
+  public async Task<List<CompanyAccess>> GetCompanyAccesses(User user) =>
+    await dbContext.CompanyAccesses.Where(v => v.UserId == user.Id).ToListAsync();
 }
