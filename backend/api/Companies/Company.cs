@@ -1,3 +1,5 @@
+using Beloyal.API.Shops;
+
 namespace Beloyal.API.Companies;
 
 public class Company
@@ -10,4 +12,5 @@ public class Company
   public List<CompanyRole> Roles { get; set; } = [];
   public List<CompanyAccess> Accesses { get; set; } = [];
   public List<CompanyAccessInvitation> AccessInvitations { get; set; } = [];
+  public List<Shop> Shops { get; set; } = [];
 }

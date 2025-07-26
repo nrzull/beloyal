@@ -295,6 +295,67 @@ namespace Beloyal.API.Migrations
                     b.ToTable("white_companies", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Shops.Shop", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_shops");
+
+                    b.HasIndex("CompanyId")
+                        .HasDatabaseName("ix_shops_company_id");
+
+                    b.ToTable("shops", (string)null);
+                });
+
+            modelBuilder.Entity("Beloyal.API.Shops.ShopAccess", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CompanyAccessId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_access_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shop_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_shop_accesses");
+
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_shop_accesses_shop_id");
+
+                    b.HasIndex("CompanyAccessId", "ShopId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_shop_accesses_company_access_id_shop_id");
+
+                    b.ToTable("shop_accesses", (string)null);
+                });
+
             modelBuilder.Entity("Beloyal.API.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -406,6 +467,39 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Shops.Shop", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.Company", "Company")
+                        .WithMany("Shops")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_shops_companies_company_id");
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Shops.ShopAccess", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.CompanyAccess", "CompanyAccess")
+                        .WithMany("ShopAccesses")
+                        .HasForeignKey("CompanyAccessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_shop_accesses_company_accesses_company_access_id");
+
+                    b.HasOne("Beloyal.API.Shops.Shop", "Shop")
+                        .WithMany("Accesses")
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_shop_accesses_shops_shop_id");
+
+                    b.Navigation("CompanyAccess");
+
+                    b.Navigation("Shop");
+                });
+
             modelBuilder.Entity("Beloyal.API.Companies.Company", b =>
                 {
                     b.Navigation("AccessInvitations");
@@ -413,6 +507,18 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Accesses");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("Shops");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
+                {
+                    b.Navigation("ShopAccesses");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Shops.Shop", b =>
+                {
+                    b.Navigation("Accesses");
                 });
 
             modelBuilder.Entity("Beloyal.API.Users.User", b =>

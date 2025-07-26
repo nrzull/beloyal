@@ -1,3 +1,4 @@
+using Beloyal.API.Shops;
 using Beloyal.API.Users;
 
 namespace Beloyal.API.Companies;
@@ -15,4 +16,6 @@ public class CompanyAccess
 
   public Guid RoleId { get; set; }
   public required CompanyRole Role { get; set; }
+
+  public List<ShopAccess> ShopAccesses { get; set; } = [];
 }
