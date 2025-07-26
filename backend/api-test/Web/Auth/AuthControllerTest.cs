@@ -1,7 +1,9 @@
 using System.Net.Http.Json;
+using Beloyal.API.Test.Users;
 using Beloyal.API.Types;
 using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
+using Beloyal.API.Web.Self.GetSelf;
 
 namespace Beloyal.API.Test.Web.Auth;
 
@@ -48,6 +50,20 @@ public class AuthControllerTest : TestLifetime
 
         Assert.Equal(System.Net.HttpStatusCode.OK, res.StatusCode);
         Assert.Equal(System.Net.HttpStatusCode.OK, (await client.GetAsync("/api/self")).StatusCode);
+      }
+    );
+
+  [Fact]
+  public Task AuthenticateFixture() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var user = await UserFixture.User(scope);
+        using var client = App!.CreateClient();
+        await AuthFixture.Authenticate(user, client);
+        var r = await client.GetAsync("/api/self");
+        var body = await r.Content.ReadFromJsonAsync<GetSelfResponse.Ok>();
+        Assert.Equal(user.Id, body?.UserId);
       }
     );
 }
