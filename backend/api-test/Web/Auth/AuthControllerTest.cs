@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using Beloyal.API.Types;
+using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
 
 namespace Beloyal.API.Test.Web.Auth;
@@ -18,6 +20,34 @@ public class AuthControllerTest : TestLifetime
 
         Assert.NotNull(content?.ExpiredAt);
         Assert.NotNull(content.Code);
+      }
+    );
+
+  [Fact]
+  public Task Confirm() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        using var client = App!.CreateClient();
+        var email = new Email("qwe@gma.com");
+
+        Assert.Equal(
+          System.Net.HttpStatusCode.Unauthorized,
+          (await client.GetAsync("/api/self")).StatusCode
+        );
+
+        var res = await client.PostAsJsonAsync("/api/auth", new LoginRequest(email.Value));
+
+        var loginOk = await res.Content.ReadFromJsonAsync<LoginResponse.Ok>();
+        Assert.NotNull(loginOk);
+
+        res = await client.PostAsJsonAsync(
+          "/api/auth/confirm",
+          new ConfirmRequest(email.Value, loginOk.Code)
+        );
+
+        Assert.Equal(System.Net.HttpStatusCode.OK, res.StatusCode);
+        Assert.Equal(System.Net.HttpStatusCode.OK, (await client.GetAsync("/api/self")).StatusCode);
       }
     );
 }

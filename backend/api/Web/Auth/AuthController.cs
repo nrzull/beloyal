@@ -1,3 +1,4 @@
+using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +12,25 @@ public class AuthController(IHostEnvironment env) : ControllerBase
   public async Task<IActionResult> Login(
     [FromBody] LoginRequest req,
     [FromServices] LoginEndpoint endpoint
-  )
-  {
-    return await endpoint.Handle(new(req.Email)) switch
+  ) =>
+    await endpoint.Handle(new(req.Email)) switch
     {
       LoginResponse.Ok ok => Ok(new { ok.ExpiredAt, Code = env.IsDevelopment() ? ok.Code : null }),
       _ => BadRequest(),
     };
-  }
+
+  [HttpPost("confirm")]
+  public async Task<IActionResult> Confirm(
+    [FromBody] ConfirmRequest req,
+    [FromServices] ConfirmEndpoint endpoint
+  ) =>
+    await endpoint.Handle(new(req.Email), req.Code) switch
+    {
+      ConfirmResponse.Ok ok => new Func<IActionResult>(() =>
+      {
+        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        return Ok();
+      })(),
+      _ => BadRequest(),
+    };
 }

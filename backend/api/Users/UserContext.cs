@@ -5,6 +5,8 @@ namespace Beloyal.API.Users;
 
 public class UserContext(ApplicationDbContext dbContext)
 {
+  public async Task<User> GetById(Guid id) => await dbContext.Users.SingleAsync(v => v.Id == id);
+
   public async Task<User> EnsureUser(Email email)
   {
     var user = await dbContext.Users.Where(v => v.Email == email.Value).FirstOrDefaultAsync();

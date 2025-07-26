@@ -4,6 +4,7 @@ using Beloyal.API.Companies;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
 using Beloyal.API.Web.Auth;
+using Beloyal.API.Web.Self;
 
 namespace Beloyal.API;
 
@@ -25,11 +26,17 @@ public class Program
     builder.Services.AddScoped<ShopContext>();
 
     builder.UseAuthEndpoints();
+    builder.UseSelfEndpoints();
 
     var app = builder.Build();
 
     app.UseCustomCors();
-    app.UseHttpsRedirection();
+
+    if (app.Environment.IsProduction())
+    {
+      app.UseHttpsRedirection();
+    }
+
     app.UseAuthorization();
     app.MapControllers();
 

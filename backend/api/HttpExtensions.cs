@@ -37,7 +37,11 @@ public static class HttpExtensions
     app.UseCors("generic");
   }
 
-  public static void SetAccessTokenCookie(this HttpContext httpContext, EncodedToken token)
+  public static void SetAccessTokenCookie(
+    this HttpContext httpContext,
+    EncodedToken token,
+    bool secure
+  )
   {
     httpContext.Response.Cookies.Append(
       AuthContext.GetAccessTokenName(),
@@ -45,10 +49,10 @@ public static class HttpExtensions
       new CookieOptions
       {
         Path = "/",
-        SameSite = SameSiteMode.None,
+        SameSite = secure ? SameSiteMode.None : SameSiteMode.Unspecified,
         Expires = token.ExpiredAt,
         HttpOnly = true,
-        Secure = true,
+        Secure = secure,
         Domain = httpContext.Request.Host.Host,
       }
     );
