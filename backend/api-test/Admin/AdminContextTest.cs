@@ -80,4 +80,20 @@ public class AdminContextTest : TestLifetime
         Assert.Equal("qweqwe", role.Name);
       }
     );
+
+  [Fact]
+  public Task GetAccess() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var adminContext = scope.Get<AdminContext>();
+        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var role = await adminContext.CreateAdminRole("qwe", []);
+        await adminContext.CreateAdminAccess(user, role);
+
+        var access = await adminContext.GetAccess(user);
+        Assert.Equal(access!.UserId, user.Id);
+        Assert.Equal(access.RoleId, role.Id);
+      }
+    );
 }

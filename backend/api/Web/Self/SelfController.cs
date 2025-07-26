@@ -12,13 +12,13 @@ namespace Beloyal.API.Web.Self;
 public class SelfController : ControllerBase
 {
   [HttpGet]
-  public IActionResult GetSelf([FromServices] GetSelfEndpoint endpoint, [FromServices] User? user)
-  {
-    user.ThrowIfNull();
-    return endpoint.Handle(user) switch
+  public async Task<IActionResult> GetSelf(
+    [FromServices] GetSelfEndpoint endpoint,
+    [FromServices] User? user
+  ) =>
+    await endpoint.Handle(user.Ensure()) switch
     {
       GetSelfResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
-  }
 }

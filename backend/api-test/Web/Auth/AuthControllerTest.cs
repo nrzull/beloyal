@@ -58,12 +58,14 @@ public class AuthControllerTest : TestLifetime
     WithScope(
       async (scope, _) =>
       {
-        var user = await UserFixture.User(scope);
         using var client = App!.CreateClient();
+
+        var user = await UserFixture.User(scope);
         await AuthFixture.Authenticate(user, client);
         var r = await client.GetAsync("/api/self");
         var body = await r.Content.ReadFromJsonAsync<GetSelfResponse.Ok>();
-        Assert.Equal(user.Id, body?.UserId);
+        Assert.Equal(user.Id, body?.User.Id);
+        Assert.NotNull(body?.AdminAccess?.Role);
       }
     );
 }

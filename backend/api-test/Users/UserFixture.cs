@@ -5,8 +5,9 @@ namespace Beloyal.API.Test.Users;
 
 public static class UserFixture
 {
-  public static async Task<User> User(AsyncServiceScope scope, string email = "qwe@gma.com")
+  public static async Task<User> User(AsyncServiceScope scope, string? email = null)
   {
+    email ??= Environment.GetEnvironmentVariable("API_ADMIN_EMAIL")!;
     var userContext = scope.Get<UserContext>();
     var user = await userContext.EnsureUser(new(email));
     return user;

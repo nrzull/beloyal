@@ -56,4 +56,9 @@ public class AdminContext(ApplicationDbContext dbContext)
     dbContext.Remove(adminAccess);
     await dbContext.SaveChangesAsync();
   }
+
+  public async Task<AdminAccess?> GetAccess(User user) =>
+    await dbContext
+      .AdminAccesses.Include(v => v.Role)
+      .FirstOrDefaultAsync(v => v.UserId == user.Id);
 }
