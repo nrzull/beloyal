@@ -3,6 +3,7 @@ using Beloyal.API.Auth;
 using Beloyal.API.Companies;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
+using Beloyal.API.Web.Auth;
 
 namespace Beloyal.API;
 
@@ -22,6 +23,8 @@ public class Program
     builder.Services.AddScoped<AdminContext>();
     builder.Services.AddScoped<CompanyContext>();
     builder.Services.AddScoped<ShopContext>();
+
+    builder.UseAuthEndpoints();
 
     var app = builder.Build();
 
