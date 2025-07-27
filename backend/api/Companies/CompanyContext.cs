@@ -146,7 +146,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
 
   public async Task<List<CompanyAccess>> GetCompanyAccesses(User user) =>
     await dbContext
-      .CompanyAccesses.Where(v => v.UserId == user.Id)
+      .CompanyAccesses.Include(v => v.Company)
+      .Include(v => v.Role)
+      .Where(v => v.UserId == user.Id)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 

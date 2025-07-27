@@ -15,10 +15,13 @@ public class GetSelfEndpoint(AdminContext adminContext, CompanyContext companyCo
       ? await companyContext.GetAccess(user, id)
       : null;
 
+    var companyAccesses = await companyContext.GetCompanyAccesses(user);
+
     return new GetSelfResponse.Ok(
-      UserDTO.From(user),
-      adminAccess is { } ? AdminAccessDTO.From(adminAccess) : null,
-      companyAccess is { } ? CompanyAccessDTO.From(companyAccess) : null
+      User: UserDTO.From(user),
+      AdminAccess: adminAccess is { } ? AdminAccessDTO.From(adminAccess) : null,
+      CompanyAccess: companyAccess is { } ? CompanyAccessDTO.From(companyAccess) : null,
+      CompanyAccesses: companyAccesses.Select(CompanyAccessDTO.From).ToList()
     );
   }
 }

@@ -6,6 +6,10 @@ namespace Beloyal.API.Web.Self.GetSelf;
 
 public abstract record GetSelfResponse
 {
-  public record Ok(UserDTO User, AdminAccessDTO? AdminAccess, CompanyAccessDTO? CompanyAccess)
-    : GetSelfResponse;
+  public record Ok(
+    UserDTO User,
+    AdminAccessDTO? AdminAccess,
+    CompanyAccessDTO? CompanyAccess,
+    List<CompanyAccessDTO> CompanyAccesses
+  ) : GetSelfResponse;
 }
