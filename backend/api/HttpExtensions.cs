@@ -37,9 +37,12 @@ public static class HttpExtensions
     app.UseCors("generic");
   }
 
+  public static string? GetAccessTokenCookie(this HttpContext ctx) =>
+    ctx.Request.Cookies.FirstOrDefault(v => v.Key == AuthContext.GetAccessTokenName()).Value;
+
   public static void SetAccessTokenCookie(
     this HttpContext httpContext,
-    EncodedToken token,
+    EncodedAccessToken token,
     bool secure
   )
   {

@@ -220,4 +220,10 @@ public class CompanyContext(ApplicationDbContext dbContext)
       .CompanyRoles.Where(v => v.CompanyId == company.Id)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
+
+  public async Task<CompanyAccess?> GetAccess(User user, Guid id) =>
+    await dbContext.CompanyAccesses.FirstOrDefaultAsync(v => v.UserId == user.Id && v.Id == id);
+
+  public async Task<CompanyAccess?> GetAccess(Guid id) =>
+    await dbContext.CompanyAccesses.Include(v => v.Company).FirstOrDefaultAsync(v => v.Id == id);
 }

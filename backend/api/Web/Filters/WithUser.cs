@@ -1,3 +1,4 @@
+using Beloyal.API.Auth;
 using Beloyal.API.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -10,9 +11,9 @@ public class WithUserFilter(UserContext userContext) : IAsyncActionFilter
 {
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {
-    if (ctx.HttpContext.Items["userId"] is Guid id)
+    if (ctx.HttpContext.Items["accessToken"] is AccessToken token)
     {
-      ctx.ActionArguments["user"] = await userContext.GetById(id);
+      ctx.ActionArguments["user"] = await userContext.GetById(token.UserId);
     }
 
     await next();

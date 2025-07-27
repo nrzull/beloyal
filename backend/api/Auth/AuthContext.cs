@@ -1,3 +1,4 @@
+using Beloyal.API.Companies;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
 using JWT.Algorithms;
@@ -46,7 +47,7 @@ public class AuthContext(ApplicationDbContext dbContext)
     return existing;
   }
 
-  public EncodedToken EncodeToken(User user)
+  public EncodedAccessToken EncodeAccessToken(User user, CompanyAccess? companyAccess)
   {
     var expiredAt = DateTimeOffset.UtcNow.AddHours(12);
 
@@ -56,12 +57,13 @@ public class AuthContext(ApplicationDbContext dbContext)
       .WithSecret(GetTokenSecret())
       .AddClaim("exp", expiredAt.ToUnixTimeSeconds())
       .AddClaim("user_id", user.Id)
+      .AddClaim("company_access_id", companyAccess?.Id)
       .Encode();
 
-    return new EncodedToken(Token: token, ExpiredAt: expiredAt);
+    return new EncodedAccessToken(Token: token, ExpiredAt: expiredAt);
   }
 
-  public DecodedToken DecodeToken(string token)
+  public AccessToken DecodeAccessToken(string token)
   {
     var decoded = JwtBuilder
       .Create()
@@ -72,6 +74,7 @@ public class AuthContext(ApplicationDbContext dbContext)
 
     decoded.TryGetValue("exp", out var rawExpiredAtSeconds);
     decoded.TryGetValue("user_id", out var rawUserId);
+    decoded.TryGetValue("company_access_id", out var rawCompanyAccessId);
 
     if (!rawExpiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
     {
@@ -83,8 +86,11 @@ public class AuthContext(ApplicationDbContext dbContext)
       throw new Exception("user_id is invalid");
     }
 
-    return new DecodedToken(
+    return new AccessToken(
       UserId: userId,
+      CompanyAccessId: rawCompanyAccessId.ValueKind == System.Text.Json.JsonValueKind.String
+        ? rawCompanyAccessId.GetGuid()
+        : null,
       ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
     );
   }

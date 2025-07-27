@@ -24,8 +24,8 @@ public class WithAuthFilter(AuthContext authContext) : IAsyncResourceFilter
 
     try
     {
-      var decodedAccessToken = authContext.DecodeToken(token!);
-      ctx.HttpContext.Items["userId"] = decodedAccessToken.UserId;
+      var decodedAccessToken = authContext.DecodeAccessToken(token!);
+      ctx.HttpContext.Items["accessToken"] = decodedAccessToken;
     }
     catch (Exception e)
     {

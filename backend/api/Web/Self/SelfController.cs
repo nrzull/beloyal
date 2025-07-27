@@ -1,3 +1,4 @@
+using Beloyal.API.Auth;
 using Beloyal.API.Users;
 using Beloyal.API.Web.Filters;
 using Beloyal.API.Web.Self.GetSelf;
@@ -12,11 +13,13 @@ namespace Beloyal.API.Web.Self;
 public class SelfController : ControllerBase
 {
   [HttpGet]
+  [WithAccessToken]
   public async Task<IActionResult> GetSelf(
     [FromServices] GetSelfEndpoint endpoint,
-    [FromServices] User? user
+    [FromServices] User? user,
+    [FromServices] AccessToken? accessToken
   ) =>
-    await endpoint.Handle(user.Ensure()) switch
+    await endpoint.Handle(user.Ensure(), accessToken!) switch
     {
       GetSelfResponse.Ok ok => Ok(ok),
       _ => BadRequest(),

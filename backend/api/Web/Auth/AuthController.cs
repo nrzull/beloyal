@@ -1,5 +1,7 @@
+using Beloyal.API.Auth;
 using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
+using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beloyal.API.Web.Auth;
@@ -20,11 +22,13 @@ public class AuthController(IHostEnvironment env) : ControllerBase
     };
 
   [HttpPost("confirm")]
+  [WithAccessToken]
   public async Task<IActionResult> Confirm(
     [FromBody] ConfirmRequest req,
-    [FromServices] ConfirmEndpoint endpoint
+    [FromServices] ConfirmEndpoint endpoint,
+    [FromServices] AccessToken? accessToken
   ) =>
-    await endpoint.Handle(new(req.Email), req.Code) switch
+    await endpoint.Handle(new(req.Email), req.Code, accessToken) switch
     {
       ConfirmResponse.Ok ok => new Func<IActionResult>(() =>
       {
