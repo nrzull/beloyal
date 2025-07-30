@@ -35,6 +35,9 @@ public class AdminContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
+  public async Task<AdminRole?> GetRole(Guid id) =>
+    await dbContext.AdminRoles.FirstOrDefaultAsync(v => v.Id == id);
+
   public async Task<AdminAccess> CreateAdminAccess(User user, AdminRole role)
   {
     var adminAccess = new AdminAccess { User = user, Role = role };

@@ -67,6 +67,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
+  public async Task<Company> GetCompany(Guid id) =>
+    await dbContext.Companies.SingleAsync(v => v.Id == id);
+
   public async Task<(Company, CompanyRole, CompanyAccess)> CreateCompany(User user, Tin tin)
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
@@ -222,6 +225,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
       .CompanyRoles.Where(v => v.CompanyId == company.Id)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
+
+  public async Task<CompanyRole?> GetRole(Company company, Guid id) =>
+    await dbContext.CompanyRoles.FirstOrDefaultAsync(v => v.Id == id && v.CompanyId == company.Id);
 
   public async Task<CompanyAccess?> GetAccess(User user, Guid id) =>
     await dbContext.CompanyAccesses.FirstOrDefaultAsync(v => v.UserId == user.Id && v.Id == id);
