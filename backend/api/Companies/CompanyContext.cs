@@ -67,6 +67,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
+  public async Task<Company> GetCompany(CompanyAccess access) =>
+    await dbContext.Companies.SingleAsync(v => v.Id == access.CompanyId);
+
   public async Task<Company> GetCompany(Guid id) =>
     await dbContext.Companies.SingleAsync(v => v.Id == id);
 
