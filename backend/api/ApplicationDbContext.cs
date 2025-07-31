@@ -107,8 +107,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       companyAccessInvitation.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
 
-      companyAccessInvitation.HasIndex(v => new { v.Email, v.CompanyId }).IsUnique();
-
       companyAccessInvitation.Property(v => v.Status).HasConversion<string>();
 
       companyAccessInvitation

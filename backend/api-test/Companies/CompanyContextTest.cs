@@ -185,9 +185,13 @@ public class CompanyContextTest : TestLifetime
         Assert.Equal(invitation.Email, user.Email);
         Assert.Equal(invitation.CompanyId, company.Id);
 
-        await Assert.ThrowsAnyAsync<Exception>(() =>
-          companyContext.CreateCompanyAccessInvitation(company, access.Role, new(user.Email))
+        var invitation2 = await companyContext.CreateCompanyAccessInvitation(
+          company,
+          access.Role,
+          new(user.Email)
         );
+
+        Assert.Equal(invitation.Id, invitation2.Id);
       }
     );
 

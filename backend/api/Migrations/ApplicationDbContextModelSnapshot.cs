@@ -223,10 +223,6 @@ namespace Beloyal.API.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_company_access_invitations_role_id");
 
-                    b.HasIndex("Email", "CompanyId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_company_access_invitations_email_company_id");
-
                     b.ToTable("company_access_invitations", (string)null);
                 });
 

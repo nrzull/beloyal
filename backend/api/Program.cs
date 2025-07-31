@@ -7,6 +7,7 @@ using Beloyal.API.Web.AdminAccesses;
 using Beloyal.API.Web.AdminRoles;
 using Beloyal.API.Web.Auth;
 using Beloyal.API.Web.CompanyAccesses;
+using Beloyal.API.Web.CompanyAccessInvitations;
 using Beloyal.API.Web.CompanyRoles;
 using Beloyal.API.Web.Self;
 
@@ -32,9 +33,10 @@ public class Program
     builder.UseAuthEndpoints();
     builder.UseSelfEndpoints();
     builder.UseAdminRolesEndpoints();
-    builder.UseCompanyRolesEndpoints();
     builder.UseAdminAccessesEndpoints();
+    builder.UseCompanyRolesEndpoints();
     builder.UseCompanyAccessesEndpoints();
+    builder.UseCompanyAccessInvitationsEndpoints();
 
     var app = builder.Build();
 

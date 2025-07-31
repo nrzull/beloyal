@@ -179,6 +179,21 @@ public class CompanyContext(ApplicationDbContext dbContext)
       throw new Exception("company access already exists");
     }
 
+    if (
+      await dbContext
+        .CompanyAccessInvitations.Include(v => v.Company)
+        .Include(v => v.Role)
+        .FirstOrDefaultAsync(v =>
+          v.Email == email.Value
+          && v.Status == CompanyAccessInvitationStatus.Active
+          && v.CompanyId == company.Id
+        ) is
+      { } existingInvitation
+    )
+    {
+      return existingInvitation;
+    }
+
     var invitation = new CompanyAccessInvitation
     {
       Company = company,

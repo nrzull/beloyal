@@ -1,0 +1,27 @@
+using Beloyal.API.Companies;
+
+namespace Beloyal.API.Web.CompanyAccessInvitations.CreateInvitation;
+
+public class CreateInvitationEndpoint(CompanyContext companyContext)
+{
+  public async Task<CreateInvitationResponse> Handle(
+    CompanyAccess access,
+    CreateInvitationRequest req
+  )
+  {
+    var company = await companyContext.GetCompany(access);
+    var role = await companyContext.GetRole(company, req.RoleId);
+    if (role is null)
+    {
+      throw new Exception("invalid role");
+    }
+
+    var invitation = await companyContext.CreateCompanyAccessInvitation(
+      company,
+      role,
+      new(req.Email)
+    );
+
+    return new CreateInvitationResponse.Ok(CompanyAccessInvitationDTO.From(invitation));
+  }
+}

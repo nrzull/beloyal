@@ -1,9 +1,7 @@
 using System.Net.Http.Json;
-using Beloyal.API.Test.Users;
 using Beloyal.API.Types;
 using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
-using Beloyal.API.Web.Self.GetSelf;
 
 namespace Beloyal.API.Test.Web.Auth;
 
