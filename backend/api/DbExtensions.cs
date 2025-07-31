@@ -5,27 +5,34 @@ namespace Beloyal.API;
 
 public static class DbExtensions
 {
-  public static async Task<(IDbContextTransaction?, bool)> EnsureTransactionAsync(
+  public class CustomTransaction(IDbContextTransaction? tc) : IAsyncDisposable
+  {
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    {
+      if (tc is { })
+      {
+        await tc.CommitAsync(cancellationToken);
+      }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+      if (tc is { })
+      {
+        await tc.DisposeAsync();
+      }
+    }
+  }
+
+  public static async Task<CustomTransaction> MaybeTransactionAsync(
     this ApplicationDbContext dbContext
   )
   {
     var isInternal = dbContext.Database.CurrentTransaction is null;
 
-    return (
-      dbContext.Database.CurrentTransaction is null
-        ? await dbContext.Database.BeginTransactionAsync()
-        : null,
-      isInternal
+    return new CustomTransaction(
+      isInternal ? await dbContext.Database.BeginTransactionAsync() : null
     );
-  }
-
-  public static async Task DisposeInternalAsync(this IDbContextTransaction? tc, bool isInternal)
-  {
-    if (tc is { } && isInternal)
-    {
-      await tc.CommitAsync();
-      await tc.DisposeAsync();
-    }
   }
 
   public static void SetupNpgsql(this WebApplicationBuilder builder)

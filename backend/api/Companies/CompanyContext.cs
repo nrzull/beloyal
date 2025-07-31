@@ -218,6 +218,11 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
+  public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(User user, Guid id) =>
+    await dbContext.CompanyAccessInvitations.FirstOrDefaultAsync(v =>
+      v.Email == user.Email && v.Id == id
+    );
+
   public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(
     Company company,
     Email email

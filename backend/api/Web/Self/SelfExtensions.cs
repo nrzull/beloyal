@@ -1,3 +1,4 @@
+using Beloyal.API.Web.Self.AcceptCompanyAccessInvitation;
 using Beloyal.API.Web.Self.CreateCompany;
 using Beloyal.API.Web.Self.GetSelf;
 
@@ -9,5 +10,6 @@ public static class SelfExtensions
   {
     builder.Services.AddScoped<GetSelfEndpoint>();
     builder.Services.AddScoped<CreateCompanyEndpoint>();
+    builder.Services.AddScoped<AcceptCompanyAccessInvitationEndpoint>();
   }
 }
