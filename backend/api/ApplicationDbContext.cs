@@ -63,6 +63,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       whiteCompany.Property(v => v.Tin).HasMaxLength(12);
       whiteCompany.HasIndex(v => v.Tin).IsUnique();
+
+      whiteCompany
+        .HasOne(v => v.Company)
+        .WithOne()
+        .HasForeignKey<WhiteCompany>(v => v.CompanyId)
+        .HasPrincipalKey<Company>(v => v.Id);
     });
 
     builder.Entity<Company>(company =>

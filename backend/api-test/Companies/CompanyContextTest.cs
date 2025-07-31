@@ -17,12 +17,18 @@ public class CompanyContextTest : TestLifetime
 
         await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
 
-        await companyContext.CreateWhiteCompany(tin, DateTimeOffset.UtcNow.AddMonths(1));
+        var whiteCompany = await companyContext.CreateWhiteCompany(
+          tin,
+          DateTimeOffset.UtcNow.AddMonths(1)
+        );
 
         (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
           user,
           tin
         );
+
+        whiteCompany = await companyContext.GetWhiteCompany(whiteCompany.Id);
+        Assert.Equal(company.Id, whiteCompany?.CompanyId);
 
         Assert.Equal(company.Tin, tin.Value);
         Assert.Equal(user.Id, access.UserId);
@@ -77,7 +83,7 @@ public class CompanyContextTest : TestLifetime
           DateTimeOffset.UtcNow.AddMonths(1)
         );
 
-        await companyContext.RemoveWhiteCompany(tin);
+        await companyContext.RemoveWhiteCompany(whiteCompany.Id);
 
         await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
       }

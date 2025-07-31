@@ -7,4 +7,7 @@ public class WhiteCompany
 
   public required string Tin { get; set; }
   public required DateTimeOffset ExpiredAt { get; set; }
+
+  public Guid? CompanyId { get; set; }
+  public Company? Company { get; set; }
 }

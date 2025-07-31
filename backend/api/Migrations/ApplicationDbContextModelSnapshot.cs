@@ -267,6 +267,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -283,6 +287,10 @@ namespace Beloyal.API.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_white_companies");
+
+                    b.HasIndex("CompanyId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_white_companies_company_id");
 
                     b.HasIndex("Tin")
                         .IsUnique()
@@ -459,6 +467,16 @@ namespace Beloyal.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_company_roles_companies_company_id");
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Companies.WhiteCompany", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.Company", "Company")
+                        .WithOne()
+                        .HasForeignKey("Beloyal.API.Companies.WhiteCompany", "CompanyId")
+                        .HasConstraintName("fk_white_companies_companies_company_id");
 
                     b.Navigation("Company");
                 });

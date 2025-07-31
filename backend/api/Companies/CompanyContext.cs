@@ -6,6 +6,9 @@ namespace Beloyal.API.Companies;
 
 public class CompanyContext(ApplicationDbContext dbContext)
 {
+  public async Task<WhiteCompany?> GetWhiteCompany(Guid id) =>
+    await dbContext.WhiteCompanies.FirstOrDefaultAsync(v => v.Id == id);
+
   public async Task<WhiteCompany> CreateWhiteCompany(Tin tin, DateTimeOffset expiredAt)
   {
     var whiteCompany = new WhiteCompany { Tin = tin.Value, ExpiredAt = expiredAt };
@@ -23,9 +26,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task RemoveWhiteCompany(Tin tin)
+  public async Task RemoveWhiteCompany(Guid id)
   {
-    await dbContext.WhiteCompanies.Where(v => v.Tin == tin.Value).ExecuteDeleteAsync();
+    await dbContext.WhiteCompanies.Where(v => v.Id == id).ExecuteDeleteAsync();
   }
 
   public async Task<CompanyRole> CreateCompanyRole(
@@ -98,6 +101,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
       Company = company,
       Role = role,
     };
+
+    dbContext.Update(whiteCompany);
+    whiteCompany.Company = company;
 
     dbContext.AddRange(company, role, access);
     await dbContext.SaveChangesAsync();
