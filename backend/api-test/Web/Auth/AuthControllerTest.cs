@@ -29,7 +29,7 @@ public class AuthControllerTest : TestLifetime
       async (scope, _) =>
       {
         using var client = App!.CreateClient();
-        var email = new Email("qwe@gma.com");
+        var email = new Email("qweqweqwe@gma.com");
 
         Assert.Equal(
           System.Net.HttpStatusCode.Unauthorized,

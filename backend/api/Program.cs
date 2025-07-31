@@ -10,6 +10,7 @@ using Beloyal.API.Web.CompanyAccesses;
 using Beloyal.API.Web.CompanyAccessInvitations;
 using Beloyal.API.Web.CompanyRoles;
 using Beloyal.API.Web.Self;
+using Beloyal.API.Web.WhiteCompanies;
 
 namespace Beloyal.API;
 
@@ -37,6 +38,7 @@ public class Program
     builder.UseCompanyRolesEndpoints();
     builder.UseCompanyAccessesEndpoints();
     builder.UseCompanyAccessInvitationsEndpoints();
+    builder.UseWhiteCompaniesEndpoints();
 
     var app = builder.Build();
 
