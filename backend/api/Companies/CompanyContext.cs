@@ -6,8 +6,8 @@ namespace Beloyal.API.Companies;
 
 public class CompanyContext(ApplicationDbContext dbContext)
 {
-  public async Task<WhiteCompany?> GetWhiteCompany(Guid id) =>
-    await dbContext.WhiteCompanies.FirstOrDefaultAsync(v => v.Id == id);
+  public async Task<WhiteCompany?> GetWhiteCompany(WhiteCompanyId id) =>
+    await dbContext.WhiteCompanies.FirstOrDefaultAsync(v => v.Id == id.Value);
 
   public async Task<WhiteCompany> CreateWhiteCompany(Tin tin, DateTimeOffset expiredAt)
   {
@@ -26,9 +26,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task RemoveWhiteCompany(Guid id)
+  public async Task RemoveWhiteCompany(WhiteCompanyId id)
   {
-    await dbContext.WhiteCompanies.Where(v => v.Id == id).ExecuteDeleteAsync();
+    await dbContext.WhiteCompanies.Where(v => v.Id == id.Value).ExecuteDeleteAsync();
   }
 
   public async Task<CompanyRole> CreateCompanyRole(
@@ -70,11 +70,8 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<Company> GetCompany(CompanyAccess access) =>
-    await dbContext.Companies.SingleAsync(v => v.Id == access.CompanyId);
-
-  public async Task<Company> GetCompany(Guid id) =>
-    await dbContext.Companies.SingleAsync(v => v.Id == id);
+  public async Task<Company> GetCompany(CompanyId id) =>
+    await dbContext.Companies.SingleAsync(v => v.Id == id.Value);
 
   public async Task<(Company, CompanyRole, CompanyAccess)> CreateCompany(User user, Tin tin)
   {
@@ -150,17 +147,17 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<List<CompanyAccess>> GetCompanyAccesses(Company company) =>
+  public async Task<List<CompanyAccess>> GetCompanyAccesses(CompanyId id) =>
     await dbContext
-      .CompanyAccesses.Where(v => v.CompanyId == company.Id)
+      .CompanyAccesses.Where(v => v.CompanyId == id.Value)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
-  public async Task<List<CompanyAccess>> GetCompanyAccesses(User user) =>
+  public async Task<List<CompanyAccess>> GetCompanyAccesses(UserId id) =>
     await dbContext
       .CompanyAccesses.Include(v => v.Company)
       .Include(v => v.Role)
-      .Where(v => v.UserId == user.Id)
+      .Where(v => v.UserId == id.Value)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
@@ -224,22 +221,25 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(User user, Guid id) =>
+  public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(
+    User user,
+    CompanyAcessInvitationId id
+  ) =>
     await dbContext.CompanyAccessInvitations.FirstOrDefaultAsync(v =>
-      v.Email == user.Email && v.Id == id
+      v.Email == user.Email && v.Id == id.Value
     );
 
   public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(
-    Company company,
+    CompanyId id,
     Email email
   ) =>
     await dbContext.CompanyAccessInvitations.SingleOrDefaultAsync(v =>
-      v.CompanyId == company.Id && v.Email == email.Value
+      v.CompanyId == id.Value && v.Email == email.Value
     );
 
-  public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(Company company) =>
+  public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(CompanyId id) =>
     await dbContext
-      .CompanyAccessInvitations.Where(v => v.CompanyId == company.Id)
+      .CompanyAccessInvitations.Where(v => v.CompanyId == id.Value)
       .OrderByDescending(v => v.UpdatedAt)
       .ToListAsync();
 
@@ -249,21 +249,25 @@ public class CompanyContext(ApplicationDbContext dbContext)
       .OrderByDescending(v => v.UpdatedAt)
       .ToListAsync();
 
-  public async Task<List<CompanyRole>> GetCompanyRoles(Company company) =>
+  public async Task<List<CompanyRole>> GetCompanyRoles(CompanyId id) =>
     await dbContext
-      .CompanyRoles.Where(v => v.CompanyId == company.Id)
+      .CompanyRoles.Where(v => v.CompanyId == id.Value)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
-  public async Task<CompanyRole?> GetRole(Company company, Guid id) =>
-    await dbContext.CompanyRoles.FirstOrDefaultAsync(v => v.Id == id && v.CompanyId == company.Id);
+  public async Task<CompanyRole?> GetRole(CompanyId companyId, CompanyRoleId id) =>
+    await dbContext.CompanyRoles.FirstOrDefaultAsync(v =>
+      v.Id == id.Value && v.CompanyId == companyId.Value
+    );
 
-  public async Task<CompanyAccess?> GetAccess(User user, Guid id) =>
-    await dbContext.CompanyAccesses.FirstOrDefaultAsync(v => v.UserId == user.Id && v.Id == id);
+  public async Task<CompanyAccess?> GetAccess(UserId userId, CompanyAccessId id) =>
+    await dbContext.CompanyAccesses.FirstOrDefaultAsync(v =>
+      v.UserId == userId.Value && v.Id == id.Value
+    );
 
-  public async Task<CompanyAccess?> GetAccess(Guid id) =>
+  public async Task<CompanyAccess?> GetAccess(CompanyAccessId id) =>
     await dbContext
       .CompanyAccesses.Include(v => v.Company)
       .Include(v => v.User)
-      .FirstOrDefaultAsync(v => v.Id == id);
+      .FirstOrDefaultAsync(v => v.Id == id.Value);
 }

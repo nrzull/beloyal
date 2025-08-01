@@ -7,7 +7,7 @@ public class CreateShopEndpoint(CompanyContext companyContext, ShopContext shopC
 {
   public async Task<CreateShopResponse> Handle(CompanyAccess access, CreateShopRequest req)
   {
-    var company = await companyContext.GetCompany(access);
+    var company = await companyContext.GetCompany(CompanyId.From(access));
     var shop = await shopContext.CreateShop(company, req.Name);
 
     return new CreateShopResponse.Ok(ShopDTO.From(shop));

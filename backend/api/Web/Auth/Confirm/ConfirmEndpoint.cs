@@ -22,8 +22,8 @@ public class ConfirmEndpoint(
     var user = await userContext.EnsureUser(email);
 
     var companyAccess = previousToken?.CompanyAccessId is Guid g
-      ? await companyContext.GetAccess(user, g)
-      : (await companyContext.GetCompanyAccesses(user)).FirstOrDefault();
+      ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))
+      : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
     var token = authContext.EncodeAccessToken(user, companyAccess);
 

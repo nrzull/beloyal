@@ -1,6 +1,7 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Test.Users;
 using Beloyal.API.Types;
+using Beloyal.API.Users;
 
 namespace Beloyal.API.Test.Companies;
 
@@ -27,7 +28,7 @@ public class CompanyContextTest : TestLifetime
           tin
         );
 
-        whiteCompany = await companyContext.GetWhiteCompany(whiteCompany.Id);
+        whiteCompany = await companyContext.GetWhiteCompany(WhiteCompanyId.From(whiteCompany));
         Assert.Equal(company.Id, whiteCompany?.CompanyId);
 
         Assert.Equal(company.Tin, tin.Value);
@@ -83,7 +84,7 @@ public class CompanyContextTest : TestLifetime
           DateTimeOffset.UtcNow.AddMonths(1)
         );
 
-        await companyContext.RemoveWhiteCompany(whiteCompany.Id);
+        await companyContext.RemoveWhiteCompany(WhiteCompanyId.From(whiteCompany));
 
         await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
       }
@@ -132,7 +133,7 @@ public class CompanyContextTest : TestLifetime
         await companyContext.RemoveCompanyAccess(access);
 
         Assert.DoesNotContain(
-          await companyContext.GetCompanyAccesses(user),
+          await companyContext.GetCompanyAccesses(UserId.From(user)),
           (v) => v.Id == access.Id
         );
       }
@@ -236,7 +237,10 @@ public class CompanyContextTest : TestLifetime
 
         await companyContext.CreateCompanyAccessInvitation(company, access.Role, new(user.Email));
 
-        var invitation = await companyContext.GetCompanyAccessInvitation(company, new(user.Email));
+        var invitation = await companyContext.GetCompanyAccessInvitation(
+          CompanyId.From(company),
+          new(user.Email)
+        );
 
         Assert.NotNull(invitation);
 
@@ -253,7 +257,10 @@ public class CompanyContextTest : TestLifetime
         var (company, access, owner) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
 
-        Assert.Contains(await companyContext.GetCompanyAccesses(owner), v => v.Id == access.Id);
+        Assert.Contains(
+          await companyContext.GetCompanyAccesses(UserId.From(owner)),
+          v => v.Id == access.Id
+        );
       }
     );
 
@@ -265,7 +272,10 @@ public class CompanyContextTest : TestLifetime
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
 
-        Assert.Contains(await companyContext.GetCompanyAccesses(company), v => v.Id == access.Id);
+        Assert.Contains(
+          await companyContext.GetCompanyAccesses(CompanyId.From(company)),
+          v => v.Id == access.Id
+        );
       }
     );
 
@@ -285,7 +295,7 @@ public class CompanyContextTest : TestLifetime
         );
 
         Assert.Contains(
-          await companyContext.GetCompanyAccessInvitations(company),
+          await companyContext.GetCompanyAccessInvitations(CompanyId.From(company)),
           v => v.Id == invitation.Id
         );
       }
@@ -320,7 +330,7 @@ public class CompanyContextTest : TestLifetime
       {
         var (company, _, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
-        var roles = await companyContext.GetCompanyRoles(company);
+        var roles = await companyContext.GetCompanyRoles(CompanyId.From(company));
 
         Assert.True(roles.Count() > 0);
         Assert.All(roles, (v) => Assert.Equal(v.CompanyId, company.Id));

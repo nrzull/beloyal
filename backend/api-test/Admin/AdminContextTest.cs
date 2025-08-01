@@ -1,5 +1,6 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Test.Users;
+using Beloyal.API.Users;
 
 namespace Beloyal.API.Test.Admin;
 
@@ -91,7 +92,7 @@ public class AdminContextTest : TestLifetime
         var role = await adminContext.CreateAdminRole("qwe", []);
         await adminContext.CreateAdminAccess(user, role);
 
-        var access = await adminContext.GetAccess(user);
+        var access = await adminContext.GetAccess(UserId.From(user));
         Assert.Equal(access!.UserId, user.Id);
         Assert.Equal(access.RoleId, role.Id);
       }

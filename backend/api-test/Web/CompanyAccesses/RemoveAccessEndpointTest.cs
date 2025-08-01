@@ -24,7 +24,7 @@ public class RemoveAccessEndpointTest : TestLifetime
 
         Assert.IsType<RemoveAccessResponse.Ok>(result);
 
-        access = await companyContext.GetAccess(access.Id);
+        access = await companyContext.GetAccess(CompanyAccessId.From(access.Id));
         Assert.Null(access);
       }
     );

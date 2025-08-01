@@ -6,7 +6,7 @@ public class UpdateRoleEndpoint(AdminContext adminContext)
 {
   public async Task<UpdateRoleResponse> Handle(UpdateRoleRequest req)
   {
-    var role = await adminContext.GetRole(req.Id);
+    var role = await adminContext.GetRole(AdminRoleId.From(req.Id));
     if (role is null)
     {
       throw new Exception("invalid role");

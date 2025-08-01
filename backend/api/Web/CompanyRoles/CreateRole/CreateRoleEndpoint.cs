@@ -6,7 +6,7 @@ public class CreateRoleEndpoint(CompanyContext companyContext)
 {
   public async Task<CreateRoleResponse> Handle(CompanyAccess access, CreateRoleRequest req)
   {
-    var company = await companyContext.GetCompany(access.CompanyId);
+    var company = await companyContext.GetCompany(CompanyId.From(access));
 
     var role = await companyContext.CreateCompanyRole(company, req.Name, req.Permissions);
 

@@ -10,15 +10,18 @@ public class CreateAccessEndpoint(CompanyContext companyContext, UserContext use
     CreateAccessRequest req
   )
   {
-    var company = await companyContext.GetCompany(companyAccess);
+    var company = await companyContext.GetCompany(CompanyId.From(companyAccess));
 
-    var role = await companyContext.GetRole(company, req.RoleId);
+    var role = await companyContext.GetRole(
+      CompanyId.From(company),
+      CompanyRoleId.From(req.RoleId)
+    );
     if (role is null)
     {
       throw new Exception("invalid role");
     }
 
-    var user = await userContext.GetById(req.UserId);
+    var user = await userContext.GetById(UserId.From(req.UserId));
     var access = await companyContext.CreateCompanyAccess(company, user, role);
 
     return new CreateAccessResponse.Ok(CompanyAccessDTO.From(access));

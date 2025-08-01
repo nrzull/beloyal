@@ -9,13 +9,13 @@ public class GetSelfEndpoint(AdminContext adminContext, CompanyContext companyCo
 {
   public async Task<GetSelfResponse> Handle(User user, AccessToken accessToken)
   {
-    var adminAccess = await adminContext.GetAccess(user);
+    var adminAccess = await adminContext.GetAccess(UserId.From(user));
 
     var companyAccess = accessToken.CompanyAccessId is Guid id
-      ? await companyContext.GetAccess(user, id)
+      ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(id))
       : null;
 
-    var companyAccesses = await companyContext.GetCompanyAccesses(user);
+    var companyAccesses = await companyContext.GetCompanyAccesses(UserId.From(user));
 
     return new GetSelfResponse.Ok(
       User: UserDTO.From(user),

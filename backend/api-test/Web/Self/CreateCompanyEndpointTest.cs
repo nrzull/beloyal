@@ -1,6 +1,7 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Test.Users;
 using Beloyal.API.Types;
+using Beloyal.API.Users;
 using Beloyal.API.Web.Self.CreateCompany;
 
 namespace Beloyal.API.Test.Web.Self;
@@ -24,7 +25,7 @@ public class CreateCompanyEndpointTest : TestLifetime
 
         Assert.IsType<CreateCompanyResponse.Ok>(await endpoint.Handle(user, tin));
 
-        Assert.Single(await companyContext.GetCompanyAccesses(user));
+        Assert.Single(await companyContext.GetCompanyAccesses(UserId.From(user)));
       }
     );
 }

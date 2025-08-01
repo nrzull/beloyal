@@ -6,7 +6,7 @@ public class UpdateCompanyEndpoint(CompanyContext companyContext)
 {
   public async Task<UpdateCompanyResponse> Handle(UpdateCompanyRequest req)
   {
-    var whiteCompany = await companyContext.GetWhiteCompany(req.Id);
+    var whiteCompany = await companyContext.GetWhiteCompany(WhiteCompanyId.From(req.Id));
     if (whiteCompany is null)
     {
       throw new Exception("invalid white company");

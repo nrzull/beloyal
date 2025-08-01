@@ -13,14 +13,20 @@ public class AcceptCompanyAccessInvitationEndpoint(
     AcceptCompanyAccessInvitationRequest req
   )
   {
-    var invitation = await companyContext.GetCompanyAccessInvitation(user, req.Id);
+    var invitation = await companyContext.GetCompanyAccessInvitation(
+      user,
+      CompanyAcessInvitationId.From(req.Id)
+    );
     if (invitation is null)
     {
       throw new Exception("invalid invitation");
     }
 
-    var company = await companyContext.GetCompany(invitation.CompanyId);
-    var role = await companyContext.GetRole(company, invitation.RoleId);
+    var company = await companyContext.GetCompany(CompanyId.From(invitation.CompanyId));
+    var role = await companyContext.GetRole(
+      CompanyId.From(company),
+      CompanyRoleId.From(invitation)
+    );
     if (role is null)
     {
       throw new Exception("invalid role");

@@ -13,7 +13,7 @@ public class WithUserFilter(UserContext userContext) : IAsyncActionFilter
   {
     if (ctx.HttpContext.Items["accessToken"] is AccessToken token)
     {
-      ctx.ActionArguments["user"] = await userContext.GetById(token.UserId);
+      ctx.ActionArguments["user"] = await userContext.GetById(UserId.From(token.UserId));
     }
 
     await next();

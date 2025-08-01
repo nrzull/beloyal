@@ -10,14 +10,13 @@ public class CreateShopAccessEndpoint(CompanyContext companyContext, ShopContext
     CreateShopAccessRequest req
   )
   {
-    var company = await companyContext.GetCompany(access);
-    var shop = await shopContext.GetShop(company, req.ShopId);
+    var shop = await shopContext.GetShop(CompanyId.From(access), ShopId.From(req.ShopId));
     if (shop is null)
     {
       throw new Exception("invalid shop");
     }
 
-    var companyAccess = await companyContext.GetAccess(req.CompanyAccessId);
+    var companyAccess = await companyContext.GetAccess(CompanyAccessId.From(req.CompanyAccessId));
     if (companyAccess is null || companyAccess.CompanyId != access.CompanyId)
     {
       throw new Exception("invalid company access");

@@ -23,7 +23,7 @@ public class CreateAccessEndpointTest : TestLifetime
 
         if (result is CreateAccessResponse.Ok ok)
         {
-          access = await companyContext.GetAccess(ok.Data.Id);
+          access = await companyContext.GetAccess(CompanyAccessId.From(ok.Data.Id));
           Assert.NotNull(access);
 
           Assert.Equal(ok.Data.Role.Id, role.Id);

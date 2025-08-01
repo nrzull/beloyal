@@ -1,5 +1,6 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Test.Users;
+using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses.RemoveAccess;
 
 namespace Beloyal.API.Test.Web.AdminAccesses;
@@ -20,7 +21,7 @@ public class RemoveAccessEndpointTest : TestLifetime
         var result = await endpoint.Handle(new(user.Id));
         Assert.IsType<RemoveAccessResponse.Ok>(result);
 
-        var access = await adminContext.GetAccess(user);
+        var access = await adminContext.GetAccess(UserId.From(user));
         Assert.Null(access);
       }
     );

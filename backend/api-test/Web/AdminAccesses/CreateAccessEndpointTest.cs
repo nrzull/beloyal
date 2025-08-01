@@ -1,5 +1,6 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Test.Users;
+using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses.CreateAccess;
 
 namespace Beloyal.API.Test.Web.AdminAccesses;
@@ -17,7 +18,7 @@ public class CreateAccessEndpointTest : TestLifetime
         var user = await UserFixture.User(scope, "qweqwe@gma.com");
 
         var result = await endpoint.Handle(new(user.Id, role.Id));
-        var access = await adminContext.GetAccess(user);
+        var access = await adminContext.GetAccess(UserId.From(user));
 
         Assert.NotNull(access);
 

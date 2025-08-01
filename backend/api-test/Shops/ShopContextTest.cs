@@ -58,7 +58,10 @@ public class ShopContextTest : TestLifetime
         var shopAccess = await shopContext.CreateAccess(shop, access);
         await shopContext.RemoveAccess(shopAccess);
 
-        Assert.DoesNotContain(await shopContext.GetAccesses(shop), v => v.Id == shopAccess.Id);
+        Assert.DoesNotContain(
+          await shopContext.GetAccesses(ShopId.From(shop)),
+          v => v.Id == shopAccess.Id
+        );
       }
     );
 
@@ -72,7 +75,10 @@ public class ShopContextTest : TestLifetime
         var shop = await shopContext.CreateShop(company, "qwe");
         var shopAccess = await shopContext.CreateAccess(shop, access);
 
-        Assert.Contains(await shopContext.GetAccesses(shop), v => v.Id == shopAccess.Id);
+        Assert.Contains(
+          await shopContext.GetAccesses(ShopId.From(shop)),
+          v => v.Id == shopAccess.Id
+        );
       }
     );
 }

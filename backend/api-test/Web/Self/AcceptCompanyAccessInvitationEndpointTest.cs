@@ -1,6 +1,7 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Test.Companies;
 using Beloyal.API.Test.Users;
+using Beloyal.API.Users;
 using Beloyal.API.Web.Self.AcceptCompanyAccessInvitation;
 
 namespace Beloyal.API.Test.Web.Self;
@@ -38,7 +39,10 @@ public class AcceptCompanyAccessInvitationEndpointTest : TestLifetime
 
         if (result is AcceptCompanyAccessInvitationResponse.Ok ok)
         {
-          Assert.Contains(await companyContext.GetCompanyAccesses(user), v => ok.Data.Id == v.Id);
+          Assert.Contains(
+            await companyContext.GetCompanyAccesses(UserId.From(user)),
+            v => ok.Data.Id == v.Id
+          );
         }
       }
     );

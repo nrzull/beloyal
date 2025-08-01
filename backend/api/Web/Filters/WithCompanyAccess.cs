@@ -16,7 +16,9 @@ public class WithCompanyAccessFilter(CompanyContext companyContext) : IAsyncActi
       && token.CompanyAccessId is Guid id
     )
     {
-      ctx.ActionArguments["companyAccess"] = await companyContext.GetAccess(id);
+      ctx.ActionArguments["companyAccess"] = await companyContext.GetAccess(
+        CompanyAccessId.From(id)
+      );
     }
 
     await next();

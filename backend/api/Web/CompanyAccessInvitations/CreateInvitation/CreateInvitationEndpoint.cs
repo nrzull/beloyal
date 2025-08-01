@@ -9,8 +9,11 @@ public class CreateInvitationEndpoint(CompanyContext companyContext)
     CreateInvitationRequest req
   )
   {
-    var company = await companyContext.GetCompany(access);
-    var role = await companyContext.GetRole(company, req.RoleId);
+    var company = await companyContext.GetCompany(CompanyId.From(access));
+    var role = await companyContext.GetRole(
+      CompanyId.From(company),
+      CompanyRoleId.From(req.RoleId)
+    );
     if (role is null)
     {
       throw new Exception("invalid role");

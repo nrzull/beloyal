@@ -35,8 +35,8 @@ public class AdminContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<AdminRole?> GetRole(Guid id) =>
-    await dbContext.AdminRoles.FirstOrDefaultAsync(v => v.Id == id);
+  public async Task<AdminRole?> GetRole(AdminRoleId id) =>
+    await dbContext.AdminRoles.FirstOrDefaultAsync(v => v.Id == id.Value);
 
   public async Task<AdminAccess> CreateAdminAccess(User user, AdminRole role)
   {
@@ -60,8 +60,8 @@ public class AdminContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<AdminAccess?> GetAccess(User user) =>
+  public async Task<AdminAccess?> GetAccess(UserId id) =>
     await dbContext
       .AdminAccesses.Include(v => v.Role)
-      .FirstOrDefaultAsync(v => v.UserId == user.Id);
+      .FirstOrDefaultAsync(v => v.UserId == id.Value);
 }

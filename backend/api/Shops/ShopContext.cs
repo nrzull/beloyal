@@ -5,8 +5,10 @@ namespace Beloyal.API.Shops;
 
 public class ShopContext(ApplicationDbContext dbContext)
 {
-  public async Task<Shop?> GetShop(Company company, Guid id) =>
-    await dbContext.Shops.FirstOrDefaultAsync(v => v.Id == id && v.CompanyId == company.Id);
+  public async Task<Shop?> GetShop(CompanyId companyId, ShopId shopId) =>
+    await dbContext.Shops.FirstOrDefaultAsync(v =>
+      v.Id == shopId.Value && v.CompanyId == companyId.Value
+    );
 
   public async Task<Shop> CreateShop(Company company, string name)
   {
@@ -44,11 +46,11 @@ public class ShopContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<List<ShopAccess>> GetAccesses(Shop shop) =>
+  public async Task<List<ShopAccess>> GetAccesses(ShopId shopId) =>
     await dbContext
       .ShopAccesses.Include(v => v.CompanyAccess)
       .ThenInclude(v => v.User)
-      .Where(v => v.ShopId == shop.Id)
+      .Where(v => v.ShopId == shopId.Value)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 }

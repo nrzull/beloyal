@@ -9,7 +9,7 @@ public class RemoveAccessEndpoint(CompanyContext companyContext)
     RemoveAccessRequest req
   )
   {
-    var access = await companyContext.GetAccess(req.CompanyAccessId);
+    var access = await companyContext.GetAccess(CompanyAccessId.From(req.CompanyAccessId));
     if (access is null || companyAccess.CompanyId != access?.CompanyId)
     {
       throw new Exception("invalid access");

@@ -3,12 +3,11 @@ using Beloyal.API.Users;
 
 namespace Beloyal.API.Web.AdminAccesses.RemoveAccess;
 
-public class RemoveAccessEndpoint(AdminContext adminContext, UserContext userContext)
+public class RemoveAccessEndpoint(AdminContext adminContext)
 {
   public async Task<RemoveAccessResponse> Handle(RemoveAccessRequest req)
   {
-    var user = await userContext.GetById(req.UserId);
-    var access = await adminContext.GetAccess(user);
+    var access = await adminContext.GetAccess(UserId.From(req.UserId));
     if (access is null)
     {
       throw new Exception("invalid access");
