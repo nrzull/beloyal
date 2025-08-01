@@ -262,5 +262,8 @@ public class CompanyContext(ApplicationDbContext dbContext)
     await dbContext.CompanyAccesses.FirstOrDefaultAsync(v => v.UserId == user.Id && v.Id == id);
 
   public async Task<CompanyAccess?> GetAccess(Guid id) =>
-    await dbContext.CompanyAccesses.Include(v => v.Company).FirstOrDefaultAsync(v => v.Id == id);
+    await dbContext
+      .CompanyAccesses.Include(v => v.Company)
+      .Include(v => v.User)
+      .FirstOrDefaultAsync(v => v.Id == id);
 }

@@ -46,7 +46,9 @@ public class ShopContext(ApplicationDbContext dbContext)
 
   public async Task<List<ShopAccess>> GetAccesses(Shop shop) =>
     await dbContext
-      .ShopAccesses.Where(v => v.ShopId == shop.Id)
+      .ShopAccesses.Include(v => v.CompanyAccess)
+      .ThenInclude(v => v.User)
+      .Where(v => v.ShopId == shop.Id)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 }
