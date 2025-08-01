@@ -5,6 +5,9 @@ namespace Beloyal.API.Shops;
 
 public class ShopContext(ApplicationDbContext dbContext)
 {
+  public async Task<Shop?> GetShop(Company company, Guid id) =>
+    await dbContext.Shops.FirstOrDefaultAsync(v => v.Id == id && v.CompanyId == company.Id);
+
   public async Task<Shop> CreateShop(Company company, string name)
   {
     var shop = new Shop { Company = company, Name = name };

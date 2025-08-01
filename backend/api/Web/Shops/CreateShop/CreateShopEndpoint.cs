@@ -1,0 +1,15 @@
+using Beloyal.API.Companies;
+using Beloyal.API.Shops;
+
+namespace Beloyal.API.Web.Shops.CreateShop;
+
+public class CreateShopEndpoint(CompanyContext companyContext, ShopContext shopContext)
+{
+  public async Task<CreateShopResponse> Handle(CompanyAccess access, CreateShopRequest req)
+  {
+    var company = await companyContext.GetCompany(access);
+    var shop = await shopContext.CreateShop(company, req.Name);
+
+    return new CreateShopResponse.Ok(ShopDTO.From(shop));
+  }
+}
