@@ -1,3 +1,5 @@
+using Beloyal.API.Customers;
+using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
 
 namespace Beloyal.API.Companies;
@@ -9,8 +11,11 @@ public class Company
 
   public required string Tin { get; set; }
 
+  public MaxBot? MaxBot { get; set; }
+  public TgBot? TgBot { get; set; }
   public List<CompanyRole> Roles { get; set; } = [];
   public List<CompanyAccess> Accesses { get; set; } = [];
   public List<CompanyAccessInvitation> AccessInvitations { get; set; } = [];
   public List<Shop> Shops { get; set; } = [];
+  public List<Customer> Customers { get; set; } = [];
 }

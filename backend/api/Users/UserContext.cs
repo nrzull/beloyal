@@ -24,4 +24,21 @@ public class UserContext(ApplicationDbContext dbContext)
 
     return user;
   }
+
+  public async Task<User> EnsureUser(Phone phone)
+  {
+    var user = await dbContext.Users.Where(v => v.Phone == phone.Value).FirstOrDefaultAsync();
+
+    if (user is { })
+    {
+      return user;
+    }
+
+    user = new User() { Phone = phone.Value };
+
+    dbContext.Add(user);
+    await dbContext.SaveChangesAsync();
+
+    return user;
+  }
 }

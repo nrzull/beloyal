@@ -1,7 +1,9 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
+using Beloyal.API.Customers;
 using Beloyal.API.Items;
+using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses;
@@ -33,6 +35,8 @@ public class Program
     builder.Services.AddScoped<CompanyContext>();
     builder.Services.AddScoped<ShopContext>();
     builder.Services.AddScoped<ItemContext>();
+    builder.Services.AddScoped<MessengerContext>();
+    builder.Services.AddScoped<CustomerContext>();
 
     builder.UseAuthEndpoints();
     builder.UseSelfEndpoints();

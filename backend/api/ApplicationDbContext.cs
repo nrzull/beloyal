@@ -2,7 +2,9 @@ using System.Globalization;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
+using Beloyal.API.Customers;
 using Beloyal.API.Items;
+using Beloyal.API.Messengers;
 using Beloyal.API.Seeds;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
@@ -25,6 +27,9 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<ShopAccess> ShopAccesses { get; set; }
   public DbSet<Item> Items { get; set; }
   public DbSet<ItemGroup> ItemGroups { get; set; }
+  public DbSet<Customer> Customers { get; set; }
+  public DbSet<MaxBot> MaxBots { get; set; }
+  public DbSet<TgBot> TgBots { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -45,6 +50,15 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       user.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
       user.HasIndex(v => v.Email).IsUnique();
+
+      user.Property(v => v.Phone).HasMaxLength(16);
+      user.HasIndex(v => v.Phone).IsUnique();
+
+      user.Property(v => v.TgUserId).HasMaxLength(32);
+      user.HasIndex(v => v.TgUserId).IsUnique();
+
+      user.Property(v => v.MaxUserId).HasMaxLength(32);
+      user.HasIndex(v => v.MaxUserId).IsUnique();
     });
 
     builder.Entity<AdminAccess>(adminAccess =>
@@ -182,6 +196,53 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany(v => v.Items)
         .HasForeignKey(v => v.ParentId)
         .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<Customer>(customer =>
+    {
+      customer.HasIndex(v => new { v.UserId, v.CompanyId }).IsUnique();
+
+      customer
+        .HasOne(v => v.MaxBot)
+        .WithMany(v => v.Customers)
+        .HasForeignKey(v => v.MaxBotId)
+        .HasPrincipalKey(v => v.Id);
+
+      customer
+        .HasOne(v => v.TgBot)
+        .WithMany(v => v.Customers)
+        .HasForeignKey(v => v.TgBotId)
+        .HasPrincipalKey(v => v.Id);
+
+      customer
+        .HasOne(v => v.Company)
+        .WithMany(v => v.Customers)
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      customer
+        .HasOne(v => v.User)
+        .WithMany(v => v.Customers)
+        .HasForeignKey(v => v.UserId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<TgBot>(tgBot =>
+    {
+      tgBot
+        .HasOne(v => v.Company)
+        .WithOne(v => v.TgBot)
+        .HasForeignKey<TgBot>(v => v.CompanyId)
+        .HasPrincipalKey<Company>(v => v.Id);
+    });
+
+    builder.Entity<MaxBot>(maxBot =>
+    {
+      maxBot
+        .HasOne(v => v.Company)
+        .WithOne(v => v.MaxBot)
+        .HasForeignKey<MaxBot>(v => v.CompanyId)
+        .HasPrincipalKey<Company>(v => v.Id);
     });
   }
 
