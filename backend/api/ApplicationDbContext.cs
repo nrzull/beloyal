@@ -2,6 +2,7 @@ using System.Globalization;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
+using Beloyal.API.Items;
 using Beloyal.API.Seeds;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
@@ -22,6 +23,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<CompanyAccessInvitation> CompanyAccessInvitations { get; set; }
   public DbSet<Shop> Shops { get; set; }
   public DbSet<ShopAccess> ShopAccesses { get; set; }
+  public DbSet<Item> Items { get; set; }
+  public DbSet<ItemGroup> ItemGroups { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -151,6 +154,34 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey(v => v.Id);
 
       shopAccess.HasIndex(v => new { v.CompanyAccessId, v.ShopId }).IsUnique();
+    });
+
+    builder.Entity<ItemGroup>(itemGroup =>
+    {
+      itemGroup
+        .HasOne(v => v.Company)
+        .WithMany()
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      itemGroup
+        .HasOne(v => v.Parent)
+        .WithMany(v => v.Groups)
+        .HasForeignKey(v => v.ParentId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<Item>(item =>
+    {
+      item.HasOne(v => v.Company)
+        .WithMany()
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      item.HasOne(v => v.Parent)
+        .WithMany(v => v.Items)
+        .HasForeignKey(v => v.ParentId)
+        .HasPrincipalKey(v => v.Id);
     });
   }
 
