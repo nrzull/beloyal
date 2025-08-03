@@ -20,7 +20,7 @@ namespace Beloyal.API;
 
 public class Program
 {
-  public static void Main(string[] args)
+  public static async Task Main(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +35,7 @@ public class Program
     builder.Services.AddScoped<CompanyContext>();
     builder.Services.AddScoped<ShopContext>();
     builder.Services.AddScoped<ItemContext>();
-    builder.Services.AddScoped<MessengerContext>();
+    builder.Services.AddScoped<TgContext>();
     builder.Services.AddScoped<CustomerContext>();
 
     builder.UseAuthEndpoints();
@@ -59,6 +59,11 @@ public class Program
 
     app.UseAuthorization();
     app.MapControllers();
+
+    await using var scope = app.Services.CreateAsyncScope();
+
+    var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
+    await tgContext.PrepareClients();
 
     app.Run();
   }
