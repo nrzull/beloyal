@@ -1,3 +1,4 @@
+using Beloyal.API.Types;
 using Beloyal.API.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,7 @@ public static class UserFixture
   {
     email ??= Environment.GetEnvironmentVariable("API_ADMIN_EMAIL")!;
     var userContext = scope.Get<UserContext>();
-    var user = await userContext.EnsureUser(new(email));
+    var user = await userContext.EnsureUser(new Email(email));
     return user;
   }
 }

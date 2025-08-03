@@ -45,11 +45,24 @@ public class TgContext(ApplicationDbContext dbContext) : IMessengerContext<TgBot
     }
 
     var client = new TelegramBotClient(tgBot.Token);
-    await client.GetMe();
+    await client.DropPendingUpdates();
+
+    client.OnError += async (e, _) => await OnClientError(companyId, e);
 
     Pool.Add(companyId, client);
 
     return client;
+  }
+
+  async Task OnClientError(CompanyId companyId, Exception e)
+  {
+    var msg = e.ToString();
+    await Console.Error.WriteLineAsync(msg);
+
+    if (msg.Contains("409"))
+    {
+      DisconnectClient(companyId);
+    }
   }
 
   public async Task PrepareClients()

@@ -12,6 +12,7 @@ using Beloyal.API.Web.Auth;
 using Beloyal.API.Web.CompanyAccesses;
 using Beloyal.API.Web.CompanyAccessInvitations;
 using Beloyal.API.Web.CompanyRoles;
+using Beloyal.API.Web.Messengers;
 using Beloyal.API.Web.Self;
 using Beloyal.API.Web.Shops;
 using Beloyal.API.Web.WhiteCompanies;
@@ -47,6 +48,7 @@ public class Program
     builder.UseCompanyAccessInvitationsEndpoints();
     builder.UseWhiteCompaniesEndpoints();
     builder.UseShopsEndpoints();
+    builder.UseMessengersEndpoints();
 
     var app = builder.Build();
 
@@ -61,8 +63,8 @@ public class Program
     app.MapControllers();
 
     await using var scope = app.Services.CreateAsyncScope();
-
     var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
+
     await tgContext.PrepareClients();
 
     app.Run();

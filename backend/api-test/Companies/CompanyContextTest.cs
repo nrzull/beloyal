@@ -176,12 +176,14 @@ public class CompanyContextTest : TestLifetime
       {
         var (company, access, owner) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
+        Assert.NotNull(owner.Email);
 
         await Assert.ThrowsAnyAsync<Exception>(() =>
           companyContext.CreateCompanyAccessInvitation(company, access.Role, new(owner.Email))
         );
 
         var user = await UserFixture.User(scope, "qwewqe@gma.com");
+        Assert.NotNull(user.Email);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
@@ -210,6 +212,7 @@ public class CompanyContextTest : TestLifetime
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
         var user = await UserFixture.User(scope, "qwewqe@gma.com");
+        Assert.NotNull(user.Email);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
@@ -234,6 +237,7 @@ public class CompanyContextTest : TestLifetime
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
         var user = await UserFixture.User(scope, "qwewqe@gma.com");
+        Assert.NotNull(user.Email);
 
         await companyContext.CreateCompanyAccessInvitation(company, access.Role, new(user.Email));
 
@@ -287,6 +291,7 @@ public class CompanyContextTest : TestLifetime
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
         var user = await UserFixture.User(scope, "qwewqe@gma.com");
+        Assert.NotNull(user.Email);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
@@ -309,6 +314,7 @@ public class CompanyContextTest : TestLifetime
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
         var user = await UserFixture.User(scope, "qwewqe@gma.com");
+        Assert.NotNull(user.Email);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,

@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Types;
 using Beloyal.API.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,7 @@ public static class CompanyFixture
 
     await companyContext.CreateWhiteCompany(new(tin), DateTimeOffset.UtcNow.AddMonths(1));
 
-    var user = await userContext.EnsureUser(new(email));
+    var user = await userContext.EnsureUser(new Email(email));
     (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
       user,
       new(tin)
