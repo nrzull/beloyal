@@ -121,6 +121,14 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<decimal>("CashbackPercent")
+                        .HasColumnType("numeric")
+                        .HasColumnName("cashback_percent");
+
+                    b.Property<decimal>("CashbackThreshold")
+                        .HasColumnType("numeric")
+                        .HasColumnName("cashback_threshold");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -318,10 +326,6 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("max_bot_id");
 
-                    b.Property<decimal>("Points")
-                        .HasColumnType("numeric")
-                        .HasColumnName("points");
-
                     b.Property<Guid?>("TgBotId")
                         .HasColumnType("uuid")
                         .HasColumnName("tg_bot_id");
@@ -347,86 +351,6 @@ namespace Beloyal.API.Migrations
                         .HasDatabaseName("ix_customers_user_id_company_id");
 
                     b.ToTable("customers", (string)null);
-                });
-
-            modelBuilder.Entity("Beloyal.API.Items.Item", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("company_id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("ExternalId")
-                        .HasColumnType("text")
-                        .HasColumnName("external_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("parent_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_items");
-
-                    b.HasIndex("CompanyId")
-                        .HasDatabaseName("ix_items_company_id");
-
-                    b.HasIndex("ParentId")
-                        .HasDatabaseName("ix_items_parent_id");
-
-                    b.ToTable("items", (string)null);
-                });
-
-            modelBuilder.Entity("Beloyal.API.Items.ItemGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("company_id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("ExternalId")
-                        .HasColumnType("text")
-                        .HasColumnName("external_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("parent_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_item_groups");
-
-                    b.HasIndex("CompanyId")
-                        .HasDatabaseName("ix_item_groups_company_id");
-
-                    b.HasIndex("ParentId")
-                        .HasDatabaseName("ix_item_groups_parent_id");
-
-                    b.ToTable("item_groups", (string)null);
                 });
 
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>
@@ -736,44 +660,6 @@ namespace Beloyal.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Beloyal.API.Items.Item", b =>
-                {
-                    b.HasOne("Beloyal.API.Companies.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_items_companies_company_id");
-
-                    b.HasOne("Beloyal.API.Items.ItemGroup", "Parent")
-                        .WithMany("Items")
-                        .HasForeignKey("ParentId")
-                        .HasConstraintName("fk_items_item_groups_parent_id");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Beloyal.API.Items.ItemGroup", b =>
-                {
-                    b.HasOne("Beloyal.API.Companies.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_item_groups_companies_company_id");
-
-                    b.HasOne("Beloyal.API.Items.ItemGroup", "Parent")
-                        .WithMany("Groups")
-                        .HasForeignKey("ParentId")
-                        .HasConstraintName("fk_item_groups_item_groups_parent_id");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Parent");
-                });
-
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
@@ -851,13 +737,6 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
                 {
                     b.Navigation("ShopAccesses");
-                });
-
-            modelBuilder.Entity("Beloyal.API.Items.ItemGroup", b =>
-                {
-                    b.Navigation("Groups");
-
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>

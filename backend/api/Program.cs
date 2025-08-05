@@ -2,7 +2,6 @@ using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
-using Beloyal.API.Items;
 using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
@@ -35,7 +34,6 @@ public class Program
     builder.Services.AddScoped<AdminContext>();
     builder.Services.AddScoped<CompanyContext>();
     builder.Services.AddScoped<ShopContext>();
-    builder.Services.AddScoped<ItemContext>();
     builder.Services.AddScoped<TgContext>();
     builder.Services.AddScoped<CustomerContext>();
 
