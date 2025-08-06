@@ -2,6 +2,7 @@ using System.Globalization;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Bonuses;
+using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Messengers;
@@ -29,6 +30,9 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<MaxBot> MaxBots { get; set; }
   public DbSet<TgBot> TgBots { get; set; }
   public DbSet<BonusRecord> BonusRecords { get; set; }
+  public DbSet<Chat> Chats { get; set; }
+  public DbSet<ChatFrame> ChatFrames { get; set; }
+  public DbSet<ChatMessage> ChatMessages { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -234,6 +238,61 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasOne(v => v.Shop)
         .WithMany()
         .HasForeignKey(v => v.ShopId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<Chat>(chat =>
+    {
+      chat.HasOne(v => v.Company)
+        .WithMany()
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      chat.HasOne(v => v.Customer)
+        .WithMany()
+        .HasForeignKey(v => v.CustomerId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<ChatFrame>(chatFrame =>
+    {
+      chatFrame
+        .HasOne(v => v.Chat)
+        .WithMany(v => v.Frames)
+        .HasForeignKey(v => v.ChatId)
+        .HasPrincipalKey(v => v.Id);
+
+      chatFrame
+        .HasOne(v => v.Agent)
+        .WithMany()
+        .HasForeignKey(v => v.AgentId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<ChatMessage>(chatMessage =>
+    {
+      chatMessage
+        .HasOne(v => v.Customer)
+        .WithMany()
+        .HasForeignKey(v => v.CustomerId)
+        .HasPrincipalKey(v => v.Id);
+
+      chatMessage
+        .HasOne(v => v.Agent)
+        .WithMany()
+        .HasForeignKey(v => v.AgentId)
+        .HasPrincipalKey(v => v.Id);
+
+      chatMessage
+        .HasOne(v => v.Frame)
+        .WithMany(v => v.Messages)
+        .HasForeignKey(v => v.FrameId)
+        .HasPrincipalKey(v => v.Id);
+
+      chatMessage
+        .HasOne(v => v.Company)
+        .WithMany()
+        .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
     });
   }

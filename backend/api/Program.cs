@@ -1,6 +1,7 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Bonuses;
+using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Messengers;
@@ -38,6 +39,7 @@ public class Program
     builder.Services.AddScoped<TgContext>();
     builder.Services.AddScoped<CustomerContext>();
     builder.Services.AddScoped<BonusContext>();
+    builder.Services.AddScoped<ChatContext>();
 
     builder.UseAuthEndpoints();
     builder.UseSelfEndpoints();
