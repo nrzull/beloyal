@@ -15,8 +15,11 @@ public class CompanyContextTest : TestLifetime
         var user = await UserFixture.User(scope);
         var companyContext = scope.Get<CompanyContext>();
         var tin = new Tin("0123456789");
+        var percent = new Percent(10);
 
-        await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+          companyContext.CreateCompany(user, tin, percent, percent)
+        );
 
         var whiteCompany = await companyContext.CreateWhiteCompany(
           tin,
@@ -25,7 +28,9 @@ public class CompanyContextTest : TestLifetime
 
         (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
           user,
-          tin
+          tin,
+          percent,
+          percent
         );
 
         whiteCompany = await companyContext.GetWhiteCompany(WhiteCompanyId.From(whiteCompany));
@@ -54,6 +59,7 @@ public class CompanyContextTest : TestLifetime
         var user = await UserFixture.User(scope);
         var companyContext = scope.Get<CompanyContext>();
         var tin = new Tin("0123456789");
+        var percent = new Percent(10);
 
         var whiteCompany = await companyContext.CreateWhiteCompany(
           tin,
@@ -62,11 +68,13 @@ public class CompanyContextTest : TestLifetime
 
         await companyContext.UpdateWhiteCompany(whiteCompany, DateTimeOffset.UtcNow.AddMonths(-2));
 
-        await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+          companyContext.CreateCompany(user, tin, percent, percent)
+        );
 
         await companyContext.UpdateWhiteCompany(whiteCompany, DateTimeOffset.UtcNow.AddYears(1));
 
-        await companyContext.CreateCompany(user, tin);
+        await companyContext.CreateCompany(user, tin, percent, percent);
       }
     );
 
@@ -78,6 +86,7 @@ public class CompanyContextTest : TestLifetime
         var user = await UserFixture.User(scope);
         var companyContext = scope.Get<CompanyContext>();
         var tin = new Tin("0123456789");
+        var percent = new Percent(10);
 
         var whiteCompany = await companyContext.CreateWhiteCompany(
           tin,
@@ -86,7 +95,9 @@ public class CompanyContextTest : TestLifetime
 
         await companyContext.RemoveWhiteCompany(WhiteCompanyId.From(whiteCompany));
 
-        await Assert.ThrowsAnyAsync<Exception>(() => companyContext.CreateCompany(user, tin));
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+          companyContext.CreateCompany(user, tin, percent, percent)
+        );
       }
     );
 

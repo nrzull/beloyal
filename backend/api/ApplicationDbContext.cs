@@ -1,6 +1,7 @@
 using System.Globalization;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
+using Beloyal.API.Bonuses;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Messengers;
@@ -27,6 +28,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<Customer> Customers { get; set; }
   public DbSet<MaxBot> MaxBots { get; set; }
   public DbSet<TgBot> TgBots { get; set; }
+  public DbSet<BonusRecord> BonusRecords { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -212,6 +214,27 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithOne(v => v.MaxBot)
         .HasForeignKey<MaxBot>(v => v.CompanyId)
         .HasPrincipalKey<Company>(v => v.Id);
+    });
+
+    builder.Entity<BonusRecord>(bonusRecord =>
+    {
+      bonusRecord
+        .HasOne(v => v.Customer)
+        .WithMany()
+        .HasForeignKey(v => v.CustomerId)
+        .HasPrincipalKey(v => v.Id);
+
+      bonusRecord
+        .HasOne(v => v.Agent)
+        .WithMany()
+        .HasForeignKey(v => v.AgentId)
+        .HasPrincipalKey(v => v.Id);
+
+      bonusRecord
+        .HasOne(v => v.Shop)
+        .WithMany()
+        .HasForeignKey(v => v.ShopId)
+        .HasPrincipalKey(v => v.Id);
     });
   }
 

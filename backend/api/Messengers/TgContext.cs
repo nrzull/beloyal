@@ -11,19 +11,9 @@ public class TgContext(ApplicationDbContext dbContext) : IMessengerContext<TgBot
   public async Task<TgBot> CreateBot(Company company, string token)
   {
     var tgBot = new TgBot { Company = company, Token = token };
-    await EnsureClient(CompanyId.From(company), tgBot);
 
     dbContext.Add(tgBot);
-
-    try
-    {
-      await dbContext.SaveChangesAsync();
-    }
-    catch
-    {
-      DisconnectClient(CompanyId.From(company));
-      throw;
-    }
+    await dbContext.SaveChangesAsync();
 
     return tgBot;
   }

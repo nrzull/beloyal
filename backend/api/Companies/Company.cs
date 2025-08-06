@@ -11,8 +11,8 @@ public class Company
 
   public required string Tin { get; set; }
 
-  public decimal CashbackPercent { get; set; }
-  public decimal CashbackThreshold { get; set; }
+  public required decimal CashbackPercent { get; set; }
+  public required decimal CashbackThreshold { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

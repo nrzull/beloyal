@@ -73,7 +73,12 @@ public class CompanyContext(ApplicationDbContext dbContext)
   public async Task<Company> GetCompany(CompanyId id) =>
     await dbContext.Companies.SingleAsync(v => v.Id == id.Value);
 
-  public async Task<(Company, CompanyRole, CompanyAccess)> CreateCompany(User user, Tin tin)
+  public async Task<(Company, CompanyRole, CompanyAccess)> CreateCompany(
+    User user,
+    Tin tin,
+    Percent cashbackPercent,
+    Percent cashbackThreshold
+  )
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
       v.Tin == tin.Value && v.ExpiredAt > DateTimeOffset.UtcNow
@@ -83,7 +88,12 @@ public class CompanyContext(ApplicationDbContext dbContext)
       throw new Exception("company is not white");
     }
 
-    var company = new Company { Tin = tin.Value };
+    var company = new Company
+    {
+      Tin = tin.Value,
+      CashbackPercent = cashbackPercent.Value,
+      CashbackThreshold = cashbackThreshold.Value,
+    };
 
     var role = new CompanyRole
     {
