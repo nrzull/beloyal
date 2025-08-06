@@ -48,6 +48,8 @@ public class BonusContextTest : TestLifetime
 
         var subtractBonusRecord = await bonusContext.SubtractBonus(customer, sAccess, 75);
 
+        Assert.Equal(75, subtractBonusRecord.Income);
+
         Assert.Equal(BonusRecordStatus.NeedConfirmation, subtractBonusRecord.Status);
 
         Assert.IsType<string>(subtractBonusRecord.ConfirmationCode);
@@ -57,8 +59,12 @@ public class BonusContextTest : TestLifetime
           subtractBonusRecord.ConfirmationCode
         );
 
-        Assert.Equal(75, confirmedSubtractBonusRecord.Bonus);
         Assert.Equal(25, customer.Bonus);
+        Assert.Equal(75, confirmedSubtractBonusRecord.Bonus);
+        Assert.Equal(0, confirmedSubtractBonusRecord.Income);
+
+        Assert.Null(confirmedSubtractBonusRecord.ConfirmationCode);
+        Assert.Null(confirmedSubtractBonusRecord.ConfirmationCodeExpiredAt);
         Assert.Equal(BonusRecordStatus.Done, confirmedSubtractBonusRecord.Status);
       }
     );

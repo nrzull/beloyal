@@ -108,12 +108,17 @@ public class BonusContext(ApplicationDbContext dbContext)
 
     var incomeThreshold = bonusRecord.Income / 100 * bonusRecord.CashbackThreshold;
 
-    bonusRecord.Status = BonusRecordStatus.Done;
-    bonusRecord.Bonus =
+    var bonus =
       bonusRecord.Customer.Bonus > incomeThreshold ? incomeThreshold : bonusRecord.Customer.Bonus;
 
+    bonusRecord.Status = BonusRecordStatus.Done;
+    bonusRecord.Bonus = bonus;
+    bonusRecord.Income -= bonus;
+    bonusRecord.ConfirmationCode = null;
+    bonusRecord.ConfirmationCodeExpiredAt = null;
+
     dbContext.Update(bonusRecord.Customer);
-    bonusRecord.Customer.Bonus -= bonusRecord.Bonus;
+    bonusRecord.Customer.Bonus -= bonus;
 
     await dbContext.SaveChangesAsync();
 
