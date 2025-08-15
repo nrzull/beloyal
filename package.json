@@ -3,5 +3,10 @@
   "engines": {
     "node": "22"
   },
-  "workspaces": []
+  "devDependencies": {
+    "concurrently": "9.2.0"
+  },
+  "workspaces": [
+    "frontend/office"
+  ]
 }

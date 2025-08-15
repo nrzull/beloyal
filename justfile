@@ -10,6 +10,9 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @db *args:
   cd backend/api && dotnet ef {{args}}
 
+@office *args:
+  cd frontend/office && {{args}}
+
 @devops:
   docker compose up -d
 
@@ -17,9 +20,13 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   dotnet restore
   npm ci
 
+@dev:
+  npx concurrently -n api,office "just api dotnet run" "just office npm run dev"
+
 @build:
   just api dotnet build
   just api-test dotnet build
+  just office npm run build
 
 @test:
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database drop --force
