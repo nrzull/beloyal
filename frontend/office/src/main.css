@@ -4,6 +4,20 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --color-grey-400: #dddddd;
+  --color-grey: var(--color-grey-400);
+
+  --color-primary: #0073ff;
+  --color-primary-hover: #1c82ff;
+  --box-shadow-card: 0 8px 16px rgba(0, 0, 0, 0.025);
+  --background-color: #fafafa;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box !important;
 }
 
 body {
@@ -17,4 +31,5 @@ body {
   height: inherit;
   width: inherit;
   overflow: hidden;
+  background-color: var(--background-color);
 }

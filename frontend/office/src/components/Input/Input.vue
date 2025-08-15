@@ -1,0 +1,37 @@
+<template>
+  <label :class="[$style.input, $style[`size-${size}`]]">
+    <input v-bind="$attrs" :class="$style.nativeInput" />
+  </label>
+</template>
+
+<script setup lang="ts">
+defineOptions({ inheritAttrs: false });
+
+const { size = "m" } = defineProps<{ size?: "m" }>();
+</script>
+
+<style module>
+:root {
+  --input-background-color: var(--background-color);
+}
+
+.input {
+  all: unset;
+  display: flex;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(0, 0, 0, 0.025);
+  background-color: var(--input-background-color);
+}
+
+.nativeInput {
+  all: unset;
+  width: 100%;
+  font-size: 14px;
+  height: 100%;
+}
+
+.size-m {
+  height: 40px;
+}
+</style>

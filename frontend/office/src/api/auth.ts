@@ -7,3 +7,5 @@ export const apiAuth = (params: { email: string }) =>
 
 export const apiAuthConfirm = (params: { email: string; code: string }) =>
   apiClient.post("/api/auth/confirm", params);
+
+export const apiAuthLogout = () => apiClient.post("/api/auth/logout");
