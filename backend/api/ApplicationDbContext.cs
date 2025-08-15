@@ -5,6 +5,7 @@ using Beloyal.API.Bonuses;
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Seeds;
 using Beloyal.API.Shops;
@@ -33,6 +34,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<Chat> Chats { get; set; }
   public DbSet<ChatFrame> ChatFrames { get; set; }
   public DbSet<ChatMessage> ChatMessages { get; set; }
+  public DbSet<Mailing> Mailings { get; set; }
+  public DbSet<MailingUnit> MailingUnits { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -244,7 +247,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     builder.Entity<Chat>(chat =>
     {
       chat.HasOne(v => v.Company)
-        .WithMany()
+        .WithMany(v => v.Chats)
         .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
 
@@ -293,6 +296,36 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasOne(v => v.Company)
         .WithMany()
         .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<Mailing>(mailing =>
+    {
+      mailing
+        .HasOne(v => v.Company)
+        .WithMany(v => v.Mailings)
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      mailing
+        .HasOne(v => v.Shop)
+        .WithMany()
+        .HasForeignKey(v => v.ShopId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<MailingUnit>(mailingUnit =>
+    {
+      mailingUnit
+        .HasOne(v => v.Mailing)
+        .WithMany(v => v.Units)
+        .HasForeignKey(v => v.MailingId)
+        .HasPrincipalKey(v => v.Id);
+
+      mailingUnit
+        .HasOne(v => v.Customer)
+        .WithMany()
+        .HasForeignKey(v => v.CustomerId)
         .HasPrincipalKey(v => v.Id);
     });
   }

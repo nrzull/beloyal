@@ -1,4 +1,6 @@
+using Beloyal.API.Chats;
 using Beloyal.API.Customers;
+using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
 
@@ -21,4 +23,6 @@ public class Company
   public List<CompanyAccessInvitation> AccessInvitations { get; set; } = [];
   public List<Shop> Shops { get; set; } = [];
   public List<Customer> Customers { get; set; } = [];
+  public List<Mailing> Mailings { get; set; } = [];
+  public List<Chat> Chats { get; set; } = [];
 }

@@ -12,6 +12,12 @@ public class CustomerContext(
   CompanyContext companyContext
 )
 {
+  public async Task<List<Customer>> GetCustomers(CompanyId companyId) =>
+    await dbContext.Customers.Where(v => v.CompanyId == companyId.Value).ToListAsync();
+
+  public async Task<Customer?> GetCustomer(CustomerId customerId) =>
+    await dbContext.Customers.FirstOrDefaultAsync(v => v.Id == customerId.Value);
+
   public async Task<Customer> EnsureCustomer(TgBot tgBot, Phone phone)
   {
     var existing = await dbContext

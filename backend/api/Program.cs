@@ -4,6 +4,7 @@ using Beloyal.API.Bonuses;
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
@@ -40,6 +41,7 @@ public class Program
     builder.Services.AddScoped<CustomerContext>();
     builder.Services.AddScoped<BonusContext>();
     builder.Services.AddScoped<ChatContext>();
+    builder.Services.AddScoped<MailingContext>();
 
     builder.UseAuthEndpoints();
     builder.UseSelfEndpoints();

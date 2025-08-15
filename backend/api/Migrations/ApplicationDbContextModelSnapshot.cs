@@ -554,6 +554,81 @@ namespace Beloyal.API.Migrations
                     b.ToTable("customers", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("ShopId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shop_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_mailings");
+
+                    b.HasIndex("CompanyId")
+                        .HasDatabaseName("ix_mailings_company_id");
+
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_mailings_shop_id");
+
+                    b.ToTable("mailings", (string)null);
+                });
+
+            modelBuilder.Entity("Beloyal.API.Mailings.MailingUnit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<Guid>("MailingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("mailing_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_mailing_units");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_mailing_units_customer_id");
+
+                    b.HasIndex("MailingId")
+                        .HasDatabaseName("ix_mailing_units_mailing_id");
+
+                    b.ToTable("mailing_units", (string)null);
+                });
+
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>
                 {
                     b.Property<Guid>("Id")
@@ -782,7 +857,7 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
-                        .WithMany()
+                        .WithMany("Chats")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -960,6 +1035,46 @@ namespace Beloyal.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.Company", "Company")
+                        .WithMany("Mailings")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_mailings_companies_company_id");
+
+                    b.HasOne("Beloyal.API.Shops.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .HasConstraintName("fk_mailings_shops_shop_id");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Mailings.MailingUnit", b =>
+                {
+                    b.HasOne("Beloyal.API.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_mailing_units_customers_customer_id");
+
+                    b.HasOne("Beloyal.API.Mailings.Mailing", "Mailing")
+                        .WithMany("Units")
+                        .HasForeignKey("MailingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_mailing_units_mailings_mailing_id");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Mailing");
+                });
+
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
@@ -1033,7 +1148,11 @@ namespace Beloyal.API.Migrations
 
                     b.Navigation("Accesses");
 
+                    b.Navigation("Chats");
+
                     b.Navigation("Customers");
+
+                    b.Navigation("Mailings");
 
                     b.Navigation("MaxBot");
 
@@ -1047,6 +1166,11 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
                 {
                     b.Navigation("ShopAccesses");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>
+                {
+                    b.Navigation("Units");
                 });
 
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>
