@@ -31,7 +31,7 @@ if (self.value) {
   width: 375px;
   display: grid;
   gap: 12px;
-  background-color: #fff;
+  background-color: var(--color-white);
   padding: 32px 24px;
   border-radius: 8px;
   box-shadow: var(--box-shadow-card);

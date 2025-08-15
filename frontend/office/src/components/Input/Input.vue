@@ -20,7 +20,7 @@ const { size = "m" } = defineProps<{ size?: "m" }>();
   display: flex;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid rgb(0, 0, 0, 0.025);
+  border: 1px solid rgb(0, 0, 0, 0.01);
   background-color: var(--input-background-color);
 }
 
@@ -29,6 +29,11 @@ const { size = "m" } = defineProps<{ size?: "m" }>();
   width: 100%;
   font-size: 14px;
   height: 100%;
+}
+
+.input:has(.nativeInput:not(:disabled):focus) {
+  border-color: var(--color-primary);
+  background-color: #fff;
 }
 
 .size-m {

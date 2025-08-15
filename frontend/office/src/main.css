@@ -1,17 +1,20 @@
 :root {
-  font-family: sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-white: #ffffff;
 
   --color-grey-400: #dddddd;
   --color-grey: var(--color-grey-400);
 
   --color-primary: #0073ff;
   --color-primary-hover: #1c82ff;
+
   --box-shadow-card: 0 8px 16px rgba(0, 0, 0, 0.025);
   --background-color: #fafafa;
+
+  font-family: sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 *,

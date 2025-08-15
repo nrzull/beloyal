@@ -40,7 +40,7 @@ const { size = "m", type = "primary" } = defineProps<{
 
 .type-primary {
   background-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .type-primary:not(:disabled):hover {
