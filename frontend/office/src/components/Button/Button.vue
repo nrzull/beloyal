@@ -23,10 +23,11 @@ const { size = "m", type = "primary" } = defineProps<{
   border-radius: 8px;
   font-size: 14px;
   border: 1px solid transparent;
+  transition: filter 0.2s ease;
 }
 
 .button:disabled {
-  filter: grayscale(1);
+  filter: grayscale(0.75);
 }
 
 .button:not(:disabled):hover {

@@ -1,6 +1,6 @@
 <template>
   <label :class="[$style.input, $style[`size-${size}`]]">
-    <input v-bind="$attrs" :class="$style.nativeInput" />
+    <input v-bind="$attrs" :class="$style.nativeInput" v-model="model" />
   </label>
 </template>
 
@@ -8,6 +8,8 @@
 defineOptions({ inheritAttrs: false });
 
 const { size = "m" } = defineProps<{ size?: "m" }>();
+
+const model = defineModel<any>();
 </script>
 
 <style module>

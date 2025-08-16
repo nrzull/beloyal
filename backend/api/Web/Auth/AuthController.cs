@@ -37,4 +37,11 @@ public class AuthController(IHostEnvironment env) : ControllerBase
       })(),
       _ => BadRequest(),
     };
+
+  [HttpGet("logout")]
+  public IActionResult Logout()
+  {
+    HttpContext.Response.Cookies.Delete(AuthContext.GetAccessTokenName());
+    return Ok();
+  }
 }
