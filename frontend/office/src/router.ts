@@ -36,6 +36,16 @@ export const router = createRouter({
       component: () => import("~/layouts/Default.vue"),
       children: [
         {
+          path: "white-companies",
+          children: [
+            {
+              path: "",
+              component: () => import("~/pages/white-companies.vue"),
+            },
+          ],
+        },
+
+        {
           path: "",
           component: () => import("~/pages/dashboard.vue"),
         },

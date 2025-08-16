@@ -1,12 +1,18 @@
 <template>
   <div :class="$style.default">
-    <div :class="$style.aside"></div>
+    <div :class="$style.aside">
+      <LayoutAside />
+    </div>
 
     <div :class="$style.main">
       <RouterView />
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import LayoutAside from "~/components/LayoutAside.vue";
+</script>
 
 <style module>
 .default {
