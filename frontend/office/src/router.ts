@@ -31,12 +31,12 @@ export const router = createRouter({
     },
 
     {
-      path: "",
+      path: "/",
       beforeEnter: [ensureSelf("/auth"), ensureCompanyAccess("/welcome")],
       component: () => import("~/layouts/Default.vue"),
       children: [
         {
-          path: "/",
+          path: "",
           component: () => import("~/pages/dashboard.vue"),
         },
       ],

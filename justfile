@@ -10,6 +10,11 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @db *args:
   cd backend/api && dotnet ef {{args}}
 
+@db-update:
+  just api dotnet ef database drop --force
+  just api dotnet ef database update
+  API_USE_SEEDING=1 just api dotnet ef database update
+
 @office *args:
   cd frontend/office && {{args}}
 
