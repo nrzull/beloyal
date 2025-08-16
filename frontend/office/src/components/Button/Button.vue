@@ -9,7 +9,7 @@
 <script setup lang="ts">
 const { size = "m", type = "primary" } = defineProps<{
   size?: "m";
-  type?: "primary";
+  type?: "primary" | "link-primary";
 }>();
 </script>
 
@@ -46,5 +46,14 @@ const { size = "m", type = "primary" } = defineProps<{
 
 .type-primary:not(:disabled):hover {
   background-color: var(--color-primary-hover);
+}
+
+.type-link-primary {
+  color: var(--color-primary);
+  padding: 0;
+}
+
+.type-link-primary:not(:disabled):hover {
+  color: var(--color-primary-hover);
 }
 </style>

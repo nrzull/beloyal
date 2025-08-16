@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { ensureCompanyAccess } from "~/middlewares/ensureCompanyAccess";
+import { ensureNoCompanyAccess } from "~/middlewares/ensureNoCompanyAccess";
 import { ensureSelf } from "~/middlewares/ensureSelf";
 
 export const router = createRouter({
@@ -12,8 +13,21 @@ export const router = createRouter({
 
     {
       path: "/welcome",
-      beforeEnter: [ensureSelf("/auth")],
-      component: () => import("~/pages/welcome.vue"),
+      beforeEnter: [ensureSelf("/auth"), ensureNoCompanyAccess("/")],
+      children: [
+        {
+          path: "company",
+          component: () => import("~/pages/welcome/company.vue"),
+        },
+        {
+          path: "invitations",
+          component: () => import("~/pages/welcome/invitations.vue"),
+        },
+        {
+          path: "",
+          component: () => import("~/pages/welcome.vue"),
+        },
+      ],
     },
 
     {

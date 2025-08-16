@@ -20,11 +20,13 @@ public class CreateCompanyEndpointTest : TestLifetime
         var tin = new Tin("1234567891");
         var percent = new Percent(10);
 
-        await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(user, tin, percent, percent));
+        var req = new CreateCompanyRequest(tin.Value, percent.Value, percent.Value);
+
+        await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(user, req));
 
         await companyContext.CreateWhiteCompany(tin, DateTimeOffset.UtcNow.AddDays(1));
 
-        Assert.IsType<CreateCompanyResponse.Ok>(await endpoint.Handle(user, tin, percent, percent));
+        Assert.IsType<CreateCompanyResponse.Ok>(await endpoint.Handle(user, req));
 
         Assert.Single(await companyContext.GetCompanyAccesses(UserId.From(user)));
       }

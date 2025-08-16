@@ -1,6 +1,7 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Users;
 using Beloyal.API.Web.Filters;
+using Beloyal.API.Web.Self.CreateCompany;
 using Beloyal.API.Web.Self.GetCompanyAccessInvitations;
 using Beloyal.API.Web.Self.GetSelf;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,18 @@ public class SelfController : ControllerBase
     await endpoint.Handle(user.Ensure()) switch
     {
       GetCompanyAccessInvitationsResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
+  [HttpPost("company")]
+  public async Task<IActionResult> CreateCompany(
+    [FromServices] CreateCompanyEndpoint endpoint,
+    [FromServices] User? user,
+    [FromBody] CreateCompanyRequest req
+  ) =>
+    await endpoint.Handle(user.Ensure(), req) switch
+    {
+      CreateCompanyResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
 }

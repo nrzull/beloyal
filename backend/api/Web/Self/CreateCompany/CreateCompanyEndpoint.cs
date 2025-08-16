@@ -6,14 +6,15 @@ namespace Beloyal.API.Web.Self.CreateCompany;
 
 public class CreateCompanyEndpoint(CompanyContext companyContext)
 {
-  public async Task<CreateCompanyResponse> Handle(
-    User user,
-    Tin tin,
-    Percent cashbackPercent,
-    Percent cashbackThreshold
-  )
+  public async Task<CreateCompanyResponse> Handle(User user, CreateCompanyRequest req)
   {
-    await companyContext.CreateCompany(user, tin, cashbackPercent, cashbackThreshold);
+    await companyContext.CreateCompany(
+      user,
+      new Tin(req.Tin),
+      new Percent(req.cashbackPercent),
+      new Percent(req.cashbackThreshold)
+    );
+
     return new CreateCompanyResponse.Ok();
   }
 }

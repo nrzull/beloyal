@@ -20,3 +20,9 @@ export const apiSelfGetCompanyAccessInvitations = () =>
       "/api/self/company-access-invitations"
     )
     .then((v) => v.data);
+
+export const apiSelfCreateCompany = (params: {
+  tin: string;
+  cashbackPercent: number;
+  cashbackThreshold: number;
+}) => apiClient.post("/api/self/company", params);

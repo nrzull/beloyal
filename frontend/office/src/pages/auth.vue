@@ -1,20 +1,16 @@
 <template>
   <div :class="$style.auth">
-    <div :class="$style.form">
+    <Card :class="$style.form">
       <template v-if="!expiredAt">
         <Input :disabled="isLoading" placeholder="E-mail" v-model="email" />
-        <Button :disabled="isLoading || !email" @click="sendEmail">
-          Получить код
-        </Button>
+        <Button :disabled="isLoading" @click="sendEmail"> Получить код </Button>
       </template>
       <template v-else>
         <Input disabled placeholder="E-mail" :model-value="email" />
         <Input :disabled="isLoading" placeholder="Код" v-model="code" />
-        <Button :disabled="isLoading || !code" @click="sendCode">
-          Отправить код
-        </Button>
+        <Button :disabled="isLoading" @click="sendCode"> Отправить код </Button>
       </template>
-    </div>
+    </Card>
   </div>
 </template>
 
@@ -26,6 +22,7 @@ import { apiAuthLogout, apiAuth, apiAuthConfirm } from "~/api/auth";
 import { computed, ref } from "vue";
 import { wait } from "~/composables/wait";
 import { useRouter } from "vue-router";
+import Card from "~/components/Card/Card.vue";
 
 if (self.value) {
   apiAuthLogout().finally(() => location.reload());
@@ -39,6 +36,10 @@ const email = ref();
 const isLoading = computed(() => wait.some([sendEmail, sendCode]));
 
 const sendEmail = async () => {
+  if (!email.value) {
+    return;
+  }
+
   try {
     wait.start(sendEmail);
 
@@ -53,6 +54,10 @@ const sendEmail = async () => {
 };
 
 const sendCode = async () => {
+  if (!code.value) {
+    return;
+  }
+
   try {
     wait.start(sendCode);
     await apiAuthConfirm({ email: email.value, code: code.value });
@@ -78,9 +83,5 @@ const sendCode = async () => {
   width: 375px;
   display: grid;
   gap: 12px;
-  background-color: var(--color-white);
-  padding: 32px 24px;
-  border-radius: 8px;
-  box-shadow: var(--box-shadow-card);
 }
 </style>

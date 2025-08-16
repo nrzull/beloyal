@@ -11,9 +11,9 @@ public class GetSelfEndpoint(AdminContext adminContext, CompanyContext companyCo
   {
     var adminAccess = await adminContext.GetAccess(UserId.From(user));
 
-    var companyAccess = accessToken.CompanyAccessId is Guid id
-      ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(id))
-      : null;
+    var companyAccess = accessToken?.CompanyAccessId is Guid g
+      ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))
+      : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
     var companyAccesses = await companyContext.GetCompanyAccesses(UserId.From(user));
 
