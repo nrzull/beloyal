@@ -256,6 +256,8 @@ public class CompanyContext(ApplicationDbContext dbContext)
   public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(Email email) =>
     await dbContext
       .CompanyAccessInvitations.Where(v => v.Email == email.Value)
+      .Include(v => v.Company)
+      .Include(v => v.Role)
       .OrderByDescending(v => v.UpdatedAt)
       .ToListAsync();
 

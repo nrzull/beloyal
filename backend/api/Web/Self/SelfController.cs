@@ -1,6 +1,7 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Users;
 using Beloyal.API.Web.Filters;
+using Beloyal.API.Web.Self.GetCompanyAccessInvitations;
 using Beloyal.API.Web.Self.GetSelf;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,17 @@ public class SelfController : ControllerBase
     await endpoint.Handle(user.Ensure(), accessToken!) switch
     {
       GetSelfResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
+  [HttpGet("company-access-invitations")]
+  public async Task<IActionResult> GetCompanyAccessInvitations(
+    [FromServices] GetCompanyAccessInvitationsEndpoint endpoint,
+    [FromServices] User? user
+  ) =>
+    await endpoint.Handle(user.Ensure()) switch
+    {
+      GetCompanyAccessInvitationsResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
 }

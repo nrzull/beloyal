@@ -4,7 +4,7 @@ public record CompanyAccessInvitationDTO(
   Guid Id,
   DateTimeOffset UpdatedAt,
   string Email,
-  CompanyAccessInvitationStatus Status,
+  string Status,
   CompanyDTO Company,
   CompanyRoleDTO Role
 )
@@ -14,7 +14,7 @@ public record CompanyAccessInvitationDTO(
       Id: v.Id,
       UpdatedAt: v.UpdatedAt,
       Email: v.Email,
-      Status: v.Status,
+      Status: v.Status.ToString(),
       Company: CompanyDTO.From(v.Company),
       Role: CompanyRoleDTO.From(v.Role)
     );
