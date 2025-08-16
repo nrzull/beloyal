@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.default">
     <div :class="$style.aside">
-      <LayoutAside />
+      <AsideMenu />
     </div>
 
     <div :class="$style.main">
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import LayoutAside from "~/components/LayoutAside.vue";
+import AsideMenu from "~/components/AsideMenu.vue";
 </script>
 
 <style module>

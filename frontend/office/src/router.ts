@@ -33,7 +33,7 @@ export const router = createRouter({
     {
       path: "/",
       beforeEnter: [ensureSelf("/auth"), ensureCompanyAccess("/welcome")],
-      component: () => import("~/layouts/Default.vue"),
+      component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
           path: "white-companies",

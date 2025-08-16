@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-const { size = "m", type = "primary" } = defineProps<{
-  size?: "m";
+const { size = "l", type = "primary" } = defineProps<{
+  size?: "l" | "m";
   type?: "primary" | "link-primary";
 }>();
 </script>
@@ -21,7 +21,7 @@ const { size = "m", type = "primary" } = defineProps<{
   align-items: center;
   gap: 8px;
   border-radius: 8px;
-  font-size: 14px;
+
   border: 1px solid transparent;
   transition: filter 0.2s ease;
 }
@@ -34,9 +34,16 @@ const { size = "m", type = "primary" } = defineProps<{
   cursor: pointer;
 }
 
-.size-m {
-  padding: 0 12px;
+.size-l {
+  padding: 0 16px;
   height: 40px;
+  font-size: 14px;
+}
+
+.size-m {
+  padding: 0 16px;
+  height: 32px;
+  font-size: 14px;
 }
 
 .type-primary {
