@@ -39,6 +39,10 @@ export const router = createRouter({
           path: "white-companies",
           children: [
             {
+              path: "new",
+              component: () => import("~/pages/white-companies/new.vue"),
+            },
+            {
               path: "",
               component: () => import("~/pages/white-companies.vue"),
             },

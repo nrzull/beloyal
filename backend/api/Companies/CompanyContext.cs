@@ -6,6 +6,9 @@ namespace Beloyal.API.Companies;
 
 public class CompanyContext(ApplicationDbContext dbContext)
 {
+  public async Task<List<WhiteCompany>> GetWhiteCompanies() =>
+    await dbContext.WhiteCompanies.Include(v => v.Company).ToListAsync();
+
   public async Task<WhiteCompany?> GetWhiteCompany(WhiteCompanyId id) =>
     await dbContext.WhiteCompanies.FirstOrDefaultAsync(v => v.Id == id.Value);
 
