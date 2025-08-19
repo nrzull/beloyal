@@ -13,7 +13,7 @@
 <style module>
 .page {
   display: grid;
-  gap: 8px;
+  gap: 24px;
 }
 
 .top {
