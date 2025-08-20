@@ -1,10 +1,11 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Types;
 
 namespace Beloyal.API.Users;
 
-public class User
+public class User : IEnsurable
 {
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

@@ -36,6 +36,16 @@ export const router = createRouter({
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
+          path: "company-accesses",
+          children: [
+            {
+              path: "",
+              component: () => import("~/pages/company-accesses.vue"),
+            },
+          ],
+        },
+
+        {
           path: "white-companies",
           children: [
             {

@@ -1,4 +1,5 @@
 using Beloyal.API.Web.CompanyAccesses.CreateAccess;
+using Beloyal.API.Web.CompanyAccesses.GetAccesses;
 using Beloyal.API.Web.CompanyAccesses.RemoveAccess;
 using Beloyal.API.Web.CompanyAccesses.UpdateAccess;
 
@@ -11,5 +12,6 @@ public static class CompanyAccessesExtensions
     builder.Services.AddScoped<CreateAccessEndpoint>();
     builder.Services.AddScoped<UpdateAccessEndpoint>();
     builder.Services.AddScoped<RemoveAccessEndpoint>();
+    builder.Services.AddScoped<GetAccessesEndpoint>();
   }
 }
