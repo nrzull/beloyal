@@ -1,4 +1,5 @@
 using Beloyal.API.Web.CompanyRoles.CreateRole;
+using Beloyal.API.Web.CompanyRoles.GetRoles;
 using Beloyal.API.Web.CompanyRoles.UpdateRole;
 
 namespace Beloyal.API.Web.CompanyRoles;
@@ -9,5 +10,6 @@ public static class CompanyRolesExtensions
   {
     builder.Services.AddScoped<CreateRoleEndpoint>();
     builder.Services.AddScoped<UpdateRoleEndpoint>();
+    builder.Services.AddScoped<GetRolesEndpoint>();
   }
 }
