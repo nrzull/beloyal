@@ -53,6 +53,10 @@ export const router = createRouter({
               component: () => import("~/pages/company-roles/new.vue"),
             },
             {
+              path: ":id",
+              component: () => import("~/pages/company-roles/_id.vue"),
+            },
+            {
               path: "",
               component: () => import("~/pages/company-roles.vue"),
             },

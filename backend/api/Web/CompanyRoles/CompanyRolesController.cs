@@ -1,7 +1,9 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Web.CompanyRoles.CreateRole;
 using Beloyal.API.Web.CompanyRoles.GetPermissions;
+using Beloyal.API.Web.CompanyRoles.GetRole;
 using Beloyal.API.Web.CompanyRoles.GetRoles;
+using Beloyal.API.Web.CompanyRoles.UpdateRole;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +26,19 @@ public class CompanyRolesController : ControllerBase
       _ => BadRequest(),
     };
 
+  [HttpGet("{id}")]
+  public async Task<IActionResult> GetRole(
+    [FromServices] GetRoleEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid roleId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), roleId) switch
+    {
+      GetRoleResponse.NotFound => NotFound(),
+      GetRoleResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
   [HttpPost]
   public async Task<IActionResult> CreateRole(
     [FromServices] CreateRoleEndpoint endpoint,
@@ -33,6 +48,18 @@ public class CompanyRolesController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
       CreateRoleResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
+  [HttpPatch("{id}")]
+  public async Task<IActionResult> UpdateRole(
+    [FromServices] UpdateRoleEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromBody] UpdateRoleRequest req
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), req) switch
+    {
+      UpdateRoleResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
 

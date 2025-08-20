@@ -1,5 +1,6 @@
 using Beloyal.API.Web.CompanyRoles.CreateRole;
 using Beloyal.API.Web.CompanyRoles.GetPermissions;
+using Beloyal.API.Web.CompanyRoles.GetRole;
 using Beloyal.API.Web.CompanyRoles.GetRoles;
 using Beloyal.API.Web.CompanyRoles.UpdateRole;
 
@@ -13,5 +14,6 @@ public static class CompanyRolesExtensions
     builder.Services.AddScoped<UpdateRoleEndpoint>();
     builder.Services.AddScoped<GetRolesEndpoint>();
     builder.Services.AddScoped<GetPermissionsEndpoint>();
+    builder.Services.AddScoped<GetRoleEndpoint>();
   }
 }
