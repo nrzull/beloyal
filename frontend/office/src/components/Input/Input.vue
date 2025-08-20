@@ -22,7 +22,7 @@ const model = defineModel<any>();
   display: flex;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid rgb(0, 0, 0, 0.01);
+  border: 1px solid rgb(0, 0, 0, 0.025);
   background-color: var(--input-background-color);
 }
 

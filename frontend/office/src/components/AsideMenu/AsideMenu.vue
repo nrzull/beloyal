@@ -128,6 +128,7 @@ const menu = computed(() =>
 
 <style module>
 .aside {
-  padding: 12px;
+  padding: 12px 0;
+  background-color: rgba(0, 0, 0, 0.025);
 }
 </style>

@@ -2,6 +2,9 @@
   <Page>
     <template #top>
       <PageHeading>Роли</PageHeading>
+      <Button size="m" @click="$router.push('/company-roles/new')">
+        Добавить роль
+      </Button>
     </template>
 
     <Table
@@ -30,6 +33,7 @@ import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
+import Button from "~/components/Button/Button.vue";
 
 const companyRoles = ref<CompanyRole[]>([]);
 

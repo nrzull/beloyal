@@ -49,6 +49,10 @@ export const router = createRouter({
           path: "company-roles",
           children: [
             {
+              path: "new",
+              component: () => import("~/pages/company-roles/new.vue"),
+            },
+            {
               path: "",
               component: () => import("~/pages/company-roles.vue"),
             },

@@ -9,7 +9,7 @@
 <script setup lang="ts">
 const { size = "l", type = "primary" } = defineProps<{
   size?: "l" | "m";
-  type?: "primary" | "link-primary";
+  type?: "primary" | "link-primary" | "outline-primary";
 }>();
 </script>
 
@@ -44,6 +44,11 @@ const { size = "l", type = "primary" } = defineProps<{
   padding: 0 16px;
   height: 32px;
   font-size: 14px;
+}
+
+.type-outline-primary {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .type-primary {
