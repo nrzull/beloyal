@@ -5,29 +5,31 @@
       :key="item.title"
       :to="item.link"
       custom
-      v-slot="{ navigate }"
+      v-slot="{ navigate, isActive, isExactActive }"
     >
-      <Button @click="navigate" type="link-primary">
+      <AsideMenuItem
+        @click="navigate"
+        :active="item.exact ? isExactActive : isActive"
+      >
         {{ item.title }}
-      </Button>
+      </AsideMenuItem>
     </RouterLink>
   </aside>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { RouteLocationRaw } from "vue-router";
 import { isAdmin, admin_white_companies_read } from "~/composables/self";
-import Button from "~/components/Button/Button.vue";
-
-type MenuItem = { link: RouteLocationRaw; title: string; available: boolean };
+import type { TAsideMenuItem } from "~/components/AsideMenu/types";
+import AsideMenuItem from "~/components/AsideMenu/AsideMenuItem.vue";
 
 const adminMenu = computed(() => {
-  const base: MenuItem[] = [
+  const base: TAsideMenuItem[] = [
     {
       link: "/",
       title: "Главная",
       available: true,
+      exact: true,
     },
 
     {
@@ -47,11 +49,12 @@ const adminMenu = computed(() => {
 });
 
 const companyMenu = computed(() => {
-  const base: MenuItem[] = [
+  const base: TAsideMenuItem[] = [
     {
       link: "/",
       title: "Главная",
       available: true,
+      exact: true,
     },
 
     {
@@ -125,5 +128,6 @@ const menu = computed(() =>
 
 <style module>
 .aside {
+  padding: 12px;
 }
 </style>

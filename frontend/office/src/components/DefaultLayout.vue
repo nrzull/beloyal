@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import AsideMenu from "~/components/AsideMenu.vue";
+import AsideMenu from "~/components/AsideMenu/AsideMenu.vue";
 </script>
 
 <style module>
@@ -30,7 +30,6 @@ import AsideMenu from "~/components/AsideMenu.vue";
   overflow-x: clip;
   display: flex;
   justify-content: center;
-  padding: 24px;
 }
 
 .main {

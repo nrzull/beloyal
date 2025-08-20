@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
 :root {
   --color-white: #ffffff;
 
@@ -7,7 +9,6 @@
   --color-primary: #0073ff;
   --color-primary-hover: #1c82ff;
 
-  --box-shadow-card: 0 8px 16px rgba(0, 0, 0, 0.025);
   --background-color: #fafafa;
 
   font-family: sans-serif;
@@ -21,6 +22,7 @@
 *::before,
 *::after {
   box-sizing: border-box !important;
+  font-family: Inter, sans-serif;
 }
 
 body {
