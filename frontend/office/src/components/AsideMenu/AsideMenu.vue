@@ -106,7 +106,7 @@ const companyMenu = computed(() => {
     },
 
     {
-      link: "/company-access-invititations",
+      link: "/company-access-invitations",
       title: "Приглашения",
       available: true,
     },

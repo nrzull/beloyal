@@ -46,6 +46,21 @@ export const router = createRouter({
         },
 
         {
+          path: "company-access-invitations",
+          children: [
+            {
+              path: "new",
+              component: () =>
+                import("~/pages/company-access-invitations/new.vue"),
+            },
+            {
+              path: "",
+              component: () => import("~/pages/company-access-invitations.vue"),
+            },
+          ],
+        },
+
+        {
           path: "company-roles",
           children: [
             {

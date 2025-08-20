@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новая роль</PageHeading>
+      <PageHeading>Редактирование роли</PageHeading>
     </template>
 
     <Card :class="$style.form">

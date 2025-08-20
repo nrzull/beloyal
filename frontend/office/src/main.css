@@ -3,11 +3,16 @@
 :root {
   --color-white: #ffffff;
 
+  --color-red-400: #ff3333;
+  --color-red: var(--color-red-400);
+
   --color-grey-400: #dddddd;
   --color-grey: var(--color-grey-400);
 
   --color-primary: #0073ff;
   --color-primary-hover: #1c82ff;
+
+  --color-error: var(--color-red);
 
   --background-color: #fafafa;
 
@@ -29,9 +34,11 @@ body {
   margin: 0;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 #app {
+  flex-flow: column;
   display: flex;
   height: inherit;
   width: inherit;
