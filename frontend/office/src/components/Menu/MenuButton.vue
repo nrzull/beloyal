@@ -15,6 +15,7 @@ defineProps<{ label: string; active: boolean }>();
   font-size: 15px;
   color: #111;
   text-decoration: none;
+  user-select: none;
 }
 
 .active {

@@ -19,23 +19,24 @@ import { admin_white_companies_read, isAdmin } from "~/composables/self";
 const adminMenu = computed(() => {
   const base: MenuItem[] = [
     {
+      type: "route",
       route: "/",
       label: "Главная",
-      type: "route",
+      exact: true,
     },
 
     {
+      type: "route",
       route: "/white-companies",
       label: "Белый список",
       available: admin_white_companies_read.value,
-      type: "route",
     },
 
     {
+      type: "route",
       route: "/auth",
       label: "Выйти",
       available: true,
-      type: "route",
     },
   ];
 
@@ -45,39 +46,39 @@ const adminMenu = computed(() => {
 const companyMenu = computed(() => {
   const base: MenuItem[] = [
     {
+      type: "route",
       route: "/",
       label: "Главная",
       available: true,
       exact: true,
-      type: "route",
     },
 
     {
+      type: "route",
       route: "/shops",
       label: "Торговые точки",
       available: true,
-      type: "route",
     },
 
     {
+      type: "route",
       route: "/promotions",
       label: "Акции",
       available: true,
-      type: "route",
     },
 
     {
+      type: "route",
       route: "/mailings",
       label: "Рассылки",
       available: true,
-      type: "route",
     },
 
     {
+      type: "route",
       route: "/chats",
       label: "Чаты",
       available: true,
-      type: "route",
     },
 
     {
@@ -86,40 +87,54 @@ const companyMenu = computed(() => {
       available: true,
       children: [
         {
+          type: "route",
           route: "/company-accesses",
           label: "Пользователи",
           available: true,
-          type: "route",
         },
 
         {
+          type: "route",
           route: "/company-roles",
           label: "Роли",
           available: true,
-          type: "route",
         },
 
         {
+          type: "route",
           route: "/company-access-invitations",
           label: "Приглашения",
           available: true,
-          type: "route",
         },
       ],
     },
 
     {
-      route: "/integrations",
+      type: "group",
       label: "Интеграции",
       available: true,
-      type: "route",
+      children: [
+        {
+          type: "route",
+          route: "/integrations/telegram",
+          label: "Telegram",
+          available: true,
+        },
+
+        {
+          type: "route",
+          route: "/integrations/max",
+          label: "Max",
+          available: true,
+        },
+      ],
     },
 
     {
+      type: "route",
       route: "/auth",
       label: "Выйти",
       available: true,
-      type: "route",
     },
   ];
 
