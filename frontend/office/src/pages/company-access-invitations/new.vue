@@ -5,10 +5,15 @@
     </template>
 
     <Card :class="$style.form">
-      <NInput placeholder="E-mail" v-model:value="email" />
+      <NInput
+        :disabled="isLoading"
+        placeholder="E-mail"
+        v-model:value="email"
+      />
 
       <NSelect
-        v-model="selectedRoleId"
+        :disabled="isLoading"
+        v-model:value="selectedRoleId"
         placeholder="Роль"
         clearable
         value-field="id"
@@ -16,7 +21,12 @@
         :options="companyRoles"
       />
 
-      <NButton type="primary">Пригласить</NButton>
+      <NButton
+        :disabled="isLoading"
+        type="primary"
+        @click="createCompanyAccessInvitation"
+        >Пригласить</NButton
+      >
     </Card>
   </Page>
 </template>
@@ -31,17 +41,30 @@ import { computed, ref } from "vue";
 import { wait } from "~/composables/wait";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "~/api/companyRoles/types";
+import { apiCompanyAccessInvitationsCreate } from "~/api/companyAccessInvitations";
+import { useRouter } from "vue-router";
 
 const isLoading = computed(() => wait.some([createCompanyAccessInvitation]));
-
+const router = useRouter();
 const email = ref<string>();
 const selectedRoleId = ref<string>();
 
 const companyRoles = ref<CompanyRole[]>([]);
 
 const createCompanyAccessInvitation = async () => {
+  if (!email.value || !selectedRoleId.value) {
+    return;
+  }
+
   try {
     wait.start(createCompanyAccessInvitation);
+
+    await apiCompanyAccessInvitationsCreate({
+      email: email.value,
+      roleId: selectedRoleId.value,
+    });
+
+    router.push("/company-access-invitations");
   } catch (e) {
     console.error(e);
   } finally {
