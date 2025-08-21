@@ -23,6 +23,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 @ci:
   dotnet restore
+  dotnet tool restore
   npm ci
 
 @dev:

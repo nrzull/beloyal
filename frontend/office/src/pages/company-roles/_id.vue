@@ -8,16 +8,17 @@
       <Input :disabled="isLoading" placeholder="Название" v-model="name" />
 
       <div :class="$style.permissions">
-        <Button
+        <NButton
           v-for="p in availablePermissions"
           :key="p"
-          size="m"
+          size="medium"
           :disabled="isLoading"
-          :type="isActive(p) ? 'primary' : 'outline-primary'"
+          :ghost="!isActive(p)"
+          type="primary"
           @click="togglePermission(p)"
         >
           {{ p }}
-        </Button>
+        </NButton>
       </div>
 
       <Button :disabled="isLoading" @click="updateRole">Сохранить</Button>
@@ -29,7 +30,7 @@
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Input from "~/components/Input/Input.vue";
-import Button from "~/components/Button/Button.vue";
+import { NButton } from "naive-ui";
 import { computed, ref } from "vue";
 import Card from "~/components/Card/Card.vue";
 import {

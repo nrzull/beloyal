@@ -101,7 +101,7 @@ const withValue = computed(() =>
 .input {
   all: unset;
   height: 100%;
-  font-size: 15px;
+  font-size: 14px;
   flex-grow: 1;
 }
 
@@ -113,17 +113,17 @@ const withValue = computed(() =>
   white-space: nowrap;
   user-select: none;
   pointer-events: none;
-  font-size: 15px;
+  font-size: 14px;
   opacity: 0.5;
 }
 
 :where(.withPlaceholder) .input {
   position: relative;
-  top: 20%;
+  top: 40%;
 }
 
 :where(.withValue, .isFocused) .placeholder {
-  top: 15%;
+  top: 20%;
   transform: translateY(-10%);
   font-size: 12px;
   font-weight: 500;

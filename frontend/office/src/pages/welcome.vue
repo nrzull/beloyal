@@ -1,18 +1,18 @@
 <template>
   <div :class="$style.welcome">
     <Card :class="$style.form">
-      <Button @click="$router.push('/welcome/company')">
+      <NButton @click="$router.push('/welcome/company')">
         Создать компанию
-      </Button>
-      <Button
+      </NButton>
+      <NButton
         :disabled="!invitations.length"
         @click="$router.push('/welcome/invitations')"
       >
         Посмотреть приглашения
-      </Button>
-      <Button type="link-primary" @click="$router.push('/auth')">
+      </NButton>
+      <NButton type="primary" ghost @click="$router.push('/auth')">
         Сменить учетную запись
-      </Button>
+      </NButton>
     </Card>
   </div>
 </template>
@@ -21,7 +21,7 @@
 import { ref } from "vue";
 import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
 import { apiSelfGetCompanyAccessInvitations } from "~/api/self";
-import Button from "~/components/Button/Button.vue";
+import { NButton } from "naive-ui";
 import Card from "~/components/Card/Card.vue";
 
 const invitations = ref<CompanyAccessInvitation[]>([]);

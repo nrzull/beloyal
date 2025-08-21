@@ -2,27 +2,34 @@
   <div :class="$style.auth">
     <Card :class="$style.form">
       <template v-if="!expiredAt">
-        <Input :disabled="isLoading" placeholder="E-mail" v-model="email" />
-        <Button :disabled="isLoading" @click="sendEmail"> Получить код </Button>
+        <NInput
+          :disabled="isLoading"
+          placeholder="E-mail"
+          v-model:value="email"
+        />
+        <NButton type="primary" :disabled="isLoading" @click="sendEmail">
+          Получить код
+        </NButton>
       </template>
       <template v-else>
-        <Input disabled placeholder="E-mail" :model-value="email" />
-        <Input :disabled="isLoading" placeholder="Код" v-model="code" />
-        <Button :disabled="isLoading" @click="sendCode"> Отправить код </Button>
+        <NInput disabled placeholder="E-mail" :value="email" />
+        <NInput :disabled="isLoading" placeholder="Код" v-model:value="code" />
+        <NButton :disabled="isLoading" @click="sendCode" type="primary">
+          Отправить код
+        </NButton>
       </template>
     </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import Button from "~/components/Button/Button.vue";
-import Input from "~/components/Input/Input.vue";
 import { self } from "~/composables/self";
 import { apiAuthLogout, apiAuth, apiAuthConfirm } from "~/api/auth";
 import { computed, ref } from "vue";
 import { wait } from "~/composables/wait";
 import { useRouter } from "vue-router";
 import Card from "~/components/Card/Card.vue";
+import { NInput, NButton } from "naive-ui";
 
 if (self.value) {
   apiAuthLogout().finally(() => location.reload());

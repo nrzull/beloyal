@@ -2,16 +2,17 @@
   <div :class="$style.company">
     <Card :class="$style.form">
       <Input :disabled="isLoading" placeholder="ИНН" v-model="tin" />
-      <Button :disabled="isLoading" @click="createCompany"
-        >Создать компанию</Button
+      <NButton :disabled="isLoading" @click="createCompany"
+        >Создать компанию</NButton
       >
-      <Button
+      <NButton
         :disabled="isLoading"
-        type="link-primary"
+        type="primary"
+        ghost
         @click="$router.push('/welcome')"
       >
         Назад
-      </Button>
+      </NButton>
     </Card>
   </div>
 </template>
@@ -19,7 +20,7 @@
 <script setup lang="ts">
 import Card from "~/components/Card/Card.vue";
 import Input from "~/components/Input/Input.vue";
-import Button from "~/components/Button/Button.vue";
+import { NButton } from "naive-ui";
 import { computed, ref } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
 import { wait } from "~/composables/wait";

@@ -2,15 +2,18 @@
   <Page>
     <template #top>
       <PageHeading>Приглашения</PageHeading>
-      <Button size="m" @click="$router.push('/company-access-invitations/new')">
+      <NButton
+        size="medium"
+        @click="$router.push('/company-access-invitations/new')"
+      >
         Создать приглашение
-      </Button>
+      </NButton>
     </template>
   </Page>
 </template>
 
 <script setup lang="ts">
+import { NButton } from "naive-ui";
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
-import Button from "~/components/Button/Button.vue";
 </script>
