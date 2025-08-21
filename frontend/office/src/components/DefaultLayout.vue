@@ -22,14 +22,6 @@ const adminMenu = computed(() => {
   const base: MenuItem[] = [
     {
       type: "route",
-      route: "/",
-      label: "Главная",
-      exact: true,
-      available: true,
-    },
-
-    {
-      type: "route",
       route: "/white-companies",
       label: "Белый список",
       available: admin_white_companies_read.value,
@@ -41,14 +33,6 @@ const adminMenu = computed(() => {
 
 const companyMenu = computed(() => {
   const base: MenuItem[] = [
-    {
-      type: "route",
-      route: "/",
-      label: "Главная",
-      available: true,
-      exact: true,
-    },
-
     {
       type: "route",
       route: "/shops",
@@ -84,6 +68,13 @@ const companyMenu = computed(() => {
       children: [
         {
           type: "route",
+          route: "/company-access-invitations",
+          label: "Приглашения",
+          available: true,
+        },
+
+        {
+          type: "route",
           route: "/company-accesses",
           label: "Пользователи",
           available: true,
@@ -93,13 +84,6 @@ const companyMenu = computed(() => {
           type: "route",
           route: "/company-roles",
           label: "Роли",
-          available: true,
-        },
-
-        {
-          type: "route",
-          route: "/company-access-invitations",
-          label: "Приглашения",
           available: true,
         },
       ],

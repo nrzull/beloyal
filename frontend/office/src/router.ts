@@ -94,7 +94,7 @@ export const router = createRouter({
 
         {
           path: "",
-          component: () => import("~/pages/dashboard.vue"),
+          component: () => import("~/pages/redirect.vue"),
         },
       ],
     },

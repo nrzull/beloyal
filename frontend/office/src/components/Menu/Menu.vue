@@ -7,7 +7,7 @@
         <MenuButton
           :label="item.label"
           :active="hasActiveChild(item)"
-          @click="expanded.set(item, !expanded.get(item))"
+          @click="expanded.set(item, true)"
         />
 
         <template v-if="expanded.get(item)">
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MenuButton from "~/components/Menu/MenuButton.vue";
 import MenuRouteButton from "~/components/Menu/MenuRouteButton.vue";
@@ -44,12 +44,12 @@ const hasActiveChild = (v: MenuGroupItem) =>
 
 const syncWithRoutes = () =>
   items.forEach((item) => {
-    if (item.type === "group" && hasActiveChild(item)) {
-      expanded.value.set(item, true);
+    if (item.type === "group") {
+      expanded.value.set(item, hasActiveChild(item));
     }
   });
 
-syncWithRoutes();
+watch(() => route.path, syncWithRoutes, { flush: "post", immediate: true });
 </script>
 
 <style module>
