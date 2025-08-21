@@ -31,7 +31,6 @@ import { computed, ref } from "vue";
 import { wait } from "~/composables/wait";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "~/api/companyRoles/types";
-import SelectInput from "~/components/SelectInput/SelectInput.vue";
 
 const isLoading = computed(() => wait.some([createCompanyAccessInvitation]));
 
