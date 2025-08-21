@@ -4,6 +4,7 @@
       <PageHeading>Приглашения</PageHeading>
       <NButton
         size="medium"
+        type="primary"
         @click="$router.push('/company-access-invitations/new')"
       >
         Создать приглашение

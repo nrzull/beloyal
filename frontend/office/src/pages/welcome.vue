@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.welcome">
     <Card :class="$style.form">
-      <NButton @click="$router.push('/welcome/company')">
+      <NButton type="primary" @click="$router.push('/welcome/company')">
         Создать компанию
       </NButton>
       <NButton

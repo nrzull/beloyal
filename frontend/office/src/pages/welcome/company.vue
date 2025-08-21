@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.company">
     <Card :class="$style.form">
-      <Input :disabled="isLoading" placeholder="ИНН" v-model="tin" />
-      <NButton :disabled="isLoading" @click="createCompany"
-        >Создать компанию</NButton
-      >
+      <NInput :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
+      <NButton type="primary" :disabled="isLoading" @click="createCompany">
+        Создать компанию
+      </NButton>
       <NButton
         :disabled="isLoading"
         type="primary"
@@ -19,8 +19,7 @@
 
 <script setup lang="ts">
 import Card from "~/components/Card/Card.vue";
-import Input from "~/components/Input/Input.vue";
-import { NButton } from "naive-ui";
+import { NButton, NInput } from "naive-ui";
 import { computed, ref } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
 import { wait } from "~/composables/wait";

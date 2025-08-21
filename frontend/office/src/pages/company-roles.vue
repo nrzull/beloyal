@@ -2,7 +2,11 @@
   <Page>
     <template #top>
       <PageHeading>Роли</PageHeading>
-      <NButton size="medium" @click="$router.push('/company-roles/new')">
+      <NButton
+        type="primary"
+        size="medium"
+        @click="$router.push('/company-roles/new')"
+      >
         Добавить роль
       </NButton>
     </template>

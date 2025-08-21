@@ -5,8 +5,8 @@
     </template>
 
     <Card :class="$style.form">
-      <Input :disabled="isLoading" placeholder="ИНН" v-model="tin" />
-      <NButton :disabled="isLoading" @click="createWhiteCompany">
+      <NInput :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
+      <NButton type="primary" :disabled="isLoading" @click="createWhiteCompany">
         Добавить
       </NButton>
     </Card>
@@ -17,8 +17,7 @@
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Card from "~/components/Card/Card.vue";
-import Input from "~/components/Input/Input.vue";
-import { NButton } from "naive-ui";
+import { NButton, NInput } from "naive-ui";
 import { computed, ref } from "vue";
 import { wait } from "~/composables/wait";
 import { apiWhiteCompaniesCreate } from "~/api/whiteCompanies";

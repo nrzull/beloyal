@@ -2,7 +2,11 @@
   <Page>
     <template #top>
       <PageHeading>Белый список</PageHeading>
-      <NButton size="medium" @click="$router.push('/white-companies/new')">
+      <NButton
+        type="primary"
+        size="medium"
+        @click="$router.push('/white-companies/new')"
+      >
         Добавить компанию
       </NButton>
     </template>

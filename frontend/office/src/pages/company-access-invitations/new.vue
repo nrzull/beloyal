@@ -5,20 +5,18 @@
     </template>
 
     <Card :class="$style.form">
-      <Input placeholder="E-mail" v-model="email" />
+      <NInput placeholder="E-mail" v-model:value="email" />
 
-      <SelectInput
+      <NSelect
         v-model="selectedRoleId"
-        :input="{ placeholder: 'Роль', withClear: true }"
-        :menu-list="{
-          items: companyRoles,
-          idPath: 'id',
-          valuePath: 'id',
-          labelPath: 'name',
-        }"
+        placeholder="Роль"
+        clearable
+        value-field="id"
+        label-field="name"
+        :options="companyRoles"
       />
 
-      <NButton>Пригласить</NButton>
+      <NButton type="primary">Пригласить</NButton>
     </Card>
   </Page>
 </template>
@@ -27,8 +25,8 @@
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Card from "~/components/Card/Card.vue";
-import Input from "~/components/Input/Input.vue";
-import { NButton } from "naive-ui";
+
+import { NButton, NInput, NSelect } from "naive-ui";
 import { computed, ref } from "vue";
 import { wait } from "~/composables/wait";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";

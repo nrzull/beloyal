@@ -5,7 +5,11 @@
     </template>
 
     <Card :class="$style.form">
-      <Input :disabled="isLoading" placeholder="Название" v-model="name" />
+      <NInput
+        :disabled="isLoading"
+        placeholder="Название"
+        v-model:value="name"
+      />
 
       <div :class="$style.permissions">
         <NButton
@@ -29,8 +33,7 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
-import Input from "~/components/Input/Input.vue";
-import { NButton } from "naive-ui";
+import { NButton, NInput } from "naive-ui";
 import { computed, ref } from "vue";
 import Card from "~/components/Card/Card.vue";
 import {
