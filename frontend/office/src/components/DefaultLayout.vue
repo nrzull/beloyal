@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.default">
     <div :class="$style.aside">
+      <Profile />
       <Menu :items="menu" />
     </div>
 
@@ -12,6 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import Profile from "~/components/Profile/Profile.vue";
 import Menu from "~/components/Menu/Menu.vue";
 import type { MenuItem } from "~/components/Menu/types";
 import { admin_white_companies_read, isAdmin } from "~/composables/self";
@@ -23,6 +25,7 @@ const adminMenu = computed(() => {
       route: "/",
       label: "Главная",
       exact: true,
+      available: true,
     },
 
     {
@@ -30,13 +33,6 @@ const adminMenu = computed(() => {
       route: "/white-companies",
       label: "Белый список",
       available: admin_white_companies_read.value,
-    },
-
-    {
-      type: "route",
-      route: "/auth",
-      label: "Выйти",
-      available: true,
     },
   ];
 
@@ -129,13 +125,6 @@ const companyMenu = computed(() => {
         },
       ],
     },
-
-    {
-      type: "route",
-      route: "/auth",
-      label: "Выйти",
-      available: true,
-    },
   ];
 
   return base.filter((v) => v.available);
@@ -161,7 +150,8 @@ const menu = computed(() =>
   overflow-y: auto;
   overflow-x: clip;
   display: flex;
-  justify-content: center;
+  flex-flow: column;
+  background-color: rgba(0, 0, 0, 0.025);
 }
 
 .main {

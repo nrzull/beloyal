@@ -55,7 +55,6 @@ syncWithRoutes();
 <style module>
 .menu {
   padding: 12px 0;
-  background-color: rgba(0, 0, 0, 0.025);
   height: auto;
   line-height: 1;
 }
