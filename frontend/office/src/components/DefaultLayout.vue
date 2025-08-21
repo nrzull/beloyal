@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.default">
     <div :class="$style.aside">
-      <AsideMenu />
+      <Menu :items="menu" />
     </div>
 
     <div :class="$style.main">
@@ -11,7 +11,124 @@
 </template>
 
 <script setup lang="ts">
-import AsideMenu from "~/components/AsideMenu/AsideMenu.vue";
+import { computed } from "vue";
+import Menu from "~/components/Menu/Menu.vue";
+import type { MenuItem } from "~/components/Menu/types";
+import { admin_white_companies_read, isAdmin } from "~/composables/self";
+
+const adminMenu = computed(() => {
+  const base: MenuItem[] = [
+    {
+      route: "/",
+      label: "Главная",
+      type: "route",
+    },
+
+    {
+      route: "/white-companies",
+      label: "Белый список",
+      available: admin_white_companies_read.value,
+      type: "route",
+    },
+
+    {
+      route: "/auth",
+      label: "Выйти",
+      available: true,
+      type: "route",
+    },
+  ];
+
+  return base.filter((v) => v.available);
+});
+
+const companyMenu = computed(() => {
+  const base: MenuItem[] = [
+    {
+      route: "/",
+      label: "Главная",
+      available: true,
+      exact: true,
+      type: "route",
+    },
+
+    {
+      route: "/shops",
+      label: "Торговые точки",
+      available: true,
+      type: "route",
+    },
+
+    {
+      route: "/promotions",
+      label: "Акции",
+      available: true,
+      type: "route",
+    },
+
+    {
+      route: "/mailings",
+      label: "Рассылки",
+      available: true,
+      type: "route",
+    },
+
+    {
+      route: "/chats",
+      label: "Чаты",
+      available: true,
+      type: "route",
+    },
+
+    {
+      type: "group",
+      label: "Персонал",
+      available: true,
+      children: [
+        {
+          route: "/company-accesses",
+          label: "Пользователи",
+          available: true,
+          type: "route",
+        },
+
+        {
+          route: "/company-roles",
+          label: "Роли",
+          available: true,
+          type: "route",
+        },
+
+        {
+          route: "/company-access-invitations",
+          label: "Приглашения",
+          available: true,
+          type: "route",
+        },
+      ],
+    },
+
+    {
+      route: "/integrations",
+      label: "Интеграции",
+      available: true,
+      type: "route",
+    },
+
+    {
+      route: "/auth",
+      label: "Выйти",
+      available: true,
+      type: "route",
+    },
+  ];
+
+  return base.filter((v) => v.available);
+});
+
+const menu = computed(() =>
+  isAdmin.value ? adminMenu.value : companyMenu.value
+);
 </script>
 
 <style module>

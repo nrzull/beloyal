@@ -25,7 +25,9 @@
         </NButton>
       </div>
 
-      <Button :disabled="isLoading" @click="updateRole">Сохранить</Button>
+      <NButton type="primary" :disabled="isLoading" @click="updateRole">
+        Сохранить
+      </NButton>
     </Card>
   </Page>
 </template>

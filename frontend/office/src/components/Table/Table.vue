@@ -111,8 +111,16 @@ a.row {
   user-select: none;
 }
 
-.row.clickable {
+a.row:hover {
+  background-color: #fafafa;
+}
+
+.clickable {
   cursor: pointer;
+}
+
+.clickable:hover {
+  background-color: #fafafa;
 }
 
 .cell {

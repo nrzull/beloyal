@@ -1,11 +1,11 @@
 <template>
   <div :class="[$style.asideMenuItem, { [$style.active]: active }]">
-    <slot></slot>
+    {{ label }}
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ active?: boolean }>();
+defineProps<{ label: string; active: boolean }>();
 </script>
 
 <style module>
@@ -14,6 +14,7 @@ defineProps<{ active?: boolean }>();
   cursor: pointer;
   font-size: 15px;
   color: #111;
+  text-decoration: none;
 }
 
 .active {
