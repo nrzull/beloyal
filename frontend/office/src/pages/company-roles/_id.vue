@@ -4,26 +4,13 @@
       <PageHeading>Редактирование роли</PageHeading>
     </template>
 
-    <Card :class="$style.form">
-      <NInput
-        :disabled="isLoading"
-        placeholder="Название"
-        v-model:value="name"
+    <Card class="v-space-24">
+      <RoleForm
+        :loading="isLoading"
+        v-model:name="name"
+        :available-permissions="availablePermissions"
+        v-model:selected-permissions="activePermissions"
       />
-
-      <div :class="$style.permissions">
-        <NButton
-          v-for="p in availablePermissions"
-          :key="p"
-          size="medium"
-          :disabled="isLoading"
-          :ghost="!isActive(p)"
-          type="primary"
-          @click="togglePermission(p)"
-        >
-          {{ p }}
-        </NButton>
-      </div>
 
       <NButton type="primary" :disabled="isLoading" @click="updateRole">
         Сохранить
@@ -35,7 +22,7 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
-import { NButton, NInput } from "naive-ui";
+import { NButton } from "naive-ui";
 import { computed, ref } from "vue";
 import Card from "~/components/Card/Card.vue";
 import {
@@ -45,6 +32,7 @@ import {
 } from "~/api/companyRoles";
 import { wait } from "~/composables/wait";
 import { useRoute, useRouter } from "vue-router";
+import RoleForm from "~/components/RoleForm/RoleForm.vue";
 
 const name = ref<string>();
 const availablePermissions = ref<string[]>([]);
@@ -54,13 +42,6 @@ const router = useRouter();
 const route = useRoute();
 
 const roleId = computed(() => route.params.id as string);
-
-const isActive = (v: string) => activePermissions.value.includes(v);
-
-const togglePermission = (v: string) =>
-  (activePermissions.value = activePermissions.value.includes(v)
-    ? activePermissions.value.filter((vv) => vv !== v)
-    : activePermissions.value.concat([v]));
 
 apiCompanyRolesGetPermissions().then(
   (v) => (availablePermissions.value = v.data)
@@ -93,16 +74,3 @@ const updateRole = async () => {
   }
 };
 </script>
-
-<style module>
-.form {
-  display: grid;
-  gap: 12px;
-}
-
-.permissions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-</style>

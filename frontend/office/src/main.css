@@ -46,3 +46,33 @@ body {
   overflow: hidden;
   background-color: var(--background-color);
 }
+
+.v-space-4 {
+  display: grid;
+  gap: 4px;
+}
+
+.v-space-8 {
+  display: grid;
+  gap: 8px;
+}
+
+.v-space-12 {
+  display: grid;
+  gap: 12px;
+}
+
+.v-space-16 {
+  display: grid;
+  gap: 16px;
+}
+
+.v-space-20 {
+  display: grid;
+  gap: 20px;
+}
+
+.v-space-24 {
+  display: grid;
+  gap: 24px;
+}
