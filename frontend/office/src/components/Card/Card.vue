@@ -1,11 +1,19 @@
 <template>
-  <div :class="[$style.card, { [$style.withPadding]: withPadding }]">
+  <div
+    :class="[
+      $style.card,
+      { [$style.withPadding]: withPadding, [$style.withShadow]: withShadow },
+    ]"
+  >
     <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-const { withPadding = true } = defineProps<{ withPadding?: boolean }>();
+const { withPadding = true, withShadow = true } = defineProps<{
+  withPadding?: boolean;
+  withShadow?: boolean;
+}>();
 </script>
 
 <style module>
@@ -16,10 +24,13 @@ const { withPadding = true } = defineProps<{ withPadding?: boolean }>();
 .card {
   background-color: var(--color-white);
   border-radius: 8px;
-  box-shadow: var(--card-box-shadow);
 }
 
 .withPadding {
   padding: 32px 24px;
+}
+
+.withShadow {
+  box-shadow: var(--card-box-shadow);
 }
 </style>

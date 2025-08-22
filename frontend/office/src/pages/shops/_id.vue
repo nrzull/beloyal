@@ -9,7 +9,7 @@
       </NBreadcrumb>
     </template>
 
-    <RouterView v-slot="{ Component }">
+    <RouterView v-if="shop" :shop="shop" v-slot="{ Component }">
       <component :is="Component">
         <template #tabs>
           <NTabs :value="$route.path" @update:value="$router.push($event)">

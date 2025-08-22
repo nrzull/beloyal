@@ -111,7 +111,8 @@ a.row {
   user-select: none;
 }
 
-a.row:hover {
+a.row:hover,
+.selected {
   background-color: #fafafa;
 }
 

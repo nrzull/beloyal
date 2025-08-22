@@ -62,4 +62,12 @@ public class ShopContext(ApplicationDbContext dbContext)
       .Where(v => v.ShopId == shopId.Value)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
+
+  public async Task<List<ShopAccess>> GetAccesses(CompanyId companyId, ShopId shopId) =>
+    await dbContext
+      .ShopAccesses.Include(v => v.CompanyAccess)
+      .ThenInclude(v => v.User)
+      .Where(v => v.ShopId == shopId.Value && v.CompanyAccess.CompanyId == companyId.Value)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
 }
