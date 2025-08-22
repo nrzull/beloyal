@@ -10,6 +10,12 @@ public class ShopContext(ApplicationDbContext dbContext)
       v.Id == shopId.Value && v.CompanyId == companyId.Value
     );
 
+  public async Task<List<Shop>> GetShops(CompanyId companyId) =>
+    await dbContext
+      .Shops.Where(v => v.CompanyId == companyId.Value)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
+
   public async Task<Shop> CreateShop(Company company, string name)
   {
     var shop = new Shop { Company = company, Name = name };

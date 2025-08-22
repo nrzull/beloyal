@@ -93,6 +93,24 @@ export const router = createRouter({
         },
 
         {
+          path: "shops",
+          children: [
+            {
+              path: "new",
+              component: () => import("~/pages/shops/new.vue"),
+            },
+            {
+              path: ":id",
+              component: () => import("~/pages/shops/_id.vue"),
+            },
+            {
+              path: "",
+              component: () => import("~/pages/shops.vue"),
+            },
+          ],
+        },
+
+        {
           path: "",
           component: () => import("~/pages/redirect.vue"),
         },

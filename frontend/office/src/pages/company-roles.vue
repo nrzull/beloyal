@@ -19,10 +19,6 @@
       ]"
       :route-fn="(v) => `/company-roles/${v.id}`"
     >
-      <template #id="{ item }">
-        {{ item.id }}
-      </template>
-
       <template #createdAt="{ item }">
         {{ formatDate(item.createdAt) }}
       </template>

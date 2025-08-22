@@ -9,6 +9,6 @@ const router = useRouter();
 if (isAdmin.value) {
   router.push("/white-companies");
 } else {
-  router.push("/company-accesses");
+  router.push("/shops");
 }
 </script>

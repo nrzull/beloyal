@@ -44,8 +44,8 @@ const hasActiveChild = (v: MenuGroupItem) =>
 
 const syncWithRoutes = () =>
   items.forEach((item) => {
-    if (item.type === "group") {
-      expanded.value.set(item, hasActiveChild(item));
+    if (item.type === "group" && hasActiveChild(item)) {
+      expanded.value.set(item, true);
     }
   });
 
