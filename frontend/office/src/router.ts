@@ -102,6 +102,18 @@ export const router = createRouter({
             {
               path: ":id",
               component: () => import("~/pages/shops/_id.vue"),
+              children: [
+                {
+                  path: "promotions",
+                  component: () => import("~/pages/shops/_id/promotions.vue"),
+                },
+
+                {
+                  path: "",
+                  component: () =>
+                    import("~/pages/shops/_id/company-accesses.vue"),
+                },
+              ],
             },
             {
               path: "",
