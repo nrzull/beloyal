@@ -39,6 +39,10 @@ export const router = createRouter({
           path: "company-accesses",
           children: [
             {
+              path: ":id",
+              component: () => import("~/pages/company-accesses/_id.vue"),
+            },
+            {
               path: "",
               component: () => import("~/pages/company-accesses.vue"),
             },

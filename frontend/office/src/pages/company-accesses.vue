@@ -10,6 +10,7 @@
         { key: 'email', title: 'E-mail' },
         { key: 'role', title: 'Роль' },
       ]"
+      :route-fn="(v) => `/company-accesses/${v.id}`"
     >
       <template #email="{ item }">
         {{ item.user?.email }}
