@@ -21,6 +21,13 @@ export const apiSelfGetCompanyAccessInvitations = () =>
     )
     .then((v) => v.data);
 
+export const apiSelfAcceptCompanyAccessInvitation = (params: {
+  companyAccessInvitationId: string;
+}) =>
+  apiClient.post(
+    `/api/self/company-access-invitations/${params.companyAccessInvitationId}/accept`
+  );
+
 export const apiSelfCreateCompany = (params: {
   tin: string;
   cashbackPercent: number;

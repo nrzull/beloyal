@@ -5,23 +5,41 @@ using Beloyal.API.Users;
 
 namespace Beloyal.API.Web.Self.GetSelf;
 
-public class GetSelfEndpoint(AdminContext adminContext, CompanyContext companyContext)
+public class GetSelfEndpoint(
+  AdminContext adminContext,
+  CompanyContext companyContext,
+  AuthContext authContext
+)
 {
-  public async Task<GetSelfResponse> Handle(User user, AccessToken accessToken)
+  public async Task<(EncodedAccessToken?, GetSelfResponse)> Handle(
+    User user,
+    AccessToken accessToken
+  )
   {
     var adminAccess = await adminContext.GetAccess(UserId.From(user));
 
-    var companyAccess = accessToken?.CompanyAccessId is Guid g
+    var companyAccess = accessToken.CompanyAccessId is Guid g
       ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))
-      : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
+      : null;
 
     var companyAccesses = await companyContext.GetCompanyAccesses(UserId.From(user));
 
-    return new GetSelfResponse.Ok(
-      User: UserDTO.From(user),
-      AdminAccess: adminAccess is { } ? AdminAccessDTO.From(adminAccess) : null,
-      CompanyAccess: companyAccess is { } ? CompanyAccessDTO.From(companyAccess) : null,
-      CompanyAccesses: companyAccesses.Select(CompanyAccessDTO.From).ToList()
+    EncodedAccessToken? newToken = default;
+    if (companyAccess is null)
+    {
+      companyAccess = (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
+
+      newToken = authContext.EncodeAccessToken(user, companyAccess);
+    }
+
+    return (
+      newToken,
+      new GetSelfResponse.Ok(
+        User: UserDTO.From(user),
+        AdminAccess: adminAccess is { } ? AdminAccessDTO.From(adminAccess) : null,
+        CompanyAccess: companyAccess is { } ? CompanyAccessDTO.From(companyAccess) : null,
+        CompanyAccesses: companyAccesses.Select(CompanyAccessDTO.From).ToList()
+      )
     );
   }
 }

@@ -1,6 +1,7 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Users;
 using Beloyal.API.Web.Filters;
+using Beloyal.API.Web.Self.AcceptCompanyAccessInvitation;
 using Beloyal.API.Web.Self.CreateCompany;
 using Beloyal.API.Web.Self.GetCompanyAccessInvitations;
 using Beloyal.API.Web.Self.GetSelf;
@@ -12,7 +13,7 @@ namespace Beloyal.API.Web.Self;
 [WithAuth]
 [WithUser]
 [Route("/api/self")]
-public class SelfController : ControllerBase
+public class SelfController(IHostEnvironment env) : ControllerBase
 {
   [HttpGet]
   [WithAccessToken]
@@ -23,7 +24,12 @@ public class SelfController : ControllerBase
   ) =>
     await endpoint.Handle(user.Ensure(), accessToken!) switch
     {
-      GetSelfResponse.Ok ok => Ok(ok),
+      (null, GetSelfResponse.Ok ok) => Ok(ok),
+      (EncodedAccessToken newToken, GetSelfResponse.Ok ok) => new Func<IActionResult>(() =>
+      {
+        HttpContext.SetAccessTokenCookie(newToken, env.IsProduction());
+        return Ok(ok);
+      })(),
       _ => BadRequest(),
     };
 
@@ -35,6 +41,18 @@ public class SelfController : ControllerBase
     await endpoint.Handle(user.Ensure()) switch
     {
       GetCompanyAccessInvitationsResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
+  [HttpPost("company-access-invitations/{id}/accept")]
+  public async Task<IActionResult> AcceptCompanyAccessInvitation(
+    [FromServices] AcceptCompanyAccessInvitationEndpoint endpoint,
+    [FromServices] User? user,
+    [FromRoute(Name = "id")] Guid companyAccessInvitationId
+  ) =>
+    await endpoint.Handle(user.Ensure(), new(companyAccessInvitationId)) switch
+    {
+      AcceptCompanyAccessInvitationResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
 
