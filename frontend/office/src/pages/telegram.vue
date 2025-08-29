@@ -13,7 +13,7 @@
 import { apiMessengersGetTgBot } from "~/api/messengers";
 import { computed, ref } from "vue";
 import type { TgBot } from "~/api/messengers/types";
-import NewPage from "~/pages/integrations/telegram/new.vue";
+import NewPage from "~/pages/telegram/new.vue";
 import { wait } from "~/composables/wait";
 
 const tgBot = ref<TgBot>();

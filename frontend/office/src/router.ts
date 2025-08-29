@@ -36,18 +36,12 @@ export const router = createRouter({
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
-          path: "integrations",
+          path: "telegram",
+          component: () => import("~/pages/telegram.vue"),
           children: [
             {
-              path: "telegram",
-              component: () => import("~/pages/integrations/telegram.vue"),
-              children: [
-                {
-                  path: "",
-                  component: () =>
-                    import("~/pages/integrations/telegram/_id.vue"),
-                },
-              ],
+              path: "",
+              component: () => import("~/pages/telegram/_id.vue"),
             },
           ],
         },

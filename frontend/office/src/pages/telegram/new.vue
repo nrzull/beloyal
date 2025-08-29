@@ -2,7 +2,7 @@
   <Page>
     <template #top>
       <NBreadcrumb>
-        <NBreadcrumbItem @click="$router.push('/integrations/telegram')">
+        <NBreadcrumbItem @click="$router.push('/telegram')">
           Telegram
         </NBreadcrumbItem>
         <NBreadcrumbItem>Новый бот</NBreadcrumbItem>

@@ -96,14 +96,14 @@ const companyMenu = computed(() => {
       children: [
         {
           type: "route",
-          route: "/integrations/telegram",
+          route: "/telegram",
           label: "Telegram",
           available: true,
         },
 
         {
           type: "route",
-          route: "/integrations/max",
+          route: "/max",
           label: "Max",
           available: true,
         },
