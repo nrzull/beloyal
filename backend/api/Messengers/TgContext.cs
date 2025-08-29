@@ -27,6 +27,9 @@ public class TgContext(ApplicationDbContext dbContext) : IMessengerContext<TgBot
     }
   }
 
+  public async Task<TgBot?> GetBot(CompanyId companyId) =>
+    await dbContext.TgBots.FirstOrDefaultAsync(v => v.CompanyId == companyId.Value);
+
   public async Task<TelegramBotClient> EnsureClient(CompanyId companyId, TgBot tgBot)
   {
     if (Pool.TryGetValue(companyId, out var existing))
