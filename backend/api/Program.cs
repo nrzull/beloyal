@@ -54,6 +54,8 @@ public class Program
     builder.UseShopsEndpoints();
     builder.UseMessengersEndpoints();
 
+    builder.UseTgBotHandlers();
+
     var app = builder.Build();
 
     app.UseCustomCors();

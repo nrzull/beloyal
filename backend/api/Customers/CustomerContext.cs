@@ -18,6 +18,11 @@ public class CustomerContext(
   public async Task<Customer?> GetCustomer(CustomerId customerId) =>
     await dbContext.Customers.FirstOrDefaultAsync(v => v.Id == customerId.Value);
 
+  public async Task<Customer?> GetCustomer(CompanyId companyId, UserId userId) =>
+    await dbContext
+      .Customers.Include(v => v.User)
+      .FirstOrDefaultAsync(v => v.CompanyId == companyId.Value && v.UserId == userId.Value);
+
   public async Task<Customer> EnsureCustomer(TgBot tgBot, Phone phone)
   {
     var existing = await dbContext

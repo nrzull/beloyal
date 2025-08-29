@@ -11,6 +11,9 @@ public class UserContext(ApplicationDbContext dbContext)
       .ThenInclude(v => v!.Role)
       .SingleAsync(v => v.Id == id.Value);
 
+  public async Task<User?> GetByTgUserId(TgUserId id) =>
+    await dbContext.Users.FirstOrDefaultAsync(v => v.TgUserId == id.Value);
+
   public async Task<User> EnsureUser(Email email)
   {
     var user = await dbContext.Users.Where(v => v.Email == email.Value).FirstOrDefaultAsync();
@@ -26,6 +29,16 @@ public class UserContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
 
     return user;
+  }
+
+  public async Task EnsureTgUserId(User user, TgUserId id)
+  {
+    if (user.TgUserId != id.Value)
+    {
+      dbContext.Update(user);
+      user.TgUserId = id.Value;
+      await dbContext.SaveChangesAsync();
+    }
   }
 
   public async Task<User> EnsureUser(Phone phone)
