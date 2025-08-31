@@ -46,6 +46,19 @@ export const router = createRouter({
           ],
         },
         {
+          path: "mailings",
+          children: [
+            {
+              path: "new",
+              component: () => import("~/pages/mailings/new.vue"),
+            },
+            {
+              path: "",
+              component: () => import("~/pages/mailings.vue"),
+            },
+          ],
+        },
+        {
           path: "company-accesses",
           children: [
             {

@@ -13,6 +13,13 @@ public class MailingContext(
   TgContext tgContext
 )
 {
+  public async Task<List<Mailing>> GetMailings(CompanyId companyId) =>
+    await dbContext
+      .Mailings.Where(v => v.CompanyId == companyId.Value)
+      .Include(v => v.Units)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
+
   public async Task<Mailing> CreateMailing(Company company, string content, Shop? shop = null)
   {
     var mailing = new Mailing
