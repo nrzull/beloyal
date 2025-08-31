@@ -9,7 +9,7 @@
       :data="promotions"
       :columns="[
         { key: 'name', title: 'Название' },
-        { key: 'createdAt', title: 'Добавлено' },
+        { key: 'createdAt', title: 'Создано' },
       ]"
     ></Table>
   </div>

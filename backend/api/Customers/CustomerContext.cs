@@ -15,6 +15,11 @@ public class CustomerContext(
   public async Task<List<Customer>> GetCustomers(CompanyId companyId) =>
     await dbContext.Customers.Where(v => v.CompanyId == companyId.Value).ToListAsync();
 
+  public async Task<List<Customer>> GetCustomers(CompanyId companyId, List<CustomerId> ids) =>
+    (await dbContext.Customers.Where(v => v.CompanyId == companyId.Value).ToListAsync())
+      .Where(v => ids.Any(vv => v.Id == vv.Value))
+      .ToList();
+
   public async Task<Customer?> GetCustomer(CustomerId customerId) =>
     await dbContext.Customers.FirstOrDefaultAsync(v => v.Id == customerId.Value);
 

@@ -1,5 +1,6 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Web.Filters;
+using Beloyal.API.Web.Mailings.CreateMailing;
 using Beloyal.API.Web.Mailings.GetMailings;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,18 @@ public class MailingsController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure()) switch
     {
       GetMailingsResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
+  [HttpPost]
+  public async Task<IActionResult> CreateMailing(
+    [FromServices] CreateMailingEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromBody] CreateMailingRequest req
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), req) switch
+    {
+      CreateMailingResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
 }

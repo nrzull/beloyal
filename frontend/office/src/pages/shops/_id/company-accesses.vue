@@ -11,7 +11,7 @@
       :data="shopAccesses"
       :columns="[
         { key: 'email', title: 'E-mail' },
-        { key: 'createdAt', title: 'Добавлено' },
+        { key: 'createdAt', title: 'Создано' },
       ]"
     >
       <template #email="{ item }">

@@ -20,26 +20,36 @@ public class MailingContext(
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
-  public async Task<Mailing> CreateMailing(Company company, string content, Shop? shop = null)
+  public async Task<Mailing> CreateMailing(
+    Company company,
+    string content,
+    bool withShops,
+    List<ShopId> shopIds
+  )
   {
-    var mailing = new Mailing
+    var mailing = new Mailing { Company = company, Content = content };
+
+    List<CustomerId> customerIds = [];
+
+    if (withShops && shopIds.Count > 0)
     {
-      Company = company,
-      Shop = shop,
-      Content = content,
-    };
+      foreach (var shopId in shopIds)
+      {
+        var bonuses = (
+          await dbContext.BonusRecords.Where(v => v.ShopId == shopId.Value).ToListAsync()
+        ).DistinctBy(v => v.CustomerId);
 
-    var customers = await customerContext.GetCustomers(CompanyId.From(company));
-
-    if (shop is { })
-    {
-      var bonuses = await dbContext
-        .BonusRecords.Where(v => v.ShopId == shop.Id)
-        .DistinctBy(v => v.CustomerId)
-        .ToListAsync();
-
-      customers = customers.Where(v => bonuses.Any(vv => vv.CustomerId == v.Id)).ToList();
+        customerIds = customerIds
+          .Concat(bonuses.Select(vv => CustomerId.From(vv.CustomerId)))
+          .ToList();
+      }
     }
+
+    customerIds = customerIds.DistinctBy(v => v.Value).ToList();
+
+    var customers = withShops
+      ? await customerContext.GetCustomers(CompanyId.From(company), customerIds)
+      : await customerContext.GetCustomers(CompanyId.From(company));
 
     mailing.Units = customers
       .Select(v => new MailingUnit { Mailing = mailing, Customer = v })
@@ -79,8 +89,7 @@ public class MailingContext(
 
     await dbContext.Entry(unit).Reference(v => v.Mailing).LoadAsync();
 
-    // TODO: send message
-    // await client.SendMessage(customer.User.TgUserId, unit.Mailing.Content);
+    await client.SendMessage(customer.User.TgUserId, unit.Mailing.Content);
 
     dbContext.Update(unit);
     unit.Status = MailingUnitStatus.Done;

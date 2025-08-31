@@ -54,6 +54,10 @@ import { wait } from "~/composables/wait";
 
 import { apiShopsGetAll } from "~/api/shops";
 import type { Shop } from "~/api/shops/types";
+import { useRouter } from "vue-router";
+import { apiMailingsCreate } from "~/api/mailings";
+
+const router = useRouter();
 
 const withShops = ref(true);
 const shops = ref<Shop[]>([]);
@@ -75,6 +79,14 @@ const createMailing = async () => {
 
   try {
     wait.start(createMailing);
+
+    await apiMailingsCreate({
+      text: text.value,
+      shopIds: selectedShopIds.value,
+      withShops: withShops.value,
+    });
+
+    router.push("/mailings");
   } catch (e) {
     console.error(e);
   } finally {

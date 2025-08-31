@@ -11,7 +11,7 @@
       :data="shops"
       :columns="[
         { key: 'name', title: 'Название' },
-        { key: 'createdAt', title: 'Добавлено' },
+        { key: 'createdAt', title: 'Создано' },
       ]"
       :route-fn="(v) => `/shops/${v.id}`"
     >
