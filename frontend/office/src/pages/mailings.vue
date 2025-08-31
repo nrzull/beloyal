@@ -20,7 +20,6 @@
         { key: 'cancelled', title: 'Отменено' },
         { key: 'total', title: 'Всего' },
       ]"
-      :route-fn="(v) => `/company-roles/${v.id}`"
     >
       <template #createdAt="{ item }">
         {{ formatDate(item.createdAt) }}
