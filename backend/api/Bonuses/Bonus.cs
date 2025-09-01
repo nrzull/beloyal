@@ -4,16 +4,16 @@ using Beloyal.API.Shops;
 
 namespace Beloyal.API.Bonuses;
 
-public class BonusRecord
+public class Bonus
 {
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-  public required BonusRecordType Type { get; set; }
-  public required BonusRecordStatus Status { get; set; }
+  public required BonusType Type { get; set; }
+  public required BonusStatus Status { get; set; }
 
-  public decimal Income { get; set; }
-  public decimal Bonus { get; set; }
+  public decimal Amount { get; set; }
+  public decimal CashIncome { get; set; }
   public decimal CashbackPercent { get; set; }
   public decimal CashbackThreshold { get; set; }
 

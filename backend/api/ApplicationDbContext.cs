@@ -30,7 +30,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<Customer> Customers { get; set; }
   public DbSet<MaxBot> MaxBots { get; set; }
   public DbSet<TgBot> TgBots { get; set; }
-  public DbSet<BonusRecord> BonusRecords { get; set; }
+  public DbSet<Bonus> Bonuses { get; set; }
   public DbSet<Chat> Chats { get; set; }
   public DbSet<ChatFrame> ChatFrames { get; set; }
   public DbSet<ChatMessage> ChatMessages { get; set; }
@@ -223,7 +223,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey<Company>(v => v.Id);
     });
 
-    builder.Entity<BonusRecord>(bonusRecord =>
+    builder.Entity<Bonus>(bonusRecord =>
     {
       bonusRecord
         .HasOne(v => v.Customer)
@@ -305,12 +305,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasOne(v => v.Company)
         .WithMany(v => v.Mailings)
         .HasForeignKey(v => v.CompanyId)
-        .HasPrincipalKey(v => v.Id);
-
-      mailing
-        .HasOne(v => v.Shop)
-        .WithMany()
-        .HasForeignKey(v => v.ShopId)
         .HasPrincipalKey(v => v.Id);
     });
 

@@ -114,7 +114,7 @@ namespace Beloyal.API.Migrations
                     b.ToTable("auth_email_ot_ps", (string)null);
                 });
 
-            modelBuilder.Entity("Beloyal.API.Bonuses.BonusRecord", b =>
+            modelBuilder.Entity("Beloyal.API.Bonuses.Bonus", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,9 +125,13 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("agent_id");
 
-                    b.Property<decimal>("Bonus")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("numeric")
-                        .HasColumnName("bonus");
+                        .HasColumnName("amount");
+
+                    b.Property<decimal>("CashIncome")
+                        .HasColumnType("numeric")
+                        .HasColumnName("cash_income");
 
                     b.Property<decimal>("CashbackPercent")
                         .HasColumnType("numeric")
@@ -153,10 +157,6 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
-                    b.Property<decimal>("Income")
-                        .HasColumnType("numeric")
-                        .HasColumnName("income");
-
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid")
                         .HasColumnName("shop_id");
@@ -170,18 +170,18 @@ namespace Beloyal.API.Migrations
                         .HasColumnName("type");
 
                     b.HasKey("Id")
-                        .HasName("pk_bonus_records");
+                        .HasName("pk_bonuses");
 
                     b.HasIndex("AgentId")
-                        .HasDatabaseName("ix_bonus_records_agent_id");
+                        .HasDatabaseName("ix_bonuses_agent_id");
 
                     b.HasIndex("CustomerId")
-                        .HasDatabaseName("ix_bonus_records_customer_id");
+                        .HasDatabaseName("ix_bonuses_customer_id");
 
                     b.HasIndex("ShopId")
-                        .HasDatabaseName("ix_bonus_records_shop_id");
+                        .HasDatabaseName("ix_bonuses_shop_id");
 
-                    b.ToTable("bonus_records", (string)null);
+                    b.ToTable("bonuses", (string)null);
                 });
 
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
@@ -511,9 +511,9 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<decimal>("Bonus")
+                    b.Property<decimal>("BonusAmount")
                         .HasColumnType("numeric")
-                        .HasColumnName("bonus");
+                        .HasColumnName("bonus_amount");
 
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid")
@@ -574,18 +574,11 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid?>("ShopId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("shop_id");
-
                     b.HasKey("Id")
                         .HasName("pk_mailings");
 
                     b.HasIndex("CompanyId")
                         .HasDatabaseName("ix_mailings_company_id");
-
-                    b.HasIndex("ShopId")
-                        .HasDatabaseName("ix_mailings_shop_id");
 
                     b.ToTable("mailings", (string)null);
                 });
@@ -828,24 +821,24 @@ namespace Beloyal.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Beloyal.API.Bonuses.BonusRecord", b =>
+            modelBuilder.Entity("Beloyal.API.Bonuses.Bonus", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.CompanyAccess", "Agent")
                         .WithMany()
                         .HasForeignKey("AgentId")
-                        .HasConstraintName("fk_bonus_records_company_accesses_agent_id");
+                        .HasConstraintName("fk_bonuses_company_accesses_agent_id");
 
                     b.HasOne("Beloyal.API.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_bonus_records_customers_customer_id");
+                        .HasConstraintName("fk_bonuses_customers_customer_id");
 
                     b.HasOne("Beloyal.API.Shops.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
-                        .HasConstraintName("fk_bonus_records_shops_shop_id");
+                        .HasConstraintName("fk_bonuses_shops_shop_id");
 
                     b.Navigation("Agent");
 
@@ -1044,14 +1037,7 @@ namespace Beloyal.API.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_mailings_companies_company_id");
 
-                    b.HasOne("Beloyal.API.Shops.Shop", "Shop")
-                        .WithMany()
-                        .HasForeignKey("ShopId")
-                        .HasConstraintName("fk_mailings_shops_shop_id");
-
                     b.Navigation("Company");
-
-                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("Beloyal.API.Mailings.MailingUnit", b =>

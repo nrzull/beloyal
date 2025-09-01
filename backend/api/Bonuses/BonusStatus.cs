@@ -1,6 +1,6 @@
 namespace Beloyal.API.Bonuses;
 
-public enum BonusRecordStatus
+public enum BonusStatus
 {
   NeedConfirmation,
   Done,

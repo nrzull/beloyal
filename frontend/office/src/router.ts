@@ -46,6 +46,15 @@ export const router = createRouter({
           ],
         },
         {
+          path: "chats",
+          children: [
+            {
+              path: "",
+              component: () => import("~/pages/chats.vue"),
+            },
+          ],
+        },
+        {
           path: "mailings",
           children: [
             {

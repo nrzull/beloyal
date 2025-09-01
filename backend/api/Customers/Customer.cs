@@ -9,7 +9,7 @@ public class Customer
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-  public decimal Bonus { get; set; }
+  public decimal BonusAmount { get; set; }
 
   public Guid UserId { get; set; }
   public required User User { get; set; }

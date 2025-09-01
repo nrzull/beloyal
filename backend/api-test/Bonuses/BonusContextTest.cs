@@ -24,7 +24,7 @@ public class BonusContextTest : TestLifetime
 
         var bonusRecord = await bonusContext.AddBonus(customer, sAccess, 1000);
 
-        Assert.Equal(100, customer.Bonus);
+        Assert.Equal(100, customer.BonusAmount);
       }
     );
 
@@ -44,28 +44,28 @@ public class BonusContextTest : TestLifetime
         var bonusContext = scope.Get<BonusContext>();
 
         var bonusRecord = await bonusContext.AddBonus(customer, sAccess, 1000);
-        Assert.Equal(100, customer.Bonus);
+        Assert.Equal(100, customer.BonusAmount);
 
         var subtractBonusRecord = await bonusContext.SubtractBonus(customer, sAccess, 75);
 
-        Assert.Equal(75, subtractBonusRecord.Income);
+        Assert.Equal(75, subtractBonusRecord.CashIncome);
 
-        Assert.Equal(BonusRecordStatus.NeedConfirmation, subtractBonusRecord.Status);
+        Assert.Equal(BonusStatus.NeedConfirmation, subtractBonusRecord.Status);
 
         Assert.IsType<string>(subtractBonusRecord.ConfirmationCode);
 
         var confirmedSubtractBonusRecord = await bonusContext.ConfirmSubtractBonus(
-          BonusRecordId.From(subtractBonusRecord),
+          BonusId.From(subtractBonusRecord),
           subtractBonusRecord.ConfirmationCode
         );
 
-        Assert.Equal(25, customer.Bonus);
-        Assert.Equal(75, confirmedSubtractBonusRecord.Bonus);
-        Assert.Equal(0, confirmedSubtractBonusRecord.Income);
+        Assert.Equal(25, customer.BonusAmount);
+        Assert.Equal(75, confirmedSubtractBonusRecord.Amount);
+        Assert.Equal(0, confirmedSubtractBonusRecord.CashIncome);
 
         Assert.Null(confirmedSubtractBonusRecord.ConfirmationCode);
         Assert.Null(confirmedSubtractBonusRecord.ConfirmationCodeExpiredAt);
-        Assert.Equal(BonusRecordStatus.Done, confirmedSubtractBonusRecord.Status);
+        Assert.Equal(BonusStatus.Done, confirmedSubtractBonusRecord.Status);
       }
     );
 }

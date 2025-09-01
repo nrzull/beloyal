@@ -36,7 +36,7 @@ public class MailingContext(
       foreach (var shopId in shopIds)
       {
         var bonuses = (
-          await dbContext.BonusRecords.Where(v => v.ShopId == shopId.Value).ToListAsync()
+          await dbContext.Bonuses.Where(v => v.ShopId == shopId.Value).ToListAsync()
         ).DistinctBy(v => v.CustomerId);
 
         customerIds = customerIds

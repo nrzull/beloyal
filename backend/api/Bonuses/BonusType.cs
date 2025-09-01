@@ -1,6 +1,6 @@
 namespace Beloyal.API.Bonuses;
 
-public enum BonusRecordType
+public enum BonusType
 {
   AddBonus,
   SubtractBonus,
