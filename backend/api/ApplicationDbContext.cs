@@ -293,6 +293,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey(v => v.Id);
 
       chatMessage
+        .HasOne(v => v.Chat)
+        .WithMany(v => v.Messages)
+        .HasForeignKey(v => v.ChatId)
+        .HasPrincipalKey(v => v.Id);
+
+      chatMessage
         .HasOne(v => v.Company)
         .WithMany()
         .HasForeignKey(v => v.CompanyId)

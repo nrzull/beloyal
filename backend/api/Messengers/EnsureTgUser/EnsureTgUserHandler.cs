@@ -9,7 +9,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace Beloyal.API.Messengers.EnsureTgUser;
 
 public class EnsureTgUserHandler(
-  TgContext tgContext,
+  IServiceScopeFactory sf,
   CustomerContext customerContext,
   UserContext userContext
 )
@@ -20,6 +20,9 @@ public class EnsureTgUserHandler(
     Message msg
   )
   {
+    await using var scope = sf.CreateAsyncScope();
+    var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
+
     if (msg.From is null || msg.From.IsBot)
     {
       return new EnsureTgUserResponse.InvalidMessage();

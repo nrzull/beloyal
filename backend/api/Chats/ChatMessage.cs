@@ -7,6 +7,7 @@ public class ChatMessage
 {
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+  public DateTimeOffset? ReadAt { get; set; }
 
   public string? Content { get; set; }
 
@@ -21,4 +22,7 @@ public class ChatMessage
 
   public Guid FrameId { get; set; }
   public required ChatFrame Frame { get; set; }
+
+  public Guid ChatId { get; set; }
+  public required Chat Chat { get; set; }
 }

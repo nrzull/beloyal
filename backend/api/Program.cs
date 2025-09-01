@@ -11,6 +11,7 @@ using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses;
 using Beloyal.API.Web.AdminRoles;
 using Beloyal.API.Web.Auth;
+using Beloyal.API.Web.Chats;
 using Beloyal.API.Web.CompanyAccesses;
 using Beloyal.API.Web.CompanyAccessInvitations;
 using Beloyal.API.Web.CompanyRoles;
@@ -55,6 +56,7 @@ public class Program
     builder.UseShopsEndpoints();
     builder.UseMessengersEndpoints();
     builder.UseMailingsEndpoints();
+    builder.UseChatsEndpoints();
 
     builder.UseTgBotHandlers();
 

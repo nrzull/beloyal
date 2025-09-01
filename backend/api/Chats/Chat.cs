@@ -15,4 +15,5 @@ public class Chat
   public required Customer Customer { get; set; }
 
   public List<ChatFrame> Frames { get; set; } = [];
+  public List<ChatMessage> Messages { get; set; } = [];
 }

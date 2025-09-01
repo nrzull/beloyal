@@ -1,3 +1,4 @@
+using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Messengers.EnsureTgUser;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,11 @@ using Telegram.Bot.Types.Enums;
 
 namespace Beloyal.API.Messengers;
 
-public class TgContext(ApplicationDbContext dbContext, IServiceScopeFactory sf)
-  : IMessengerContext<TgBot, TelegramBotClient>
+public class TgContext(
+  ApplicationDbContext dbContext,
+  ChatContext chatContext,
+  EnsureTgUserHandler ensureTgUserHandler
+) : IMessengerContext<TgBot, TelegramBotClient>
 {
   static Dictionary<CompanyId, TelegramBotClient> Pool { get; set; } = new() { };
 
@@ -66,8 +70,29 @@ public class TgContext(ApplicationDbContext dbContext, IServiceScopeFactory sf)
     var client = new TelegramBotClient(tgBot.Token);
     await client.DropPendingUpdates();
 
-    client.OnError += async (e, _) => await OnError(companyId, e);
-    client.OnMessage += async (msg, u) => await OnMessage(client, companyId, msg, u);
+    client.OnError += async (e, _) =>
+    {
+      try
+      {
+        await OnError(companyId, e);
+      }
+      catch (Exception error)
+      {
+        Console.WriteLine(error);
+      }
+    };
+
+    client.OnMessage += async (msg, u) =>
+    {
+      try
+      {
+        await OnMessage(client, companyId, msg, u);
+      }
+      catch (Exception error)
+      {
+        Console.WriteLine(error);
+      }
+    };
 
     Pool.Add(companyId, client);
 
@@ -87,31 +112,22 @@ public class TgContext(ApplicationDbContext dbContext, IServiceScopeFactory sf)
 
   async Task OnMessage(TelegramBotClient client, CompanyId companyId, Message msg, UpdateType _)
   {
-    try
+    if (await ensureTgUserHandler.Handle(client, companyId, msg) is not EnsureTgUserResponse.Ok ok)
     {
-      await using var scope = sf.CreateAsyncScope();
-
-      var ensureTgUserHandler = scope.ServiceProvider.GetRequiredService<EnsureTgUserHandler>();
-
-      if (
-        await ensureTgUserHandler.Handle(client, companyId, msg) is not EnsureTgUserResponse.Ok ok
-      )
-      {
-        return;
-      }
-
-      if (
-        (msg.Text is string { } && msg.Text.Contains("/start"))
-        || msg.Contact is { PhoneNumber: { } }
-      )
-      {
-        await OnCustomerStart(ok);
-        return;
-      }
+      return;
     }
-    catch (Exception e)
+    else if (msg.Text is not string { } text)
     {
-      Console.WriteLine(e);
+      return;
+    }
+    else if (text.Contains("/start"))
+    {
+      await OnCustomerStart(ok);
+    }
+    else
+    {
+      await chatContext.EnsureConversation(ok.Customer);
+      await chatContext.SendMessage(ok.Customer, text);
     }
   }
 

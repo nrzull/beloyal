@@ -273,6 +273,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("agent_id");
 
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("chat_id");
+
                     b.Property<Guid?>("CompanyId")
                         .HasColumnType("uuid")
                         .HasColumnName("company_id");
@@ -293,11 +297,18 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("frame_id");
 
+                    b.Property<DateTimeOffset?>("ReadAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("read_at");
+
                     b.HasKey("Id")
                         .HasName("pk_chat_messages");
 
                     b.HasIndex("AgentId")
                         .HasDatabaseName("ix_chat_messages_agent_id");
+
+                    b.HasIndex("ChatId")
+                        .HasDatabaseName("ix_chat_messages_chat_id");
 
                     b.HasIndex("CompanyId")
                         .HasDatabaseName("ix_chat_messages_company_id");
@@ -894,6 +905,13 @@ namespace Beloyal.API.Migrations
                         .HasForeignKey("AgentId")
                         .HasConstraintName("fk_chat_messages_company_accesses_agent_id");
 
+                    b.HasOne("Beloyal.API.Chats.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_chat_messages_chats_chat_id");
+
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
@@ -912,6 +930,8 @@ namespace Beloyal.API.Migrations
                         .HasConstraintName("fk_chat_messages_chat_frames_frame_id");
 
                     b.Navigation("Agent");
+
+                    b.Navigation("Chat");
 
                     b.Navigation("Company");
 
@@ -1121,6 +1141,8 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
                 {
                     b.Navigation("Frames");
+
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Beloyal.API.Chats.ChatFrame", b =>
