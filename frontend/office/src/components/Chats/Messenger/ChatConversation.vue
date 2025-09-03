@@ -66,9 +66,8 @@ onMounted(() => inputRef.value!.focus());
 
 <style module>
 .chatConversation {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-rows: calc(100vh - 200px) max-content;
   gap: 24px;
 }
 
@@ -83,5 +82,6 @@ onMounted(() => inputRef.value!.focus());
   flex-flow: column-reverse;
   height: 100%;
   gap: 8px;
+  overflow: auto;
 }
 </style>

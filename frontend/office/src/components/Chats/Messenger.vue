@@ -74,7 +74,4 @@ fetchChats();
   flex-flow: column;
   gap: 4px;
 }
-
-.conversation {
-}
 </style>
