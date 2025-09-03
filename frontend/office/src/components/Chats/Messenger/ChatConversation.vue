@@ -1,37 +1,51 @@
 <template>
-  <Card :with-shadow="false" :class="$style.chatConversation">
-    <div :class="$style.messages"></div>
-    <NInput
-      ref="input"
-      size="large"
-      type="textarea"
-      autosize
-      placeholder="Введите сообщение"
-      :loading="loading"
-      v-model:value="proxyInput"
-    >
-      <template #suffix>
-        <NButton
-          :type="input ? 'primary' : 'tertiary'"
-          size="small"
-          :disabled="!input || loading"
-        >
-          Отправить
-        </NButton>
-      </template>
-    </NInput>
-  </Card>
+  <div :class="$style.chatConversation">
+    <div :class="$style.messages">
+      <ChatMessage
+        v-for="message in messages"
+        :key="message.id"
+        :message="message"
+        :is-owner="message.agentId === self?.companyAccess?.id"
+      />
+    </div>
+    <div :class="$style.inputWrapper">
+      <NInput
+        ref="input"
+        size="large"
+        type="textarea"
+        autosize
+        placeholder="Введите сообщение"
+        :loading="loading"
+        :bordered="false"
+        v-model:value="proxyInput"
+      >
+        <template #suffix>
+          <NButton
+            :type="input ? 'primary' : 'tertiary'"
+            size="large"
+            :bordered="!!input"
+            :disabled="!input || loading"
+          >
+            Отправить
+          </NButton>
+        </template>
+      </NInput>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import Card from "~/components/Card/Card.vue";
 import { NInput, NButton } from "naive-ui";
-import type { Chat, ChatMessage } from "~/api/chats/types";
+import type { Chat, ChatMessage as TChatMessage } from "~/api/chats/types";
 import { computed, onMounted, useTemplateRef } from "vue";
+import ChatMessage from "~/components/Chats/Messenger/ChatMessage.vue";
+import { self } from "~/composables/self";
+
+self.value?.companyAccess?.id;
 
 const { input, chat } = defineProps<{
   chat: Chat;
-  messages: ChatMessage[];
+  messages: TChatMessage[];
   loading: boolean;
   input?: any;
 }>();
@@ -55,5 +69,19 @@ onMounted(() => inputRef.value!.focus());
   display: flex;
   flex-flow: column;
   justify-content: flex-end;
+  gap: 24px;
+}
+
+.inputWrapper {
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.messages {
+  display: flex;
+  flex-flow: column-reverse;
+  height: 100%;
+  gap: 8px;
 }
 </style>

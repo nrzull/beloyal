@@ -6,7 +6,7 @@
     <div :class="$style.top">
       <div :class="$style.sender">{{ chat.previewMessage.name }}</div>
       <div :class="$style.timestamp">
-        {{ formatTimestamp(chat.previewMessage.createdAt) }}
+        {{ formatMessageTimestamp(chat.previewMessage.createdAt) }}
       </div>
     </div>
 
@@ -18,15 +18,9 @@
 
 <script setup lang="ts">
 import type { Chat } from "~/api/chats/types";
-import { formatDistanceToNow, differenceInCalendarDays } from "date-fns";
-import { formatDate } from "~/utils/date";
+import { formatMessageTimestamp } from "~/utils/date";
 
 defineProps<{ chat: Chat; active?: boolean; loading: boolean }>();
-
-const formatTimestamp = (v: string) =>
-  differenceInCalendarDays(new Date(), v) > 0
-    ? formatDate(v)
-    : formatDistanceToNow(v);
 </script>
 
 <style module>

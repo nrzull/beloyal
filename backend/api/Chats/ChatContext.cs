@@ -55,7 +55,7 @@ public class ChatContext(ApplicationDbContext dbContext)
       .ThenInclude(v => v!.User)
       .ToListAsync();
 
-    return chats;
+    return chats.OrderDescending(new MessageCreatedAtComparer()).ToList();
   }
 
   public async Task<Chat> EnsureConversation(Customer customer)
