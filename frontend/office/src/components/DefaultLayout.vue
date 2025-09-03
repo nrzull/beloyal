@@ -143,5 +143,6 @@ const menu = computed(() =>
   overflow-y: auto;
   overflow-x: clip;
   padding: 24px;
+  height: 100%;
 }
 </style>

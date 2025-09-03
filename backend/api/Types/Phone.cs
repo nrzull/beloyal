@@ -9,6 +9,11 @@ public class Phone
   public Phone(string value)
   {
     Value = value;
+    if (!Value.StartsWith("+"))
+    {
+      Value = $"+{Value}";
+    }
+
     new Validator().ValidateAndThrow(this);
   }
 

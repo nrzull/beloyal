@@ -8,21 +8,15 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Beloyal.API.Messengers.EnsureTgUser;
 
-public class EnsureTgUserHandler(
-  IServiceScopeFactory sf,
-  CustomerContext customerContext,
-  UserContext userContext
-)
+public class EnsureTgUserHandler(CustomerContext customerContext, UserContext userContext)
 {
   public async Task<EnsureTgUserResponse> Handle(
+    TgBot tgBot,
     TelegramBotClient client,
     CompanyId companyId,
     Message msg
   )
   {
-    await using var scope = sf.CreateAsyncScope();
-    var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
-
     if (msg.From is null || msg.From.IsBot)
     {
       return new EnsureTgUserResponse.InvalidMessage();
@@ -32,12 +26,6 @@ public class EnsureTgUserHandler(
     if (uid is 0)
     {
       return new EnsureTgUserResponse.InvalidMessage();
-    }
-
-    var tgBot = await tgContext.GetBot(companyId);
-    if (tgBot is null)
-    {
-      return new EnsureTgUserResponse.InvalidTgBot();
     }
 
     var user = await userContext.GetByTgUserId(TgUserId.From(uid));

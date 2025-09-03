@@ -12,8 +12,10 @@
 
 <style module>
 .page {
-  display: grid;
+  display: flex;
+  flex-flow: column;
   gap: 24px;
+  height: inherit;
 }
 
 .top {

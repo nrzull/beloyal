@@ -112,7 +112,16 @@ public class TgContext(
 
   async Task OnMessage(TelegramBotClient client, CompanyId companyId, Message msg, UpdateType _)
   {
-    if (await ensureTgUserHandler.Handle(client, companyId, msg) is not EnsureTgUserResponse.Ok ok)
+    var bot = await GetBot(companyId);
+    if (bot is null)
+    {
+      return;
+    }
+
+    if (
+      await ensureTgUserHandler.Handle(bot, client, companyId, msg)
+      is not EnsureTgUserResponse.Ok ok
+    )
     {
       return;
     }
