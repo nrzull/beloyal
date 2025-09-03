@@ -43,64 +43,22 @@ public class ChatContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
-  public async Task<List<ChatMessage>> GetChatMessages(CompanyId companyId, ChatId chatId) =>
-    await dbContext
-      .ChatMessages.Include(v => v.Chat)
-      .Include(v => v.Agent)
-      .ThenInclude(v => v!.User)
-      .Include(v => v.Customer)
-      .ThenInclude(v => v!.User)
-      .Where(v => v.ChatId == chatId.Value && v.Chat.CompanyId == companyId.Value)
-      .OrderByDescending(v => v.CreatedAt)
-      .ToListAsync();
-
   public async Task<List<Chat>> GetChats(CompanyId companyId)
   {
-    List<Chat> chats = [];
-
-    foreach (
-      var chat in await dbContext.Chats.Where(v => v.CompanyId == companyId.Value).ToListAsync()
-    )
-    {
-      var frame = await dbContext
-        .ChatFrames.Where(v => v.ChatId == chat.Id)
-        .OrderByDescending(v => v.CreatedAt)
-        .FirstOrDefaultAsync();
-
-      if (frame is { })
-      {
-        var msg = await dbContext
-          .ChatMessages.Where(v => v.FrameId == frame.Id)
-          .OrderByDescending(v => v.CreatedAt)
-          .Include(v => v.Agent)
-          .ThenInclude(v => v!.User)
-          .Include(v => v.Customer)
-          .ThenInclude(v => v!.User)
-          .FirstOrDefaultAsync();
-
-        if (msg is { })
-        {
-          frame.Messages = [msg];
-          chat.Messages = [msg];
-        }
-
-        chat.Frames = [frame];
-      }
-
-      chats = [.. chats, chat];
-    }
+    var chats = await dbContext
+      .Chats.Where(v => v.CompanyId == companyId.Value)
+      .Include(v => v.Messages.OrderByDescending(vv => vv.CreatedAt).Take(1))
+      .ThenInclude(v => v.Customer)
+      .ThenInclude(v => v!.User)
+      .Include(v => v.Messages)
+      .ThenInclude(v => v.Agent)
+      .ThenInclude(v => v!.User)
+      .ToListAsync();
 
     return chats;
   }
 
-  public async Task<ChatFrame?> GetConversationFrame(Chat chat) =>
-    await dbContext.ChatFrames.FirstOrDefaultAsync(v =>
-      v.Status == ChatFrameStatus.Opened
-      && v.ChatId == chat.Id
-      && v.Type == ChatFrameType.Conversation
-    );
-
-  public async Task<(Chat, ChatFrame)> EnsureConversation(Customer customer)
+  public async Task<Chat> EnsureConversation(Customer customer)
   {
     var chat = await GetChat(CustomerId.From(customer));
     if (chat is null)
@@ -111,29 +69,15 @@ public class ChatContext(ApplicationDbContext dbContext)
       await dbContext.SaveChangesAsync();
     }
 
-    var frame = await GetConversationFrame(chat);
-    if (frame is null)
-    {
-      frame = new ChatFrame
-      {
-        Chat = chat,
-        Status = ChatFrameStatus.Opened,
-        Type = ChatFrameType.Conversation,
-      };
-      dbContext.Add(frame);
-      await dbContext.SaveChangesAsync();
-    }
-
-    return (chat, frame);
+    return chat;
   }
 
   public async Task<ChatMessage> SendMessage(Customer customer, string content)
   {
-    var (chat, frame) = await EnsureConversation(customer);
+    var chat = await EnsureConversation(customer);
 
     var message = new ChatMessage
     {
-      Frame = frame,
       Content = content,
       Customer = customer,
       Chat = chat,
@@ -146,11 +90,10 @@ public class ChatContext(ApplicationDbContext dbContext)
 
   public async Task<ChatMessage> SendMessage(CompanyAccess agent, Customer customer, string content)
   {
-    var (chat, frame) = await EnsureConversation(customer);
+    var chat = await EnsureConversation(customer);
 
     var message = new ChatMessage
     {
-      Frame = frame,
       Content = content,
       Agent = agent,
       Chat = chat,
@@ -161,60 +104,25 @@ public class ChatContext(ApplicationDbContext dbContext)
     return message;
   }
 
-  public async Task<List<ChatMessage>> GetMessages(ChatId chatId)
-  {
-    var frames = await dbContext
-      .ChatFrames.Where(v => v.ChatId == chatId.Value)
-      .Include(v => v.Messages)
-      .ThenInclude(v => v.Customer)
-      .Include(v => v.Messages)
-      .ThenInclude(v => v.Agent)
+  public async Task<List<ChatMessage>> GetChatMessages(CompanyId companyId, ChatId chatId) =>
+    await dbContext
+      .ChatMessages.Include(v => v.Chat)
+      .Where(v => v.ChatId == chatId.Value && v.Chat.CompanyId == companyId.Value)
+      .Include(v => v.Agent)
+      .ThenInclude(v => v!.User)
+      .Include(v => v.Customer)
+      .ThenInclude(v => v!.User)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
-
-    return frames.SelectMany(v => v.Messages.OrderByDescending(v => v.CreatedAt)).ToList();
-  }
-
-  public async Task ResolveConversation(
-    Customer customer,
-    int? rate = null,
-    string? rateComment = null
-  )
-  {
-    var chat = await GetChat(CustomerId.From(customer));
-    if (chat is null)
-    {
-      throw new Exception("invalid chat");
-    }
-    var frame = await GetConversationFrame(chat);
-    if (frame is null)
-    {
-      throw new Exception("no active conversation");
-    }
-
-    dbContext.Update(frame);
-    frame.Status = ChatFrameStatus.Resolved;
-    frame.Rate = rate;
-    frame.RateComment = rateComment;
-    await dbContext.SaveChangesAsync();
-  }
 }
 
 class MessageCreatedAtComparer : IComparer<Chat>
 {
   public int Compare(Chat? x, Chat? y)
   {
-    var first = x
-      ?.Frames.OrderByDescending(v => v.CreatedAt)
-      .FirstOrDefault()
-      ?.Messages.OrderByDescending(vv => vv.CreatedAt)
-      ?.FirstOrDefault();
+    var first = x?.Messages.OrderByDescending(vv => vv.CreatedAt)?.FirstOrDefault();
 
-    var second = y
-      ?.Frames.OrderByDescending(v => v.CreatedAt)
-      .FirstOrDefault()
-      ?.Messages.OrderByDescending(vv => vv.CreatedAt)
-      ?.FirstOrDefault();
+    var second = y?.Messages.OrderByDescending(vv => vv.CreatedAt)?.FirstOrDefault();
 
     return first?.CreatedAt < second?.CreatedAt ? -1
       : second?.CreatedAt < first?.CreatedAt ? 1

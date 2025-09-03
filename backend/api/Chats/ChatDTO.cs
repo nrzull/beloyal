@@ -7,8 +7,7 @@ public record ChatDTO(Guid Id, ChatMessageDTO? PreviewMessage)
       Id: v.Id,
       PreviewMessage: new Func<ChatMessageDTO?>(() =>
       {
-        var lastMessage = v.Frames?.FirstOrDefault()?.Messages?.FirstOrDefault();
-
+        var lastMessage = v.Messages?.FirstOrDefault();
         return lastMessage is { } l ? ChatMessageDTO.From(l) : null;
       })()
     );

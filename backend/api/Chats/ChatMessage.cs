@@ -20,9 +20,6 @@ public class ChatMessage
   public Guid? AgentId { get; set; }
   public CompanyAccess? Agent { get; set; }
 
-  public Guid FrameId { get; set; }
-  public required ChatFrame Frame { get; set; }
-
   public Guid ChatId { get; set; }
   public required Chat Chat { get; set; }
 }

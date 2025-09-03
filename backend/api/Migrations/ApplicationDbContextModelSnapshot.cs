@@ -215,53 +215,6 @@ namespace Beloyal.API.Migrations
                     b.ToTable("chats", (string)null);
                 });
 
-            modelBuilder.Entity("Beloyal.API.Chats.ChatFrame", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("AgentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("agent_id");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("chat_id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("Rate")
-                        .HasColumnType("integer")
-                        .HasColumnName("rate");
-
-                    b.Property<string>("RateComment")
-                        .HasColumnType("text")
-                        .HasColumnName("rate_comment");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer")
-                        .HasColumnName("status");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
-                        .HasColumnName("type");
-
-                    b.HasKey("Id")
-                        .HasName("pk_chat_frames");
-
-                    b.HasIndex("AgentId")
-                        .HasDatabaseName("ix_chat_frames_agent_id");
-
-                    b.HasIndex("ChatId")
-                        .HasDatabaseName("ix_chat_frames_chat_id");
-
-                    b.ToTable("chat_frames", (string)null);
-                });
-
             modelBuilder.Entity("Beloyal.API.Chats.ChatMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -293,10 +246,6 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
-                    b.Property<Guid>("FrameId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("frame_id");
-
                     b.Property<DateTimeOffset?>("ReadAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("read_at");
@@ -315,9 +264,6 @@ namespace Beloyal.API.Migrations
 
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_chat_messages_customer_id");
-
-                    b.HasIndex("FrameId")
-                        .HasDatabaseName("ix_chat_messages_frame_id");
 
                     b.ToTable("chat_messages", (string)null);
                 });
@@ -879,25 +825,6 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Beloyal.API.Chats.ChatFrame", b =>
-                {
-                    b.HasOne("Beloyal.API.Companies.CompanyAccess", "Agent")
-                        .WithMany()
-                        .HasForeignKey("AgentId")
-                        .HasConstraintName("fk_chat_frames_company_accesses_agent_id");
-
-                    b.HasOne("Beloyal.API.Chats.Chat", "Chat")
-                        .WithMany("Frames")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_chat_frames_chats_chat_id");
-
-                    b.Navigation("Agent");
-
-                    b.Navigation("Chat");
-                });
-
             modelBuilder.Entity("Beloyal.API.Chats.ChatMessage", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.CompanyAccess", "Agent")
@@ -922,13 +849,6 @@ namespace Beloyal.API.Migrations
                         .HasForeignKey("CustomerId")
                         .HasConstraintName("fk_chat_messages_customers_customer_id");
 
-                    b.HasOne("Beloyal.API.Chats.ChatFrame", "Frame")
-                        .WithMany("Messages")
-                        .HasForeignKey("FrameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_chat_messages_chat_frames_frame_id");
-
                     b.Navigation("Agent");
 
                     b.Navigation("Chat");
@@ -936,8 +856,6 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Frame");
                 });
 
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
@@ -1139,13 +1057,6 @@ namespace Beloyal.API.Migrations
                 });
 
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
-                {
-                    b.Navigation("Frames");
-
-                    b.Navigation("Messages");
-                });
-
-            modelBuilder.Entity("Beloyal.API.Chats.ChatFrame", b =>
                 {
                     b.Navigation("Messages");
                 });
