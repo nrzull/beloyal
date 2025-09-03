@@ -1,5 +1,6 @@
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
+using Beloyal.API.Web.Chats.CreateMessage;
 using Beloyal.API.Web.Chats.GetChatMessages;
 using Beloyal.API.Web.Chats.GetChats;
 using Beloyal.API.Web.Filters;
@@ -33,6 +34,19 @@ public class ChatsController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure(), ChatId.From(chatId)) switch
     {
       GetChatMessagesResponse.Ok ok => Ok(ok),
+      _ => BadRequest(),
+    };
+
+  [HttpPost("{id}/messages")]
+  public async Task<IActionResult> CreateMessage(
+    [FromServices] CreateMessageEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid chatId,
+    [FromBody] CreateMessageRequest req
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), ChatId.From(chatId), req) switch
+    {
+      CreateMessageResponse.Ok ok => Ok(ok),
       _ => BadRequest(),
     };
 }

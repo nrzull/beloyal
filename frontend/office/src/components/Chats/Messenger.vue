@@ -19,13 +19,18 @@
       :messages="chats.get(activeChat) || []"
       :input="inputHistory.get(activeChat)"
       @update:input="inputHistory.set($event.chat, $event.input)"
+      @send="sendMessage"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { apiChatsGetAll, apiChatsGetAllMessages } from "~/api/chats";
+import {
+  apiChatsGetAll,
+  apiChatsGetAllMessages,
+  apiChatsCreateMessage,
+} from "~/api/chats";
 import type { Chat, ChatMessage } from "~/api/chats/types";
 import { wait } from "~/composables/wait";
 import ChatPreview from "~/components/Chats/Messenger/ChatPreview.vue";
@@ -53,6 +58,37 @@ const fetchChats = async () => {
     console.error(e);
   } finally {
     wait.end(fetchChats);
+  }
+};
+
+const sendMessage = async (chat: Chat) => {
+  const input = inputHistory.value.get(chat);
+  if (!input) {
+    return;
+  }
+
+  try {
+    wait.start(sendMessage);
+
+    inputHistory.value.set(chat, "");
+
+    const { data: message } = await apiChatsCreateMessage({
+      chatId: chat.id,
+      content: input,
+    });
+
+    const messages = chats.value.get(chat);
+    if (messages) {
+      messages.unshift(message);
+    }
+  } catch (e) {
+    console.error(e);
+
+    if (!inputHistory.value.has(chat)) {
+      inputHistory.value.set(chat, input);
+    }
+  } finally {
+    wait.end(sendMessage);
   }
 };
 

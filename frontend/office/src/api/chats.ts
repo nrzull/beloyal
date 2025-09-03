@@ -10,3 +10,14 @@ export const apiChatsGetAllMessages = (params: { chatId: string }) =>
       `/api/company/chats/${params.chatId}/messages`
     )
     .then((v) => v.data);
+
+export const apiChatsCreateMessage = (params: {
+  chatId: string;
+  content: string;
+}) =>
+  apiClient
+    .post<{ data: ChatMessage }>(
+      `/api/company/chats/${params.chatId}/messages`,
+      params
+    )
+    .then((v) => v.data);

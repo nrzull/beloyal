@@ -9,6 +9,11 @@ public class ChatContext(ApplicationDbContext dbContext)
   public async Task<Chat?> GetChat(CustomerId customerId) =>
     await dbContext.Chats.FirstOrDefaultAsync(v => v.CustomerId == customerId.Value);
 
+  public async Task<Chat?> GetChat(ChatId chatId, CompanyId companyId) =>
+    await dbContext
+      .Chats.Include(v => v.Customer)
+      .FirstOrDefaultAsync(v => v.Id == chatId.Value && v.CompanyId == companyId.Value);
+
   public async Task MarkAsRead(ChatMessageId id, CompanyAccess reader)
   {
     var msg = await dbContext.ChatMessages.FirstOrDefaultAsync(v =>

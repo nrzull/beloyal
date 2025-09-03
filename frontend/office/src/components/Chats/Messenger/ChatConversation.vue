@@ -25,6 +25,7 @@
             size="large"
             :bordered="!!input"
             :disabled="!input || loading"
+            @click="$emit('send', chat)"
           >
             Отправить
           </NButton>
@@ -50,7 +51,10 @@ const { input, chat } = defineProps<{
   input?: any;
 }>();
 
-const emit = defineEmits<{ "update:input": [{ chat: Chat; input: any }] }>();
+const emit = defineEmits<{
+  "update:input": [{ chat: Chat; input: any }];
+  send: [chat: Chat];
+}>();
 
 const proxyInput = computed({
   get: () => input,
