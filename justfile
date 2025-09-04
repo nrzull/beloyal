@@ -57,3 +57,8 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 @retest:
   ASPNETCORE_ENVIRONMENT=Development POSTGRES_DATABASE=beloyal_test just api-test dotnet test
+
+# screen -dmS bore bash -c 'bore server --secret $BORE_SECRET'
+# screen -ls
+# screen -r bore
+# Ctrl+A D
