@@ -51,6 +51,10 @@ defineProps<{ chat: Chat; active?: boolean; loading: boolean }>();
 .sender {
   color: var(--color-primary);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 120px;
 }
 
 .timestamp {

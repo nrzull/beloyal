@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.chatConversation">
-    <div :class="$style.messages">
+    <div ref="messagesRef" :class="$style.messages">
       <ChatMessage
         v-for="message in messages"
         :key="message.id"
@@ -38,13 +38,15 @@
 <script setup lang="ts">
 import { NInput, NButton } from "naive-ui";
 import type { Chat, ChatMessage as TChatMessage } from "~/api/chats/types";
-import { computed, onMounted, useTemplateRef } from "vue";
+import { computed, onMounted, useTemplateRef, watch } from "vue";
 import ChatMessage from "~/components/Chats/Messenger/ChatMessage.vue";
 import { self } from "~/composables/self";
 
 self.value?.companyAccess?.id;
 
-const { input, chat } = defineProps<{
+const messagesRef = useTemplateRef("messagesRef");
+
+const { input, chat, messages } = defineProps<{
   chat: Chat;
   messages: TChatMessage[];
   loading: boolean;
@@ -66,6 +68,12 @@ const proxyInput = computed({
 const inputRef = useTemplateRef("input");
 
 onMounted(() => inputRef.value!.focus());
+
+watch(
+  () => messages,
+  () => messagesRef?.value?.scrollTo({ top: 0 }),
+  { deep: true, flush: "post" }
+);
 </script>
 
 <style module>

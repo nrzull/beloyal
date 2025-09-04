@@ -45,6 +45,12 @@ defineProps<{ message: ChatMessage; isOwner: boolean }>();
   white-space: nowrap;
 }
 
+.content {
+  line-height: 1.3;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+}
+
 .bottom {
   display: flex;
   align-items: flex-end;
