@@ -22,8 +22,8 @@ defineProps<{ message: ChatMessage; isOwner: boolean }>();
 .chatMessage {
   background-color: #fff;
   width: max-content;
-  min-width: 25%;
-  max-width: 50%;
+  min-width: 200px;
+  max-width: 375px;
   padding: 12px 18px;
   border-radius: 16px 4px;
   flex-flow: column;

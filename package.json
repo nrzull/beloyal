@@ -7,6 +7,7 @@
     "concurrently": "9.2.0"
   },
   "workspaces": [
-    "frontend/office"
+    "frontend/office",
+    "frontend/customer"
   ]
 }

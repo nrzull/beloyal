@@ -18,6 +18,9 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @office *args:
   cd frontend/office && {{args}}
 
+@customer *args:
+  cd frontend/customer && {{args}}
+
 @devops:
   docker compose up -d
 
@@ -26,8 +29,20 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   dotnet tool restore
   npm ci
 
+@dev-local:
+  npx concurrently -n api,office,customer \
+  "just api dotnet run" \
+  "just office npm run dev" \
+  "just customer npm run dev"
+
 @dev:
-  npx concurrently -n api,office "just api dotnet run" "just office npm run dev"
+  API_WEB_PUBLIC_URL=https://nrzull.beloyal.ru npx concurrently -n api,office,customer,officebore,customerbore,apibore \
+  "just api dotnet run" \
+  "just office npm run dev" \
+  "just customer npm run dev" \
+  "bore local 3000 --to nrzull.beloyal.ru --port 3000" \
+  "bore local 3001 --to nrzull.beloyal.ru --port 3001" \
+  "bore local 8080 --to nrzull.beloyal.ru --port 8080"
 
 @build:
   just api dotnet build
