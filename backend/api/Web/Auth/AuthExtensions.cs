@@ -1,5 +1,6 @@
 using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
+using Beloyal.API.Web.Auth.LoginAsTgCustomer;
 
 namespace Beloyal.API.Web.Auth;
 
@@ -9,5 +10,7 @@ public static class AuthExtensions
   {
     builder.Services.AddScoped<LoginEndpoint>();
     builder.Services.AddScoped<ConfirmEndpoint>();
+
+    builder.Services.AddScoped<LoginAsTgCustomerEndpoint>();
   }
 }

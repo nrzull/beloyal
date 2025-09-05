@@ -50,7 +50,8 @@ public class EnsureTgUserHandler(CustomerContext customerContext, UserContext us
       return new EnsureTgUserResponse.InvalidCustomer();
     }
 
-    var url = Environment.GetEnvironmentVariable("CUSTOMER_WEB_PUBLIC_URL")! + "/telegram";
+    var url =
+      $"{Environment.GetEnvironmentVariable("CUSTOMER_WEB_PUBLIC_URL")!}/telegram?tgBotId={tgBot.Id}";
 
     var text = "Открыть кабинет";
 

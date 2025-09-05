@@ -1,6 +1,7 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
+using Beloyal.API.Web.Auth.LoginAsTgCustomer;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,18 @@ public class AuthController(IHostEnvironment env) : ControllerBase
         HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
         return Ok();
       })(),
+      _ => BadRequest(),
+    };
+
+  [HttpPost("miniapp/customer/telegram")]
+  public async Task<IActionResult> LoginAsCustomer(
+    [FromServices] LoginAsTgCustomerEndpoint endpoint,
+    [FromBody] LoginAsTgCustomerRequest req
+  ) =>
+    await endpoint.Handle(req) switch
+    {
+      LoginAsTgCustomerResponse.Ok ok => Ok(ok),
+      LoginAsTgCustomerResponse.InvalidUser => BadRequest("invalid user"),
       _ => BadRequest(),
     };
 
