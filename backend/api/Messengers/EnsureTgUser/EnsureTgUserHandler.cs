@@ -50,6 +50,25 @@ public class EnsureTgUserHandler(CustomerContext customerContext, UserContext us
       return new EnsureTgUserResponse.InvalidCustomer();
     }
 
+    var url = Environment.GetEnvironmentVariable("CUSTOMER_WEB_PUBLIC_URL")! + "/telegram";
+
+    var text = "Открыть кабинет";
+
+    if (
+      await client.GetChatMenuButton(chatId: uid) is MenuButtonWebApp btn
+      && (btn.WebApp.Url != url || btn.Text != text)
+    )
+    {
+      await client.SetChatMenuButton(
+        chatId: uid,
+        menuButton: new MenuButtonWebApp
+        {
+          Text = text,
+          WebApp = new() { Url = url },
+        }
+      );
+    }
+
     return new EnsureTgUserResponse.Ok(client, customer);
   }
 

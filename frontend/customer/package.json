@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "9.0.6",
+    "@telegram-apps/sdk-vue": "2.0.31",
     "axios": "1.11.0",
     "date-fns": "4.1.0",
     "naive-ui": "2.42.0",

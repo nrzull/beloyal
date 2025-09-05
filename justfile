@@ -36,7 +36,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "just customer npm run dev"
 
 @dev:
-  API_WEB_PUBLIC_URL=https://nrzull.beloyal.ru npx concurrently -n api,office,customer,officebore,customerbore,apibore \
+  CUSTOMER_WEB_PUBLIC_URL=https://nrzull.beloyal.ru/miniapp/customer API_WEB_PUBLIC_URL=https://nrzull.beloyal.ru npx concurrently -n api,office,customer,officebore,customerbore,apibore \
   "just api dotnet run" \
   "just office npm run dev" \
   "just customer npm run dev" \

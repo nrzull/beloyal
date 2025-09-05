@@ -4,8 +4,8 @@ export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      component: () => import("~/pages/auth.vue"),
+      path: "/:messenger",
+      component: () => import("~/pages/root.vue"),
     },
   ],
 });

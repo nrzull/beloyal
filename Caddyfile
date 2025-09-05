@@ -21,7 +21,7 @@ nrzull.beloyal.ru {
 		reverse_proxy localhost:8080
 	}
 
-  handle /customer* {
+  handle /miniapp/* {
     reverse_proxy localhost:3001
   }
 
