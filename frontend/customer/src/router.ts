@@ -5,7 +5,13 @@ export const router = createRouter({
   routes: [
     {
       path: "/:messenger",
-      component: () => import("~/pages/root.vue"),
+      component: () => import("~/components/DefaultLayout.vue"),
+      children: [
+        {
+          path: "",
+          component: () => import("~/pages/dashboard.vue"),
+        },
+      ],
     },
   ],
 });
