@@ -10,7 +10,7 @@
       },
     }"
   >
-    <RouterView v-if="done" />
+    <RouterView v-if="self" />
   </NConfigProvider>
 </template>
 
@@ -21,24 +21,29 @@ import {
   retrieveRawInitData,
   parseInitDataQuery,
 } from "@telegram-apps/sdk-vue";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { apiAuthLoginAsTelegramCustomer } from "~/api/auth";
+import { customerToken } from "~/api/clients";
+import { fetchSelf, self } from "~/composables/self";
 
 const route = useRoute();
-const done = ref(false);
 
-onMounted(() => {
-  const data = retrieveRawInitData();
+onMounted(async () => {
+  const initData = retrieveRawInitData();
+  if (initData) {
+    const { hash } = parseInitDataQuery(initData);
 
-  if (data) {
-    const { hash } = parseInitDataQuery(data);
-
-    apiAuthLoginAsTelegramCustomer({
-      query: data,
+    const {
+      data: { token },
+    } = await apiAuthLoginAsTelegramCustomer({
+      query: initData,
       tgBotId: route.query.tgBotId as string,
       hash,
-    }).then(() => (done.value = true));
+    });
+
+    customerToken.value = token;
+    await fetchSelf();
   }
 });
 </script>

@@ -1,3 +1,5 @@
-<template>dashboard {{ $route.fullPath }}</template>
+<template>{{ self?.bonusAmount }} {{ self?.companyName }}</template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { self } from "~/composables/self";
+</script>

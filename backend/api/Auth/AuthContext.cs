@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Customers;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
 using JWT.Algorithms;
@@ -47,6 +48,26 @@ public class AuthContext(ApplicationDbContext dbContext)
     return existing;
   }
 
+  public async Task<EncodedAccessToken> EncodeCustomerAccessToken(Customer customer)
+  {
+    await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
+
+    var token = new CustomerAccessToken(
+      CustomerId: customer.Id,
+      ExpiredAt: DateTimeOffset.UtcNow.AddHours(1)
+    );
+
+    var tokenString = JwtBuilder
+      .Create()
+      .WithAlgorithm(new HMACSHA256Algorithm())
+      .WithSecret(GetTokenSecret())
+      .AddClaim("exp", token.ExpiredAt.ToUnixTimeSeconds())
+      .AddClaim("customer_id", token.CustomerId)
+      .Encode();
+
+    return new EncodedAccessToken(tokenString, token.ExpiredAt);
+  }
+
   public EncodedAccessToken EncodeAccessToken(User user, CompanyAccess? companyAccess)
   {
     var expiredAt = DateTimeOffset.UtcNow.AddHours(12);
@@ -61,6 +82,34 @@ public class AuthContext(ApplicationDbContext dbContext)
       .Encode();
 
     return new EncodedAccessToken(Token: token, ExpiredAt: expiredAt);
+  }
+
+  public CustomerAccessToken DecodeCustomerAccessToken(string token)
+  {
+    var decoded = JwtBuilder
+      .Create()
+      .WithAlgorithm(new HMACSHA256Algorithm())
+      .WithSecret(GetTokenSecret())
+      .MustVerifySignature()
+      .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
+
+    decoded.TryGetValue("exp", out var _expiredAtSeconds);
+    decoded.TryGetValue("customer_id", out var _customerId);
+
+    if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
+    {
+      throw new Exception("exp is invalid");
+    }
+
+    if (!_customerId.TryGetGuid(out var customerId))
+    {
+      throw new Exception("customer_id is invalid");
+    }
+
+    return new CustomerAccessToken(
+      CustomerId: customerId,
+      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
+    );
   }
 
   public AccessToken DecodeAccessToken(string token)

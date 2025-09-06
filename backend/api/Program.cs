@@ -15,6 +15,7 @@ using Beloyal.API.Web.Chats;
 using Beloyal.API.Web.CompanyAccesses;
 using Beloyal.API.Web.CompanyAccessInvitations;
 using Beloyal.API.Web.CompanyRoles;
+using Beloyal.API.Web.CustomerSelf;
 using Beloyal.API.Web.Mailings;
 using Beloyal.API.Web.Messengers;
 using Beloyal.API.Web.Self;
@@ -57,6 +58,7 @@ public class Program
     builder.UseMessengersEndpoints();
     builder.UseMailingsEndpoints();
     builder.UseChatsEndpoints();
+    builder.UseCustomerSelfEndpoints();
 
     builder.UseTgBotHandlers();
 

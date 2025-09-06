@@ -4,4 +4,10 @@ export const apiAuthLoginAsTelegramCustomer = (params: {
   query: string;
   tgBotId: string;
   hash: string;
-}) => apiClient.post("/api/auth/miniapp/customer/telegram", params);
+}) =>
+  apiClient
+    .post<{ data: { token: string; expiredAt: string } }>(
+      "/api/auth/miniapp/customer/telegram",
+      params
+    )
+    .then((v) => v.data);

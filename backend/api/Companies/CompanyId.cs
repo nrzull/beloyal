@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Customers;
 using Beloyal.API.Messengers;
 using Vogen;
 
@@ -10,4 +11,6 @@ public partial struct CompanyId
   public static CompanyId From(CompanyAccess v) => From(v.CompanyId);
 
   public static CompanyId From(TgBot v) => From(v.CompanyId);
+
+  public static CompanyId From(Customer v) => From(v.CompanyId);
 };

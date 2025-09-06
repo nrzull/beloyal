@@ -2,12 +2,19 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Web;
+using Beloyal.API.Auth;
+using Beloyal.API.Customers;
 using Beloyal.API.Messengers;
 using Beloyal.API.Users;
 
 namespace Beloyal.API.Web.Auth.LoginAsTgCustomer;
 
-public class LoginAsTgCustomerEndpoint(TgContext tgContext, UserContext userContext)
+public class LoginAsTgCustomerEndpoint(
+  TgContext tgContext,
+  UserContext userContext,
+  CustomerContext customerContext,
+  AuthContext authContext
+)
 {
   public async Task<LoginAsTgCustomerResponse> Handle(LoginAsTgCustomerRequest req)
   {
@@ -23,9 +30,13 @@ public class LoginAsTgCustomerEndpoint(TgContext tgContext, UserContext userCont
       result
       && tgUserData is { id: var tgUserId }
       && await userContext.GetByTgUserId(TgUserId.From(tgUserId)) is { } user
+      && await customerContext.GetCustomer(CompanyId.From(bot.CompanyId), UserId.From(user))
+        is { } customer
     )
     {
-      return new LoginAsTgCustomerResponse.Ok(UserDTO.From(user));
+      var customerAccessToken = await authContext.EncodeCustomerAccessToken(customer);
+
+      return new LoginAsTgCustomerResponse.Ok(customerAccessToken);
     }
     else
     {
