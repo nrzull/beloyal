@@ -1,0 +1,9 @@
+{
+  "name": "@beloyal/agent",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  }
+}

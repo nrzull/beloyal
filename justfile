@@ -21,6 +21,9 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @customer *args:
   cd frontend/customer && {{args}}
 
+@agent *args:
+  cd frontend/agent && {{args}}
+
 @devops:
   docker compose up -d
 
@@ -33,21 +36,26 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   npx concurrently -n api,office,customer \
   "just api dotnet run" \
   "just office npm run dev" \
-  "just customer npm run dev"
+  "just customer npm run dev" \
+  "just agent npm run dev"
 
 @dev:
-  CUSTOMER_WEB_PUBLIC_URL=https://nrzull.beloyal.ru/miniapp/customer API_WEB_PUBLIC_URL=https://nrzull.beloyal.ru npx concurrently -n api,office,customer,officebore,customerbore,apibore \
+  CUSTOMER_WEB_PUBLIC_URL=https://nrzull.beloyal.ru/miniapp/customer AGENT_WEB_PUBLIC_URL=https://nrzull.beloyal.ru/agent API_WEB_PUBLIC_URL=https://nrzull.beloyal.ru npx concurrently -n api,office,customer,agent,apibore,officebore,customerbore,agentbore \
   "just api dotnet run" \
   "just office npm run dev" \
   "just customer npm run dev" \
+  "just agent npm run dev" \
+  "bore local 8080 --to nrzull.beloyal.ru --port 8080" \
   "bore local 3000 --to nrzull.beloyal.ru --port 3000" \
   "bore local 3001 --to nrzull.beloyal.ru --port 3001" \
-  "bore local 8080 --to nrzull.beloyal.ru --port 8080"
+  "bore local 3002 --to nrzull.beloyal.ru --port 3002"
 
 @build:
   just api dotnet build
   just api-test dotnet build
   just office npm run build
+  just customer npm run build
+  just agent npm run build
 
 @test:
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database drop --force
