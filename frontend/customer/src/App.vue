@@ -24,7 +24,8 @@ import {
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { apiAuthLoginAsTelegramCustomer } from "~/api/auth";
-import { customerToken } from "~/api/clients";
+import { authToken } from "~/api/clients";
+import { publicToken } from "~/composables/publicToken";
 import { fetchSelf, self } from "~/composables/self";
 
 const route = useRoute();
@@ -34,15 +35,14 @@ onMounted(async () => {
   if (initData) {
     const { hash } = parseInitDataQuery(initData);
 
-    const {
-      data: { token },
-    } = await apiAuthLoginAsTelegramCustomer({
+    const result = await apiAuthLoginAsTelegramCustomer({
       query: initData,
       tgBotId: route.query.tgBotId as string,
       hash,
     });
 
-    customerToken.value = token;
+    authToken.value = result.data.authToken.token;
+    publicToken.value = result.data.publicToken.token;
     await fetchSelf();
   }
 });

@@ -34,9 +34,9 @@ public class LoginAsTgCustomerEndpoint(
         is { } customer
     )
     {
-      var customerAccessToken = await authContext.EncodeCustomerAccessToken(customer);
+      var (authToken, publicToken) = authContext.EncodeCustomerAccessToken(customer);
 
-      return new LoginAsTgCustomerResponse.Ok(customerAccessToken);
+      return new LoginAsTgCustomerResponse.Ok(new(AuthToken: authToken, PublicToken: publicToken));
     }
     else
     {

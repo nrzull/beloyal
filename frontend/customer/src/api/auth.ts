@@ -6,8 +6,10 @@ export const apiAuthLoginAsTelegramCustomer = (params: {
   hash: string;
 }) =>
   apiClient
-    .post<{ data: { token: string; expiredAt: string } }>(
-      "/api/auth/miniapp/customer/telegram",
-      params
-    )
+    .post<{
+      data: {
+        authToken: { token: string; expiredAt: string };
+        publicToken: { token: string; expiredAt: string };
+      };
+    }>("/api/auth/miniapp/customer/telegram", params)
     .then((v) => v.data);

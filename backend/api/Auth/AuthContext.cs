@@ -48,16 +48,16 @@ public class AuthContext(ApplicationDbContext dbContext)
     return existing;
   }
 
-  public async Task<EncodedAccessToken> EncodeCustomerAccessToken(Customer customer)
+  public (EncodedAccessToken authToken, EncodedAccessToken publicToken) EncodeCustomerAccessToken(
+    Customer customer
+  )
   {
-    await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
-
     var token = new CustomerAccessToken(
       CustomerId: customer.Id,
       ExpiredAt: DateTimeOffset.UtcNow.AddHours(1)
     );
 
-    var tokenString = JwtBuilder
+    var authToken = JwtBuilder
       .Create()
       .WithAlgorithm(new HMACSHA256Algorithm())
       .WithSecret(GetTokenSecret())
@@ -65,7 +65,18 @@ public class AuthContext(ApplicationDbContext dbContext)
       .AddClaim("customer_id", token.CustomerId)
       .Encode();
 
-    return new EncodedAccessToken(tokenString, token.ExpiredAt);
+    var publicToken = JwtBuilder
+      .Create()
+      .WithAlgorithm(new HMACSHA256Algorithm())
+      .WithSecret(GetCustomerPublicSecret())
+      .AddClaim("exp", token.ExpiredAt.ToUnixTimeSeconds())
+      .AddClaim("customer_id", token.CustomerId)
+      .Encode();
+
+    return (
+      new EncodedAccessToken(authToken, token.ExpiredAt),
+      new EncodedAccessToken(publicToken, token.ExpiredAt)
+    );
   }
 
   public EncodedAccessToken EncodeAccessToken(User user, CompanyAccess? companyAccess)
@@ -143,6 +154,9 @@ public class AuthContext(ApplicationDbContext dbContext)
       ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
     );
   }
+
+  string? GetCustomerPublicSecret() =>
+    Environment.GetEnvironmentVariable("API_AUTH_CUSTOMER_PUBLIC_SECRET");
 
   string? GetTokenSecret() => Environment.GetEnvironmentVariable("API_AUTH_SECRET");
 
