@@ -7,7 +7,7 @@ const { CUSTOMER_WEB_PORT, API_WEB_PUBLIC_URL } = process.env;
 export default defineConfig({
   plugins: [vue()],
 
-  base: "/miniapp/customer",
+  base: "/customer",
 
   resolve: {
     alias: {

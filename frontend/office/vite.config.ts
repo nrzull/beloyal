@@ -6,6 +6,9 @@ const { OFFICE_WEB_PORT, API_WEB_PUBLIC_URL } = process.env;
 
 export default defineConfig({
   plugins: [vue()],
+
+  base: "/office",
+
   resolve: {
     alias: {
       "~": new URL("./src", import.meta.url).pathname,

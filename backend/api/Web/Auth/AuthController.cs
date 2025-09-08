@@ -39,7 +39,7 @@ public class AuthController(IHostEnvironment env) : ControllerBase
       _ => BadRequest(),
     };
 
-  [HttpPost("miniapp/customer/telegram")]
+  [HttpPost("customer/telegram")]
   public async Task<IActionResult> LoginAsCustomer(
     [FromServices] LoginAsTgCustomerEndpoint endpoint,
     [FromBody] LoginAsTgCustomerRequest req
