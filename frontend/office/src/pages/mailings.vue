@@ -33,7 +33,7 @@ import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import { NButton } from "naive-ui";
 import { ref } from "vue";
-import type { Mailing } from "~/api/mailings/types";
+import type { Mailing } from "@beloyal/shared";
 import { apiMailingsGetAll } from "~/api/mailings";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";

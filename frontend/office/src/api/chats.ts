@@ -1,4 +1,4 @@
-import type { Chat, ChatMessage } from "~/api/chats/types";
+import type { Chat, ChatMessage } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
 
 export const apiChatsGetAll = () =>

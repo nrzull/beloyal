@@ -40,7 +40,7 @@ import { NButton, NInput, NSelect } from "naive-ui";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
-import type { CompanyRole } from "~/api/companyRoles/types";
+import type { CompanyRole } from "@beloyal/shared";
 import { apiCompanyAccessInvitationsCreate } from "~/api/companyAccessInvitations";
 import { useRouter } from "vue-router";
 

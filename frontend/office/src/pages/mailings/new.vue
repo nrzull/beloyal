@@ -53,7 +53,7 @@ import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 
 import { apiShopsGetAll } from "~/api/shops";
-import type { Shop } from "~/api/shops/types";
+import type { Shop } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 import { apiMailingsCreate } from "~/api/mailings";
 

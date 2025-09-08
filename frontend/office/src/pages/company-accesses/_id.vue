@@ -30,10 +30,10 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
-import type { CompanyRole } from "~/api/companyRoles/types";
+import type { CompanyRole } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { NBreadcrumb, NBreadcrumbItem, NSelect, NButton } from "naive-ui";
-import type { CompanyAccess } from "~/api/companyAccesses/types";
+import type { CompanyAccess } from "@beloyal/shared";
 import {
   apiCompanyAccessesGet,
   apiCompanyAccessesUpdate,

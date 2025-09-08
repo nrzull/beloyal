@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { apiCompanyAccessesGetAll } from "~/api/companyAccesses";
-import type { CompanyAccess } from "~/api/companyAccesses/types";
+import type { CompanyAccess } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";

@@ -1,8 +1,10 @@
-import type { AdminAccess } from "~/api/adminAccesses/types";
+import type {
+  User,
+  AdminAccess,
+  CompanyAccess,
+  CompanyAccessInvitation,
+} from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { CompanyAccess } from "~/api/companyAccesses/types";
-import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
-import type { User } from "~/api/users/types";
 
 export const apiSelfGet = () =>
   apiClient

@@ -26,7 +26,7 @@
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { apiShopsGet } from "~/api/shops";
-import type { Shop } from "~/api/shops/types";
+import type { Shop } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { NBreadcrumb, NBreadcrumbItem, NTabs, NTab } from "naive-ui";
 

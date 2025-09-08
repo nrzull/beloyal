@@ -1,5 +1,5 @@
+import type { CompanyAccessInvitation } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
 
 export const apiCompanyAccessInvitationsCreate = (params: {
   email: string;

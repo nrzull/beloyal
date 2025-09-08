@@ -1,5 +1,5 @@
+import type { TgBot } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { TgBot } from "~/api/messengers/types";
 
 export const apiMessengersGetTgBot = () =>
   apiClient

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Chat } from "~/api/chats/types";
+import type { Chat } from "@beloyal/shared";
 import { formatMessageTimestamp } from "~/utils/date";
 
 defineProps<{ chat: Chat; active?: boolean; loading: boolean }>();

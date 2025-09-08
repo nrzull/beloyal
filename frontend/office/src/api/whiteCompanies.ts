@@ -1,5 +1,5 @@
+import type { WhiteCompany } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { WhiteCompany } from "~/api/whiteCompanies/types";
 
 export const apiWhiteCompaniesGetAll = () =>
   apiClient

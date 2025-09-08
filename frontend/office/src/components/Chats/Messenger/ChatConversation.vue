@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { NInput, NButton } from "naive-ui";
-import type { Chat, ChatMessage as TChatMessage } from "~/api/chats/types";
+import type { Chat, ChatMessage as TChatMessage } from "@beloyal/shared";
 import { computed, onMounted, useTemplateRef, watch } from "vue";
 import ChatMessage from "~/components/Chats/Messenger/ChatMessage.vue";
 import { self } from "~/composables/self";

@@ -1,5 +1,5 @@
+import type { CompanyAccess } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { CompanyAccess } from "~/api/companyAccesses/types";
 
 export const apiCompanyAccessesGetAll = () =>
   apiClient

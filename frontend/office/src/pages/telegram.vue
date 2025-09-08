@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { apiMessengersGetTgBot } from "~/api/messengers";
 import { computed, ref } from "vue";
-import type { TgBot } from "~/api/messengers/types";
+import type { TgBot } from "@beloyal/shared";
 import NewPage from "~/pages/telegram/new.vue";
 import { wait } from "@beloyal/shared";
 

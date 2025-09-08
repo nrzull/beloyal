@@ -1,8 +1,9 @@
-import { ref, computed, type ComputedRef } from "vue";
 import {
   adminRolePermissions,
   type AdminRolePermission,
-} from "~/api/adminRoles/types";
+} from "@beloyal/shared";
+import { ref, computed, type ComputedRef } from "vue";
+
 import { apiSelfGet } from "~/api/self";
 
 export const self = ref<Awaited<ReturnType<typeof apiSelfGet>>>();

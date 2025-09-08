@@ -55,10 +55,10 @@
 import { NButton, NModal } from "naive-ui";
 import { computed, ref } from "vue";
 import { apiCompanyAccessesGetAll } from "~/api/companyAccesses";
-import type { CompanyAccess } from "~/api/companyAccesses/types";
-import type { ShopAccess } from "~/api/shopAccesses/types";
+import type { CompanyAccess } from "@beloyal/shared";
+import type { ShopAccess } from "@beloyal/shared";
 import { apiShopsGetAccesses, apiShopsCreateAccess } from "~/api/shops";
-import type { Shop } from "~/api/shops/types";
+import type { Shop } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
 import { wait } from "@beloyal/shared";
 import { formatDate } from "~/utils/date";

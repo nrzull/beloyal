@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
-import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
+import type { CompanyAccessInvitation } from "@beloyal/shared";
 import {
   apiSelfGetCompanyAccessInvitations,
   apiSelfAcceptCompanyAccessInvitation,

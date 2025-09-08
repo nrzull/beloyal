@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
-import type { CompanyRole } from "~/api/companyRoles/types";
+import type { CompanyRole } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";

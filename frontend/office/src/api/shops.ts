@@ -1,6 +1,5 @@
+import type { Shop, ShopAccess } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { Shop } from "~/api/shops/types";
-import type { ShopAccess } from "~/api/shopAccesses/types";
 
 export const apiShopsGetAll = () =>
   apiClient.get<{ data: Shop[] }>("/api/company/shops").then((v) => v.data);

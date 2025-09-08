@@ -1,5 +1,5 @@
+import type { Mailing } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { Mailing } from "~/api/mailings/types";
 
 export const apiMailingsGetAll = () =>
   apiClient

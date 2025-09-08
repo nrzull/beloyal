@@ -1,3 +1,3 @@
-import type { AdminRole } from "~/api/adminRoles/types";
+import type { AdminRole } from "../adminRoles/types";
 
 export type AdminAccess = { id: string; role: AdminRole };

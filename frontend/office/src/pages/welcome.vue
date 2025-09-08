@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
+import type { CompanyAccessInvitation } from "@beloyal/shared";
 import { apiSelfGetCompanyAccessInvitations } from "~/api/self";
 import { NButton, NBadge, NSpace } from "naive-ui";
 import { Card } from "@beloyal/shared";

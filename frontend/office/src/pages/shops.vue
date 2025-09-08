@@ -29,7 +29,7 @@ import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
 import { NButton } from "naive-ui";
-import type { Shop } from "~/api/shops/types";
+import type { Shop } from "@beloyal/shared";
 import { apiShopsGetAll } from "~/api/shops";
 
 const shops = ref<Shop[]>([]);

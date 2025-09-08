@@ -1,5 +1,5 @@
-import type { Company } from "~/api/companies/types";
-import type { CompanyRole } from "~/api/companyRoles/types";
+import type { Company } from "../companies/types";
+import type { CompanyRole } from "../companyRoles/types";
 
 export type CompanyAccessInvitationStatus =
   | "Active"

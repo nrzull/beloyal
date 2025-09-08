@@ -1,5 +1,5 @@
+import type { CompanyRole } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { CompanyRole } from "~/api/companyRoles/types";
 
 export const apiCompanyRolesGetAll = () =>
   apiClient

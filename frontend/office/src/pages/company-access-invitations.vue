@@ -42,7 +42,7 @@ import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
 import { apiCompanyAccessInvitationsGetAll } from "~/api/companyAccessInvitations";
-import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
+import type { CompanyAccessInvitation } from "@beloyal/shared";
 import { ref } from "vue";
 
 const invitations = ref<CompanyAccessInvitation[]>([]);
