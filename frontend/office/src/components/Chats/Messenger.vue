@@ -32,7 +32,7 @@ import {
   apiChatsCreateMessage,
 } from "~/api/chats";
 import type { Chat, ChatMessage } from "~/api/chats/types";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import ChatPreview from "~/components/Chats/Messenger/ChatPreview.vue";
 import ChatConversation from "~/components/Chats/Messenger/ChatConversation.vue";
 

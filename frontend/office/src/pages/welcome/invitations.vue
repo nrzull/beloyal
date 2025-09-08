@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
 import {
@@ -42,7 +42,7 @@ import {
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { NButton } from "naive-ui";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

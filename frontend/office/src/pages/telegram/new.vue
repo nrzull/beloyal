@@ -21,9 +21,9 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { NBreadcrumb, NBreadcrumbItem, NButton, NInput } from "naive-ui";
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import { apiMessengersCreateTgBot } from "~/api/messengers";
 
 const emit = defineEmits<{ refresh: [] }>();

@@ -14,7 +14,7 @@ import { apiMessengersGetTgBot } from "~/api/messengers";
 import { computed, ref } from "vue";
 import type { TgBot } from "~/api/messengers/types";
 import NewPage from "~/pages/telegram/new.vue";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 
 const tgBot = ref<TgBot>();
 const isLoading = computed(() => wait.some([fetchBot]));

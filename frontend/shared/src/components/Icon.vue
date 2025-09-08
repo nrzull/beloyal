@@ -6,10 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import user from "./assets/user.svg?raw";
-import home from "./assets/home.svg?raw";
-import qr from "./assets/qr.svg?raw";
-import search from "./assets/search.svg?raw";
+import user from "./Icon/assets/user.svg?raw";
+import home from "./Icon/assets/home.svg?raw";
+import qr from "./Icon/assets/qr.svg?raw";
+import search from "./Icon/assets/search.svg?raw";
 
 const icons = { user, home, qr, search } as const;
 

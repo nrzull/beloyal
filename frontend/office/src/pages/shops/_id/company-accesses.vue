@@ -60,7 +60,7 @@ import type { ShopAccess } from "~/api/shopAccesses/types";
 import { apiShopsGetAccesses, apiShopsCreateAccess } from "~/api/shops";
 import type { Shop } from "~/api/shops/types";
 import Table from "~/components/Table/Table.vue";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import { formatDate } from "~/utils/date";
 
 const { shop } = defineProps<{ shop: Shop }>();

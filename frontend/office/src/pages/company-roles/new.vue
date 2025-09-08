@@ -24,12 +24,12 @@ import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import { NButton } from "naive-ui";
 import { computed, ref } from "vue";
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 import {
   apiCompanyRolesGetPermissions,
   apiCompanyRolesCreate,
 } from "~/api/companyRoles";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 import RoleForm from "~/components/RoleForm/RoleForm.vue";
 

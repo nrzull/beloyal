@@ -34,11 +34,11 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 
 import { NButton, NInput, NSelect } from "naive-ui";
 import { computed, ref } from "vue";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "~/api/companyRoles/types";
 import { apiCompanyAccessInvitationsCreate } from "~/api/companyAccessInvitations";

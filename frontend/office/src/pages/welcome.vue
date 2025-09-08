@@ -31,7 +31,7 @@ import { ref } from "vue";
 import type { CompanyAccessInvitation } from "~/api/companyAccessInvitations/types";
 import { apiSelfGetCompanyAccessInvitations } from "~/api/self";
 import { NButton, NBadge, NSpace } from "naive-ui";
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 
 const invitations = ref<CompanyAccessInvitation[]>([]);
 

@@ -39,8 +39,8 @@ import {
   apiCompanyAccessesUpdate,
 } from "~/api/companyAccesses";
 import { useRoute, useRouter } from "vue-router";
-import Card from "~/components/Card/Card.vue";
-import { wait } from "~/composables/wait";
+import { Card } from "@beloyal/shared";
+import { wait } from "@beloyal/shared";
 
 const route = useRoute();
 const router = useRouter();

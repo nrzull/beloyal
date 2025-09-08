@@ -18,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 import { NButton, NInput } from "naive-ui";
 import { computed, ref } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
-import { wait } from "~/composables/wait";
+import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 
 const tin = ref();

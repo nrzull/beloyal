@@ -51,7 +51,7 @@
 <script setup lang="ts" generic="T extends Record<PropertyKey, unknown>">
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import Card from "~/components/Card/Card.vue";
+import { Card } from "@beloyal/shared";
 
 export type TableColumn = {
   key: string;
