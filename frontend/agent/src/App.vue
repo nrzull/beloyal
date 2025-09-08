@@ -16,7 +16,22 @@
 
 <script setup lang="ts">
 import { NConfigProvider } from "naive-ui";
+import { onMounted } from "vue";
+
+const onResize = () => {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+};
+
+window.addEventListener("resize", onResize);
+onMounted(onResize);
 </script>
+
+<style>
+body {
+  height: calc(var(--vh) * 100);
+}
+</style>
 
 <style module>
 .provider {
