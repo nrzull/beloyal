@@ -1,26 +1,25 @@
 <template>
   <div :class="$style.defaultLayout">
-    <div :class="$style.header">header</div>
     <div :class="$style.content">
       <RouterView />
     </div>
-    <div :class="$style.footer">footer</div>
+    <ViewFooter :class="$style.footer" />
   </div>
 </template>
+
+<script setup lang="ts">
+import ViewFooter from "~/components/ViewFooter.vue";
+</script>
 
 <style module>
 .defaultLayout {
   display: grid;
-  grid-template-areas: "header" "content" "footer";
-  grid-template-rows: 48px 1fr 48px;
+  grid-template-areas: "content" "footer";
+  grid-template-rows: 1fr 48px;
   height: inherit;
-}
-
-.header {
-  grid-area: header;
-  display: flex;
-  align-items: center;
-  padding: 12px;
+  max-width: 768px;
+  width: 100%;
+  margin: auto;
 }
 
 .content {
@@ -33,6 +32,5 @@
 
 .footer {
   grid-area: footer;
-  padding: 12px;
 }
 </style>

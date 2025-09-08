@@ -1,0 +1,10 @@
+{
+  "name": "@beloyal/shared",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/main.ts"
+    },
+    "./main.css": "./src/main.css"
+  }
+}

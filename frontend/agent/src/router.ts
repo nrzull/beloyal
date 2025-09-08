@@ -8,6 +8,10 @@ export const router = createRouter({
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
+          path: "profile",
+          component: () => import("~/pages/profile.vue"),
+        },
+        {
           path: "",
           component: () => import("~/pages/dashboard.vue"),
         },

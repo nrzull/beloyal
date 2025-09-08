@@ -11,9 +11,9 @@
     "vue-router": "4.5.1"
   },
   "devDependencies": {
-    "concurrently": "9.2.0",
     "@vitejs/plugin-vue": "6.0.1",
     "@vue/tsconfig": "0.7.0",
+    "concurrently": "3.5.1",
     "typescript": "5.9.2",
     "vite": "7.1.2",
     "vue-tsc": "3.0.5"
@@ -21,6 +21,7 @@
   "workspaces": [
     "frontend/office",
     "frontend/customer",
-    "frontend/agent"
+    "frontend/agent",
+    "frontend/shared"
   ]
 }
