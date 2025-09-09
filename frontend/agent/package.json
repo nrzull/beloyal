@@ -7,6 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@beloyal/shared": "file:../shared"
+    "@beloyal/shared": "file:../shared",
+    "html5-qrcode": "2.3.8"
   }
 }
