@@ -1,21 +1,12 @@
 <template>
-  <NConfigProvider
-    :class="$style.provider"
-    :theme-overrides="{
-      common: {
-        primaryColor: '#0073ff',
-        primaryColorHover: '#1c82ff',
-        primaryColorPressed: '#0073ff',
-        primaryColorSuppl: '#0073ff',
-      },
-    }"
-  >
+  <NConfigProvider :class="$style.provider" :theme-overrides="theme">
     <RouterView v-if="self" />
   </NConfigProvider>
 </template>
 
 <script setup lang="ts">
 import { NConfigProvider } from "naive-ui";
+import { theme } from "@beloyal/shared";
 
 import {
   retrieveRawInitData,
