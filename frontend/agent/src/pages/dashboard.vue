@@ -5,11 +5,6 @@
       Сканировать
     </NButton>
 
-    <NButton tertiary size="large" type="primary" block>
-      <template #icon> <Icon variant="search" /> </template>
-      Поиск по номеру телефона
-    </NButton>
-
     <div id="qr-code-full-region"></div>
   </NSpace>
 </template>
@@ -18,6 +13,7 @@
 import { Icon } from "@beloyal/shared";
 import { NButton, NSpace } from "naive-ui";
 import { Html5QrcodeScanner, Html5QrcodeScanType } from "html5-qrcode";
+import { apiCustomersGetByPublicToken } from "~/api/customers";
 
 const scanQr = () => {
   const scanner = new Html5QrcodeScanner(
@@ -26,8 +22,11 @@ const scanQr = () => {
     undefined
   );
 
-  scanner.render((_result) => {
+  scanner.render((token) => {
     scanner.clear();
+    apiCustomersGetByPublicToken({ publicToken: token }).then((v) => {
+      console.log(v);
+    });
   }, undefined);
 };
 </script>

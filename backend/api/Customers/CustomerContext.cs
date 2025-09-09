@@ -21,7 +21,9 @@ public class CustomerContext(
       .ToList();
 
   public async Task<Customer?> GetCustomer(CustomerId customerId) =>
-    await dbContext.Customers.FirstOrDefaultAsync(v => v.Id == customerId.Value);
+    await dbContext
+      .Customers.Include(v => v.User)
+      .FirstOrDefaultAsync(v => v.Id == customerId.Value);
 
   public async Task<Customer?> GetCustomer(CompanyId companyId, UserId userId) =>
     await dbContext

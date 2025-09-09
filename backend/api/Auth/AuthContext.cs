@@ -101,6 +101,34 @@ public class AuthContext(ApplicationDbContext dbContext)
     return new EncodedAccessToken(Token: token, ExpiredAt: expiredAt);
   }
 
+  public CustomerAccessToken DecodeCustomerPublicAccessToken(string token)
+  {
+    var decoded = JwtBuilder
+      .Create()
+      .WithAlgorithm(new HMACSHA256Algorithm())
+      .WithSecret(GetCustomerPublicSecret())
+      .MustVerifySignature()
+      .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
+
+    decoded.TryGetValue("exp", out var _expiredAtSeconds);
+    decoded.TryGetValue("customer_id", out var _customerId);
+
+    if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
+    {
+      throw new Exception("exp is invalid");
+    }
+
+    if (!_customerId.TryGetGuid(out var customerId))
+    {
+      throw new Exception("customer_id is invalid");
+    }
+
+    return new CustomerAccessToken(
+      CustomerId: customerId,
+      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
+    );
+  }
+
   public CustomerAccessToken DecodeCustomerAccessToken(string token)
   {
     var decoded = JwtBuilder
