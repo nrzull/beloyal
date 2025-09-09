@@ -1,6 +1,8 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Users;
 using Beloyal.API.Web.AgentSelf.GetSelf;
+using Beloyal.API.Web.AgentSelf.SetCompanyAccess;
+using Beloyal.API.Web.AgentSelf.SetShopAccess;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,38 @@ public class AgentSelfController(IHostEnvironment env) : ControllerBase
       {
         HttpContext.SetAccessTokenCookie(newToken, env.IsProduction());
         return TypedResults.Ok(ok);
+      })(),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch("company-access")]
+  public async Task<Results<Ok, BadRequest>> SetCompanyAccess(
+    [FromServices] SetCompanyAccessEndpoint endpoint,
+    [FromServices] User? user,
+    [FromBody] SetCompanyAccessRequest req
+  ) =>
+    await endpoint.Handle(user.Ensure(), req) switch
+    {
+      SetCompanyAccessResponse.Ok ok => new Func<Ok>(() =>
+      {
+        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        return TypedResults.Ok();
+      })(),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch("shop-access")]
+  public async Task<Results<Ok, BadRequest>> SetShopAccess(
+    [FromServices] SetShopAccessEndpoint endpoint,
+    [FromServices] User? user,
+    [FromBody] SetShopAccessRequest req
+  ) =>
+    await endpoint.Handle(user.Ensure(), req) switch
+    {
+      SetShopAccessResponse.Ok ok => new Func<Ok>(() =>
+      {
+        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        return TypedResults.Ok();
       })(),
       _ => TypedResults.BadRequest(),
     };

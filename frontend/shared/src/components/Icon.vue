@@ -10,8 +10,9 @@ import user from "./Icon/assets/user.svg?raw";
 import home from "./Icon/assets/home.svg?raw";
 import qr from "./Icon/assets/qr.svg?raw";
 import search from "./Icon/assets/search.svg?raw";
+import location from "./Icon/assets/location.svg?raw";
 
-const icons = { user, home, qr, search } as const;
+const icons = { user, home, qr, search, location } as const;
 
 export type Variant = keyof typeof icons;
 

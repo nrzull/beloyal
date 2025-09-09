@@ -67,6 +67,11 @@ public class ShopContext(ApplicationDbContext dbContext)
     await dbContext.SaveChangesAsync();
   }
 
+  public async Task<ShopAccess?> GetAccess(ShopId shopId, CompanyAccessId companyAccessId) =>
+    await dbContext.ShopAccesses.FirstOrDefaultAsync(v =>
+      v.ShopId == shopId.Value && v.CompanyAccessId == companyAccessId.Value
+    );
+
   public async Task<ShopAccess?> GetAccess(ShopAccessId id) =>
     await dbContext.ShopAccesses.FirstOrDefaultAsync(v => v.Id == id.Value);
 
