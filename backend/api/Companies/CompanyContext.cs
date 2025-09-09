@@ -180,7 +180,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
   public async Task<CompanyAccessInvitation> CreateCompanyAccessInvitation(
     Company company,
     CompanyRole role,
-    Email email
+    Phone phone
   )
   {
     if (role.CompanyId != company.Id)
@@ -191,7 +191,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
     if (
       await dbContext
         .CompanyAccesses.Include(v => v.User)
-        .FirstOrDefaultAsync(v => v.User.Email == email.Value && v.CompanyId == company.Id) is
+        .FirstOrDefaultAsync(v => v.User.Phone == phone.Value && v.CompanyId == company.Id) is
       { }
     )
     {
@@ -203,7 +203,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
         .CompanyAccessInvitations.Include(v => v.Company)
         .Include(v => v.Role)
         .FirstOrDefaultAsync(v =>
-          v.Email == email.Value
+          v.Phone == phone.Value
           && v.Status == CompanyAccessInvitationStatus.Active
           && v.CompanyId == company.Id
         ) is
@@ -217,7 +217,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
     {
       Company = company,
       Role = role,
-      Email = email.Value,
+      Phone = phone.Value,
     };
 
     dbContext.Add(invitation);
@@ -242,15 +242,15 @@ public class CompanyContext(ApplicationDbContext dbContext)
     CompanyAcessInvitationId id
   ) =>
     await dbContext.CompanyAccessInvitations.FirstOrDefaultAsync(v =>
-      v.Email == user.Email && v.Id == id.Value
+      v.Phone == user.Phone && v.Id == id.Value
     );
 
   public async Task<CompanyAccessInvitation?> GetCompanyAccessInvitation(
     CompanyId id,
-    Email email
+    Phone phone
   ) =>
     await dbContext.CompanyAccessInvitations.SingleOrDefaultAsync(v =>
-      v.CompanyId == id.Value && v.Email == email.Value
+      v.CompanyId == id.Value && v.Phone == phone.Value
     );
 
   public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(CompanyId id) =>
@@ -261,9 +261,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
       .OrderByDescending(v => v.UpdatedAt)
       .ToListAsync();
 
-  public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(Email email) =>
+  public async Task<List<CompanyAccessInvitation>> GetCompanyAccessInvitations(Phone phone) =>
     await dbContext
-      .CompanyAccessInvitations.Where(v => v.Email == email.Value)
+      .CompanyAccessInvitations.Where(v => v.Phone == phone.Value)
       .Include(v => v.Company)
       .Include(v => v.Role)
       .OrderByDescending(v => v.UpdatedAt)

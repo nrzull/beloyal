@@ -16,7 +16,7 @@ public class CreateAccessEndpointTest : TestLifetime
         var companyContext = scope.Get<CompanyContext>();
         var (company, access, _) = await CompanyFixture.Company(scope);
         var role = await companyContext.CreateCompanyRole(company, "qwe", []);
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
 
         var result = await endpoint.Handle(access, new(user.Id, role.Id));
         Assert.IsType<CreateAccessResponse.Ok>(result);

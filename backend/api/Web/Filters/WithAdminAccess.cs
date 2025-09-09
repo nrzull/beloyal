@@ -18,10 +18,10 @@ public class WithAdminAccessFilter(string permission) : IAsyncActionFilter
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {
     var user = (ctx.ActionArguments["user"] as User).Ensure();
-    var email = Environment.GetEnvironmentVariable("API_ADMIN_EMAIL");
+    var phone = Environment.GetEnvironmentVariable("API_ADMIN_PHONE");
 
     if (
-      user.Email == email
+      user.Phone == phone
       || user.AdminAccess is { Role: { Permissions: var permissions } }
         && permissions.Any(v => v == permission)
     )

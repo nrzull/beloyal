@@ -16,7 +16,7 @@ namespace Beloyal.API;
 
 public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 {
-  public DbSet<AuthEmailOTP> AuthEmailOTPs { get; set; }
+  public DbSet<AuthOtp> AuthOtps { get; set; }
   public DbSet<User> Users { get; set; }
   public DbSet<AdminAccess> AdminAccesses { get; set; }
   public DbSet<AdminRole> AdminRoles { get; set; }
@@ -53,9 +53,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 
     builder.Entity<User>(user =>
     {
-      user.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
-      user.HasIndex(v => v.Email).IsUnique();
-
       user.Property(v => v.Phone).HasMaxLength(16);
       user.HasIndex(v => v.Phone).IsUnique();
 
@@ -133,8 +130,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 
     builder.Entity<CompanyAccessInvitation>(companyAccessInvitation =>
     {
-      companyAccessInvitation.Property(v => v.Email).HasColumnType("citext").HasMaxLength(64);
-
+      companyAccessInvitation.Property(v => v.Phone).HasMaxLength(32);
       companyAccessInvitation.Property(v => v.Status).HasConversion<string>();
 
       companyAccessInvitation

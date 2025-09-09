@@ -7,8 +7,8 @@
     <Card :class="$style.form">
       <NInput
         :disabled="isLoading"
-        placeholder="E-mail"
-        v-model:value="email"
+        placeholder="Номер телефона"
+        v-model:value="phone"
       />
 
       <NSelect
@@ -46,13 +46,13 @@ import { useRouter } from "vue-router";
 
 const isLoading = computed(() => wait.some([createCompanyAccessInvitation]));
 const router = useRouter();
-const email = ref<string>();
+const phone = ref<string>();
 const selectedRoleId = ref<string>();
 
 const companyRoles = ref<CompanyRole[]>([]);
 
 const createCompanyAccessInvitation = async () => {
-  if (!email.value || !selectedRoleId.value) {
+  if (!phone.value || !selectedRoleId.value) {
     return;
   }
 
@@ -60,7 +60,7 @@ const createCompanyAccessInvitation = async () => {
     wait.start(createCompanyAccessInvitation);
 
     await apiCompanyAccessInvitationsCreate({
-      email: email.value,
+      phone: phone.value,
       roleId: selectedRoleId.value,
     });
 

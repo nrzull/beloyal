@@ -21,7 +21,7 @@ public class CreateShopAccessEndpointTest : TestLifetime
 
         if (result is CreateShopAccessResponse.Ok ok)
         {
-          Assert.Equal(ok.Data.Email, user.Email);
+          Assert.Equal(ok.Data.Phone, user.Phone);
         }
       }
     );

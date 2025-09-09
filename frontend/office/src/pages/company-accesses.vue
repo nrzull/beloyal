@@ -7,13 +7,13 @@
     <Table
       :data="companyAccesses"
       :columns="[
-        { key: 'email', title: 'E-mail' },
+        { key: 'phone', title: 'Номер телефона' },
         { key: 'role', title: 'Роль' },
       ]"
       :route-fn="(v) => `/company-accesses/${v.id}`"
     >
-      <template #email="{ item }">
-        {{ item.user?.email }}
+      <template #phone="{ item }">
+        {{ item.user?.phone }}
       </template>
 
       <template #role="{ item }">

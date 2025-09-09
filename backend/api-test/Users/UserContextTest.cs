@@ -11,9 +11,9 @@ public class UserContextTest : TestLifetime
       async (scope, _) =>
       {
         var userContext = scope.Get<UserContext>();
-        var email = new Email("qwe@gma.com");
-        var user = await userContext.EnsureUser(email);
-        var user2 = await userContext.EnsureUser(email);
+        var phone = new Phone("+123123123123");
+        var user = await userContext.EnsureUser(phone);
+        var user2 = await userContext.EnsureUser(phone);
 
         Assert.Equal(user.Id, user2.Id);
       }

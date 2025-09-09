@@ -8,18 +8,18 @@ public static class SeedAdminUser
 {
   public static void Run(DbContext dbContext)
   {
-    var email = Environment.GetEnvironmentVariable("API_ADMIN_EMAIL");
-    if (email is null)
+    var phone = Environment.GetEnvironmentVariable("API_ADMIN_PHONE");
+    if (phone is null)
     {
-      throw new Exception("missing API_ADMIN_EMAIL");
+      throw new Exception("missing API_ADMIN_PHONE");
     }
 
-    if (dbContext.Set<User>().FirstOrDefault(v => v.Email == email) is { })
+    if (dbContext.Set<User>().FirstOrDefault(v => v.Phone == phone) is { })
     {
       return;
     }
 
-    var user = new User { Email = email };
+    var user = new User { Phone = phone };
 
     var role = new AdminRole { Name = "Admin", Permissions = AdminPermissions.GetAllPermissions() };
 

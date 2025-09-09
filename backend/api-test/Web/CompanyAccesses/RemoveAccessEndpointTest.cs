@@ -17,7 +17,7 @@ public class RemoveAccessEndpointTest : TestLifetime
         var (company, _, _) = await CompanyFixture.Company(scope);
 
         var role = await companyContext.CreateCompanyRole(company, "qwe", []);
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
         var access = await companyContext.CreateCompanyAccess(company, user, role);
 
         var result = await endpoint.Handle(access, new(access.Id));

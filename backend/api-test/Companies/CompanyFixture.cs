@@ -9,7 +9,7 @@ public static class CompanyFixture
 {
   public static async Task<(Company, CompanyAccess, User)> Company(
     AsyncServiceScope scope,
-    string email = "qwe@gma.com",
+    string phone = "+123123123123",
     string tin = "0123456789",
     decimal cashbackPercent = 10,
     decimal cashbackThreshold = 10
@@ -21,7 +21,7 @@ public static class CompanyFixture
 
     await companyContext.CreateWhiteCompany(new(tin), DateTimeOffset.UtcNow.AddMonths(1));
 
-    var user = await userContext.EnsureUser(new Email(email));
+    var user = await userContext.EnsureUser(new Phone(phone));
     (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
       user,
       new(tin),

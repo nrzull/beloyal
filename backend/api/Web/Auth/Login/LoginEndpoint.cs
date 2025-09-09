@@ -5,9 +5,9 @@ namespace Beloyal.API.Web.Auth.Login;
 
 public class LoginEndpoint(AuthContext authContext)
 {
-  public async Task<LoginResponse> Handle(Email email)
+  public async Task<LoginResponse> Handle(Phone phone)
   {
-    var result = await authContext.CreateEmailOTP(email);
+    var result = await authContext.CreateOtp(phone);
     return new LoginResponse.Ok(result.Code, result.ExpiredAt);
   }
 }

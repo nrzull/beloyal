@@ -22,7 +22,7 @@ public class CreateInvitationEndpoint(CompanyContext companyContext)
     var invitation = await companyContext.CreateCompanyAccessInvitation(
       company,
       role,
-      new(req.Email)
+      new(req.Phone)
     );
 
     return new CreateInvitationResponse.Ok(CompanyAccessInvitationDTO.From(invitation));

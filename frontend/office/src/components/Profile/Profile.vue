@@ -21,7 +21,7 @@
             self?.companyAccess?.company?.tin || self?.adminAccess?.role?.name
           }}
         </div>
-        <div :class="$style.email">{{ self?.user.email }}</div>
+        <div :class="$style.phone">{{ self?.user.phone }}</div>
       </div>
     </div>
   </NDropdown>
@@ -55,7 +55,7 @@ import { NDropdown } from "naive-ui";
   text-overflow: ellipsis;
 }
 
-.email {
+.phone {
   font-size: 12px;
   font-weight: 500;
   opacity: 0.5;

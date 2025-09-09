@@ -10,8 +10,7 @@ public class User : IEnsurable
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-  public string? Email { get; set; }
-  public string? Phone { get; set; }
+  public required string Phone { get; set; }
   public string? Address { get; set; }
   public string? MaxUserId { get; set; }
   public string? TgUserId { get; set; }

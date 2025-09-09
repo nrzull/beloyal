@@ -15,7 +15,7 @@ public class RemoveAccessEndpointTest : TestLifetime
         var endpoint = scope.Get<RemoveAccessEndpoint>();
         var adminContext = scope.Get<AdminContext>();
         var role = await adminContext.CreateAdminRole("qwe", []);
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
         await adminContext.CreateAdminAccess(user, role);
 
         var result = await endpoint.Handle(new(user.Id));

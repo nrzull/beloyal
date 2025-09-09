@@ -18,7 +18,7 @@ public record ChatMessageDTO(
       AgentId: v.AgentId,
       CustomerId: v.CustomerId,
       Content: v.Content,
-      Name: v.Agent is { } g ? g.User!.Email!
+      Name: v.Agent is { } g ? g.User!.Phone!
         : v.Customer is { } c ? c.User!.Phone!
         : throw new Exception("no agent nor customer")
     );

@@ -6,33 +6,33 @@ namespace Beloyal.API.Test.Auth;
 public class AuthContextTest : TestLifetime
 {
   [Fact]
-  public Task CreateEmailOTP() =>
+  public Task CreateOtp() =>
     WithScope(
       async (scope, _) =>
       {
         var authContext = scope.Get<AuthContext>();
-        Email email = new("qwe@gma.com");
-        var otp = await authContext.CreateEmailOTP(email);
-        Assert.Equal(email.Value, otp.Email);
+        Phone phone = new("+123123123123");
+        var otp = await authContext.CreateOtp(phone);
+        Assert.Equal(phone.Value, otp.Phone);
       }
     );
 
   [Fact]
-  public Task DrainEmailOTP() =>
+  public Task DrainOtp() =>
     WithScope(
       async (scope, _) =>
       {
         var authContext = scope.Get<AuthContext>();
-        Email email = new("qwe@gma.com");
+        Phone phone = new("+123123123123");
 
-        var otp = await authContext.CreateEmailOTP(email);
-        var otp2 = await authContext.CreateEmailOTP(email);
+        var otp = await authContext.CreateOtp(phone);
+        var otp2 = await authContext.CreateOtp(phone);
 
-        Assert.Null(await authContext.DrainEmailOTP(email, otp.Code));
+        Assert.Null(await authContext.DrainOtp(phone, otp.Code));
 
-        Assert.IsType<AuthEmailOTP>(await authContext.DrainEmailOTP(email, otp2.Code));
+        Assert.IsType<AuthOtp>(await authContext.DrainOtp(phone, otp2.Code));
 
-        Assert.Null(await authContext.DrainEmailOTP(email, otp2.Code));
+        Assert.Null(await authContext.DrainOtp(phone, otp2.Code));
       }
     );
 }

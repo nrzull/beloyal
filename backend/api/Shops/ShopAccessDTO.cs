@@ -1,11 +1,11 @@
 namespace Beloyal.API.Shops;
 
-public record ShopAccessDTO(Guid Id, string? Email, Guid CompanyAccessId, DateTimeOffset CreatedAt)
+public record ShopAccessDTO(Guid Id, string? Phone, Guid CompanyAccessId, DateTimeOffset CreatedAt)
 {
   public static ShopAccessDTO From(ShopAccess v) =>
     new(
       Id: v.Id,
-      Email: v.CompanyAccess?.User?.Email,
+      Phone: v.CompanyAccess?.User?.Phone,
       CreatedAt: v.CreatedAt,
       CompanyAccessId: v.CompanyAccessId
     );

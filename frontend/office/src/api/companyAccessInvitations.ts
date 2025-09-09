@@ -2,7 +2,7 @@ import type { CompanyAccessInvitation } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
 
 export const apiCompanyAccessInvitationsCreate = (params: {
-  email: string;
+  phone: string;
   roleId: string;
 }) =>
   apiClient

@@ -10,12 +10,12 @@
     <Table
       :data="shopAccesses"
       :columns="[
-        { key: 'email', title: 'E-mail' },
+        { key: 'phone', title: 'Номер телефона' },
         { key: 'createdAt', title: 'Создано' },
       ]"
     >
-      <template #email="{ item }">
-        {{ item.email }}
+      <template #phone="{ item }">
+        {{ item.phone }}
       </template>
 
       <template #createdAt="{ item }">
@@ -36,12 +36,12 @@
       "
       @row="addShopAccess"
       :columns="[
-        { key: 'email', title: 'E-mail' },
+        { key: 'phone', title: 'Номер телефона' },
         { key: 'role', title: 'Роль' },
       ]"
     >
-      <template #email="{ item }">
-        {{ item.user?.email }}
+      <template #phone="{ item }">
+        {{ item.user?.phone }}
       </template>
 
       <template #role="{ item }">

@@ -6,7 +6,7 @@ public class CompanyAccessInvitation
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
   public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-  public required string Email { get; set; }
+  public required string Phone { get; set; }
   public CompanyAccessInvitationStatus Status { get; set; } = CompanyAccessInvitationStatus.Active;
 
   public Guid CompanyId { get; set; }

@@ -16,7 +16,7 @@ public class CreateCompanyEndpointTest : TestLifetime
         var endpoint = scope.Get<CreateCompanyEndpoint>();
         var companyContext = scope.Get<CompanyContext>();
 
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
         var tin = new Tin("1234567891");
         var percent = new Percent(10);
 

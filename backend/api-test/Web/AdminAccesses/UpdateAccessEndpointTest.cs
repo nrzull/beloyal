@@ -15,7 +15,7 @@ public class UpdateAccessEndpointTest : TestLifetime
         var adminContext = scope.Get<AdminContext>();
         var role = await adminContext.CreateAdminRole("qwe", []);
         var role2 = await adminContext.CreateAdminRole("qwe", []);
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
 
         await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(new(user.Id, role.Id)));
 

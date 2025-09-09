@@ -17,19 +17,19 @@ public class AcceptCompanyAccessInvitationEndpointTest : TestLifetime
         var (company, access, _) = await CompanyFixture.Company(scope);
         var endpoint = scope.Get<AcceptCompanyAccessInvitationEndpoint>();
 
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
-        var user2 = await UserFixture.User(scope, "qweqweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
+        var user2 = await UserFixture.User(scope, "+12345678902");
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new("qweqwe@gma.com")
+          new("+12345678901")
         );
 
         var invitation2 = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new("qweqweqwe@gma.com")
+          new("+12345678902")
         );
 
         await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(user, new(invitation2.Id)));

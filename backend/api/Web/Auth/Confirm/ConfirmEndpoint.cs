@@ -13,15 +13,15 @@ public class ConfirmEndpoint(
   ShopContext shopContext
 )
 {
-  public async Task<ConfirmResponse> Handle(Email email, string code, AccessToken? previousToken)
+  public async Task<ConfirmResponse> Handle(Phone phone, string code, AccessToken? previousToken)
   {
-    var otp = await authContext.DrainEmailOTP(email, code);
+    var otp = await authContext.DrainOtp(phone, code);
     if (otp is null)
     {
       throw new Exception("invalid otp");
     }
 
-    var user = await userContext.EnsureUser(email);
+    var user = await userContext.EnsureUser(phone);
 
     var companyAccess = previousToken?.CompanyAccessId is Guid g
       ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))

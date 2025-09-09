@@ -5,7 +5,7 @@
         <NBreadcrumbItem @click="$router.push('/company-accesses')">
           Пользователи
         </NBreadcrumbItem>
-        <NBreadcrumbItem>{{ companyAccess?.user?.email }}</NBreadcrumbItem>
+        <NBreadcrumbItem>{{ companyAccess?.user?.phone }}</NBreadcrumbItem>
       </NBreadcrumb>
     </template>
 

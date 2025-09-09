@@ -9,7 +9,16 @@ public class Tin
   public Tin(string value)
   {
     Value = value;
-    new Validator().ValidateAndThrow(this);
+
+    try
+    {
+      new Validator().ValidateAndThrow(this);
+    }
+    catch (Exception)
+    {
+      Console.WriteLine($"failed to validate: {Value}");
+      throw;
+    }
   }
 
   class Validator : AbstractValidator<Tin>

@@ -14,7 +14,7 @@ public class AuthControllerTest : TestLifetime
       {
         using var client = App!.CreateClient();
 
-        var resp = await client.PostAsJsonAsync("/api/auth", new LoginRequest("qwe@gma.com"));
+        var resp = await client.PostAsJsonAsync("/api/auth", new LoginRequest("+123123123123"));
 
         var content = await resp.Content.ReadFromJsonAsync<LoginResponse.Ok>();
 
@@ -29,21 +29,21 @@ public class AuthControllerTest : TestLifetime
       async (scope, _) =>
       {
         using var client = App!.CreateClient();
-        var email = new Email("qweqweqwe@gma.com");
+        var phone = new Phone("+12312312331");
 
         Assert.Equal(
           System.Net.HttpStatusCode.Unauthorized,
           (await client.GetAsync("/api/self")).StatusCode
         );
 
-        var res = await client.PostAsJsonAsync("/api/auth", new LoginRequest(email.Value));
+        var res = await client.PostAsJsonAsync("/api/auth", new LoginRequest(phone.Value));
 
         var loginOk = await res.Content.ReadFromJsonAsync<LoginResponse.Ok>();
         Assert.NotNull(loginOk);
 
         res = await client.PostAsJsonAsync(
           "/api/auth/confirm",
-          new ConfirmRequest(email.Value, loginOk.Code)
+          new ConfirmRequest(phone.Value, loginOk.Code)
         );
 
         Assert.Equal(System.Net.HttpStatusCode.OK, res.StatusCode);

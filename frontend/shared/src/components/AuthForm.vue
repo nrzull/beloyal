@@ -3,15 +3,15 @@
     <template v-if="!expiredAt">
       <NInput
         :disabled="isLoading"
-        placeholder="E-mail"
-        v-model:value="email"
+        placeholder="Номер телефона"
+        v-model:value="phone"
       />
-      <NButton type="primary" :disabled="isLoading" @click="sendEmail">
+      <NButton type="primary" :disabled="isLoading" @click="sendPhone">
         Получить код
       </NButton>
     </template>
     <template v-else>
-      <NInput disabled placeholder="E-mail" :value="email" />
+      <NInput disabled placeholder="Номер телефона" :value="phone" />
       <NInput :disabled="isLoading" placeholder="Код" v-model:value="code" />
       <NButton :disabled="isLoading" @click="sendCode" type="primary">
         Отправить код
@@ -31,9 +31,9 @@ const { profile, logoutFn, authFn, confirmFn } = defineProps<{
   profile: any;
   logoutFn: () => Promise<any>;
   authFn: (params: {
-    email: string;
+    phone: string;
   }) => Promise<{ code?: string; expiredAt: string }>;
-  confirmFn: (params: { email: string; code: string }) => Promise<any>;
+  confirmFn: (params: { phone: string; code: string }) => Promise<any>;
 }>();
 
 if (profile) {
@@ -43,25 +43,25 @@ if (profile) {
 const router = useRouter();
 const expiredAt = ref();
 const code = ref();
-const email = ref();
+const phone = ref();
 
-const isLoading = computed(() => wait.some([sendEmail, sendCode]));
+const isLoading = computed(() => wait.some([sendPhone, sendCode]));
 
-const sendEmail = async () => {
-  if (!email.value) {
+const sendPhone = async () => {
+  if (!phone.value) {
     return;
   }
 
   try {
-    wait.start(sendEmail);
+    wait.start(sendPhone);
 
-    const result = await authFn({ email: email.value });
+    const result = await authFn({ phone: phone.value });
     expiredAt.value = result.expiredAt;
     code.value = result.code;
   } catch (e) {
     console.error(e);
   } finally {
-    wait.end(sendEmail);
+    wait.end(sendPhone);
   }
 };
 
@@ -72,7 +72,7 @@ const sendCode = async () => {
 
   try {
     wait.start(sendCode);
-    await confirmFn({ email: email.value, code: code.value });
+    await confirmFn({ phone: phone.value, code: code.value });
     router.push("/");
   } catch (e) {
     console.error(e);

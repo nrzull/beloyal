@@ -18,7 +18,7 @@ public class UpdateAccessEndpointTest : TestLifetime
         var role = await companyContext.CreateCompanyRole(company, "qwe", []);
         var role2 = await companyContext.CreateCompanyRole(company, "qwe", []);
 
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
 
         await Assert.ThrowsAnyAsync<Exception>(() =>
           endpoint.Handle(access, new(user.Id, role.Id))

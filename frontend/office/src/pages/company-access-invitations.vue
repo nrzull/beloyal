@@ -14,7 +14,7 @@
     <Table
       :data="invitations"
       :columns="[
-        { key: 'email', title: 'E-mail' },
+        { key: 'phone', title: 'Номер телефона' },
         { key: 'role', title: 'Роль' },
         { key: 'status', title: 'Статус' },
         { key: 'updatedAt', title: 'Обновлено' },

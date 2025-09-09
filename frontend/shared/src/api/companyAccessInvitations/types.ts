@@ -10,7 +10,7 @@ export type CompanyAccessInvitationStatus =
 export type CompanyAccessInvitation = {
   id: string;
   updatedAt: string;
-  email: string;
+  phone: string;
   company: Company;
   role: CompanyRole;
   status: CompanyAccessInvitationStatus;

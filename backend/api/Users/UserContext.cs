@@ -14,23 +14,6 @@ public class UserContext(ApplicationDbContext dbContext)
   public async Task<User?> GetByTgUserId(TgUserId id) =>
     await dbContext.Users.FirstOrDefaultAsync(v => v.TgUserId == id.Value);
 
-  public async Task<User> EnsureUser(Email email)
-  {
-    var user = await dbContext.Users.Where(v => v.Email == email.Value).FirstOrDefaultAsync();
-
-    if (user is { })
-    {
-      return user;
-    }
-
-    user = new User() { Email = email.Value };
-
-    dbContext.Add(user);
-    await dbContext.SaveChangesAsync();
-
-    return user;
-  }
-
   public async Task EnsureTgUserId(User user, TgUserId id)
   {
     if (user.TgUserId != id.Value)

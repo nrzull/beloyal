@@ -8,12 +8,12 @@ public class GetCompanyAccessInvitationsEndpoint(CompanyContext companyContext)
 {
   public async Task<GetCompanyAccessInvitationsResponse> Handle(User user)
   {
-    if (user.Email is null)
+    if (user.Phone is null)
     {
-      throw new Exception("no email");
+      throw new Exception("no phone");
     }
 
-    var invitations = await companyContext.GetCompanyAccessInvitations(new Email(user.Email));
+    var invitations = await companyContext.GetCompanyAccessInvitations(new Phone(user.Phone));
 
     return new GetCompanyAccessInvitationsResponse.Ok(
       invitations.Select(CompanyAccessInvitationDTO.From).ToList()

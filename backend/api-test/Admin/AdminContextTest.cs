@@ -13,7 +13,7 @@ public class AdminContextTest : TestLifetime
       {
         var adminContext = scope.Get<AdminContext>();
         var role = await adminContext.CreateAdminRole("qwe", []);
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
         Assert.Null(user.AdminAccess);
 
         var access = await adminContext.CreateAdminAccess(user, role);
@@ -33,7 +33,7 @@ public class AdminContextTest : TestLifetime
         var role = await adminContext.CreateAdminRole("qwe", []);
         var role2 = await adminContext.CreateAdminRole("qwe", []);
 
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
 
         var access = await adminContext.CreateAdminAccess(user, role);
         await adminContext.UpdateAdminAccess(access, role2);
@@ -49,7 +49,7 @@ public class AdminContextTest : TestLifetime
       {
         var adminContext = scope.Get<AdminContext>();
         var role = await adminContext.CreateAdminRole("qwe", []);
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
 
         var access = await adminContext.CreateAdminAccess(user, role);
         Assert.NotNull(user.AdminAccess);
@@ -88,7 +88,7 @@ public class AdminContextTest : TestLifetime
       async (scope, _) =>
       {
         var adminContext = scope.Get<AdminContext>();
-        var user = await UserFixture.User(scope, "qweqwe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
         var role = await adminContext.CreateAdminRole("qwe", []);
         await adminContext.CreateAdminAccess(user, role);
 

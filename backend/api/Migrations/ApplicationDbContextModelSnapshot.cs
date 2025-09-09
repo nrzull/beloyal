@@ -21,7 +21,6 @@ namespace Beloyal.API.Migrations
                 .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Beloyal.API.Admin.AdminAccess", b =>
@@ -83,7 +82,7 @@ namespace Beloyal.API.Migrations
                     b.ToTable("admin_roles", (string)null);
                 });
 
-            modelBuilder.Entity("Beloyal.API.Auth.AuthEmailOTP", b =>
+            modelBuilder.Entity("Beloyal.API.Auth.AuthOtp", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,19 +98,19 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
                     b.Property<DateTimeOffset>("ExpiredAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expired_at");
 
-                    b.HasKey("Id")
-                        .HasName("pk_auth_email_ot_ps");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
 
-                    b.ToTable("auth_email_ot_ps", (string)null);
+                    b.HasKey("Id")
+                        .HasName("pk_auth_otps");
+
+                    b.ToTable("auth_otps", (string)null);
                 });
 
             modelBuilder.Entity("Beloyal.API.Bonuses.Bonus", b =>
@@ -357,11 +356,11 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Phone")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("citext")
-                        .HasColumnName("email");
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("phone");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid")
@@ -715,17 +714,13 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(64)
-                        .HasColumnType("citext")
-                        .HasColumnName("email");
-
                     b.Property<string>("MaxUserId")
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)")
                         .HasColumnName("max_user_id");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)")
                         .HasColumnName("phone");
@@ -737,10 +732,6 @@ namespace Beloyal.API.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_users");
-
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("ix_users_email");
 
                     b.HasIndex("MaxUserId")
                         .IsUnique()

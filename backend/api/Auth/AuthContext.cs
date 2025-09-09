@@ -13,28 +13,28 @@ public class AuthContext(ApplicationDbContext dbContext)
 {
   public static string GetAccessTokenName() => "beloyal_access_token";
 
-  public async Task<AuthEmailOTP> CreateEmailOTP(Email email)
+  public async Task<AuthOtp> CreateOtp(Phone phone)
   {
-    await dbContext.AuthEmailOTPs.Where(v => v.Email == email.Value).ExecuteDeleteAsync();
+    await dbContext.AuthOtps.Where(v => v.Phone == phone.Value).ExecuteDeleteAsync();
 
-    var emailOtp = new AuthEmailOTP()
+    var otp = new AuthOtp()
     {
-      Email = email.Value,
+      Phone = phone.Value,
       Code = GenCode(),
       ExpiredAt = DateTimeOffset.UtcNow.AddMinutes(5),
     };
 
-    dbContext.Add(emailOtp);
+    dbContext.Add(otp);
     await dbContext.SaveChangesAsync();
 
-    return emailOtp;
+    return otp;
   }
 
-  public async Task<AuthEmailOTP?> DrainEmailOTP(Email email, string code)
+  public async Task<AuthOtp?> DrainOtp(Phone phone, string code)
   {
     var existing = await dbContext
-      .AuthEmailOTPs.Where(v =>
-        v.Code == code && v.Email == email.Value && v.ExpiredAt > DateTimeOffset.UtcNow
+      .AuthOtps.Where(v =>
+        v.Code == code && v.Phone == phone.Value && v.ExpiredAt > DateTimeOffset.UtcNow
       )
       .FirstOrDefaultAsync();
 

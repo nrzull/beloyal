@@ -16,7 +16,7 @@ public class AuthController(IHostEnvironment env) : ControllerBase
     [FromBody] LoginRequest req,
     [FromServices] LoginEndpoint endpoint
   ) =>
-    await endpoint.Handle(new(req.Email)) switch
+    await endpoint.Handle(new(req.Phone)) switch
     {
       LoginResponse.Ok ok => Ok(new { ok.ExpiredAt, Code = env.IsDevelopment() ? ok.Code : null }),
       _ => BadRequest(),
@@ -29,7 +29,7 @@ public class AuthController(IHostEnvironment env) : ControllerBase
     [FromServices] ConfirmEndpoint endpoint,
     [FromServices] AccessToken? accessToken
   ) =>
-    await endpoint.Handle(new(req.Email), req.Code, accessToken) switch
+    await endpoint.Handle(new(req.Phone), req.Code, accessToken) switch
     {
       ConfirmResponse.Ok ok => new Func<IActionResult>(() =>
       {

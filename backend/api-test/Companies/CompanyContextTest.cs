@@ -106,7 +106,7 @@ public class CompanyContextTest : TestLifetime
     WithScope(
       async (scope, _) =>
       {
-        var user = await UserFixture.User(scope, "qwewe@gma.com");
+        var user = await UserFixture.User(scope, "+12345678901");
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
 
@@ -187,28 +187,28 @@ public class CompanyContextTest : TestLifetime
       {
         var (company, access, owner) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
-        Assert.NotNull(owner.Email);
+        Assert.NotNull(owner.Phone);
 
         await Assert.ThrowsAnyAsync<Exception>(() =>
-          companyContext.CreateCompanyAccessInvitation(company, access.Role, new(owner.Email))
+          companyContext.CreateCompanyAccessInvitation(company, access.Role, new(owner.Phone))
         );
 
-        var user = await UserFixture.User(scope, "qwewqe@gma.com");
-        Assert.NotNull(user.Email);
+        var user = await UserFixture.User(scope, "+12345678901");
+        Assert.NotNull(user.Phone);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new(user.Email)
+          new(user.Phone)
         );
 
-        Assert.Equal(invitation.Email, user.Email);
+        Assert.Equal(invitation.Phone, user.Phone);
         Assert.Equal(invitation.CompanyId, company.Id);
 
         var invitation2 = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new(user.Email)
+          new(user.Phone)
         );
 
         Assert.Equal(invitation.Id, invitation2.Id);
@@ -222,13 +222,13 @@ public class CompanyContextTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
-        var user = await UserFixture.User(scope, "qwewqe@gma.com");
-        Assert.NotNull(user.Email);
+        var user = await UserFixture.User(scope, "+12345678901");
+        Assert.NotNull(user.Phone);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new(user.Email)
+          new(user.Phone)
         );
 
         await companyContext.UpdateCompanyAccessInvitation(
@@ -247,20 +247,20 @@ public class CompanyContextTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
-        var user = await UserFixture.User(scope, "qwewqe@gma.com");
-        Assert.NotNull(user.Email);
+        var user = await UserFixture.User(scope, "+12345678901");
+        Assert.NotNull(user.Phone);
 
-        await companyContext.CreateCompanyAccessInvitation(company, access.Role, new(user.Email));
+        await companyContext.CreateCompanyAccessInvitation(company, access.Role, new(user.Phone));
 
         var invitation = await companyContext.GetCompanyAccessInvitation(
           CompanyId.From(company),
-          new(user.Email)
+          new(user.Phone)
         );
 
         Assert.NotNull(invitation);
 
         Assert.Equal(company.Id, invitation.CompanyId);
-        Assert.Equal(user.Email, invitation.Email);
+        Assert.Equal(user.Phone, invitation.Phone);
       }
     );
 
@@ -301,13 +301,13 @@ public class CompanyContextTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
-        var user = await UserFixture.User(scope, "qwewqe@gma.com");
-        Assert.NotNull(user.Email);
+        var user = await UserFixture.User(scope, "+12345678901");
+        Assert.NotNull(user.Phone);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new(user.Email)
+          new(user.Phone)
         );
 
         Assert.Contains(
@@ -318,23 +318,23 @@ public class CompanyContextTest : TestLifetime
     );
 
   [Fact]
-  public Task GetCompanyAccessInvitationsByEmail() =>
+  public Task GetCompanyAccessInvitationsByPhone() =>
     WithScope(
       async (scope, _) =>
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var companyContext = scope.Get<CompanyContext>();
-        var user = await UserFixture.User(scope, "qwewqe@gma.com");
-        Assert.NotNull(user.Email);
+        var user = await UserFixture.User(scope, "+12345678901");
+        Assert.NotNull(user.Phone);
 
         var invitation = await companyContext.CreateCompanyAccessInvitation(
           company,
           access.Role,
-          new(user.Email)
+          new(user.Phone)
         );
 
         Assert.Contains(
-          await companyContext.GetCompanyAccessInvitations(new Email(user.Email)),
+          await companyContext.GetCompanyAccessInvitations(new Phone(user.Phone)),
           v => v.Id == invitation.Id
         );
       }
