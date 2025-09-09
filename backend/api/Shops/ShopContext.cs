@@ -16,6 +16,21 @@ public class ShopContext(ApplicationDbContext dbContext)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
+  public async Task<List<Shop>> GetShops(CompanyAccessId companyAccessId) =>
+    await dbContext
+      .ShopAccesses.Include(v => v.Shop)
+      .Where(v => v.CompanyAccessId == companyAccessId.Value)
+      .Select(v => v.Shop)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
+
+  public async Task<Shop?> GetShop(ShopAccessId shopAccessId) =>
+    (
+      await dbContext
+        .ShopAccesses.Include(v => v.Shop)
+        .FirstOrDefaultAsync(v => v.Id == shopAccessId.Value)
+    )?.Shop;
+
   public async Task<Shop> CreateShop(Company company, string name)
   {
     var shop = new Shop { Company = company, Name = name };

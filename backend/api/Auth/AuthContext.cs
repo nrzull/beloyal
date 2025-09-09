@@ -1,5 +1,6 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Shops;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
 using JWT.Algorithms;
@@ -79,7 +80,11 @@ public class AuthContext(ApplicationDbContext dbContext)
     );
   }
 
-  public EncodedAccessToken EncodeAccessToken(User user, CompanyAccess? companyAccess)
+  public EncodedAccessToken EncodeAccessToken(
+    User user,
+    CompanyAccess? companyAccess,
+    ShopAccess? shopAccess
+  )
   {
     var expiredAt = DateTimeOffset.UtcNow.AddHours(12);
 
@@ -90,6 +95,7 @@ public class AuthContext(ApplicationDbContext dbContext)
       .AddClaim("exp", expiredAt.ToUnixTimeSeconds())
       .AddClaim("user_id", user.Id)
       .AddClaim("company_access_id", companyAccess?.Id)
+      .AddClaim("shop_access_id", shopAccess?.Id)
       .Encode();
 
     return new EncodedAccessToken(Token: token, ExpiredAt: expiredAt);
@@ -132,24 +138,28 @@ public class AuthContext(ApplicationDbContext dbContext)
       .MustVerifySignature()
       .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
 
-    decoded.TryGetValue("exp", out var rawExpiredAtSeconds);
-    decoded.TryGetValue("user_id", out var rawUserId);
-    decoded.TryGetValue("company_access_id", out var rawCompanyAccessId);
+    decoded.TryGetValue("exp", out var _expiredAtSeconds);
+    decoded.TryGetValue("user_id", out var _userId);
+    decoded.TryGetValue("company_access_id", out var _companyAccessId);
+    decoded.TryGetValue("shop_access_id", out var _shopAccessId);
 
-    if (!rawExpiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
+    if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
     {
       throw new Exception("exp is invalid");
     }
 
-    if (!rawUserId.TryGetGuid(out var userId))
+    if (!_userId.TryGetGuid(out var userId))
     {
       throw new Exception("user_id is invalid");
     }
 
     return new AccessToken(
       UserId: userId,
-      CompanyAccessId: rawCompanyAccessId.ValueKind == System.Text.Json.JsonValueKind.String
-        ? rawCompanyAccessId.GetGuid()
+      CompanyAccessId: _companyAccessId.ValueKind == System.Text.Json.JsonValueKind.String
+        ? _companyAccessId.GetGuid()
+        : null,
+      ShopAccessId: _shopAccessId.ValueKind == System.Text.Json.JsonValueKind.String
+        ? _shopAccessId.GetGuid()
         : null,
       ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
     );

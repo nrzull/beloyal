@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { ensureShop } from "~/middlewares/ensureShop";
+import { ensureSelf } from "~/middlewares/ensureSelf";
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,6 +12,7 @@ export const router = createRouter({
 
     {
       path: "/",
+      beforeEnter: [ensureSelf("/auth")],
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
@@ -18,6 +21,7 @@ export const router = createRouter({
         },
         {
           path: "",
+          beforeEnter: [ensureShop("/profile")],
           component: () => import("~/pages/dashboard.vue"),
         },
       ],

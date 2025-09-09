@@ -10,6 +10,7 @@ using Beloyal.API.Shops;
 using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses;
 using Beloyal.API.Web.AdminRoles;
+using Beloyal.API.Web.AgentSelf;
 using Beloyal.API.Web.Auth;
 using Beloyal.API.Web.Chats;
 using Beloyal.API.Web.CompanyAccesses;
@@ -59,6 +60,7 @@ public class Program
     builder.UseMailingsEndpoints();
     builder.UseChatsEndpoints();
     builder.UseCustomerSelfEndpoints();
+    builder.UseAgentSelfEndpoints();
 
     builder.UseTgBotHandlers();
 

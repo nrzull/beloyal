@@ -29,7 +29,7 @@ public class GetSelfEndpoint(
     {
       companyAccess = (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
-      newToken = authContext.EncodeAccessToken(user, companyAccess);
+      newToken = authContext.EncodeAccessToken(user, companyAccess, null);
     }
 
     return (

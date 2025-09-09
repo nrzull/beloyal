@@ -13,7 +13,9 @@ public class WithUserFilter(UserContext userContext) : IAsyncActionFilter
   {
     if (ctx.HttpContext.Items["accessToken"] is AccessToken token)
     {
-      ctx.ActionArguments["user"] = await userContext.GetById(UserId.From(token.UserId));
+      var user = await userContext.GetById(UserId.From(token.UserId));
+      ctx.HttpContext.Items["user"] = user;
+      ctx.ActionArguments["user"] = user;
     }
 
     await next();
