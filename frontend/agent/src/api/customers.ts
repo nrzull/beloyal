@@ -1,5 +1,7 @@
 import { apiClient } from "~/api/clients";
 
+export type Customer = Awaited<ReturnType<typeof apiCustomersGetByPublicToken>>;
+
 export const apiCustomersGetByPublicToken = (params: { publicToken: string }) =>
   apiClient
     .get<{

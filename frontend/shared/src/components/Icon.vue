@@ -11,8 +11,11 @@ import home from "./Icon/assets/home.svg?raw";
 import qr from "./Icon/assets/qr.svg?raw";
 import search from "./Icon/assets/search.svg?raw";
 import location from "./Icon/assets/location.svg?raw";
+import coins from "./Icon/assets/coins.svg?raw";
+import rub from "./Icon/assets/rub.svg?raw";
+import back from "./Icon/assets/back.svg?raw";
 
-const icons = { user, home, qr, search, location } as const;
+const icons = { user, home, qr, search, location, coins, rub, back } as const;
 
 export type Variant = keyof typeof icons;
 
