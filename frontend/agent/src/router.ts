@@ -3,6 +3,7 @@ import { ensureShop } from "~/middlewares/ensureShop";
 import { ensureSelf } from "~/middlewares/ensureSelf";
 
 export const router = createRouter({
+  // TODO: change to createMemoryHistory
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {

@@ -55,7 +55,8 @@ public class AuthContext(ApplicationDbContext dbContext)
   {
     var token = new CustomerAccessToken(
       CustomerId: customer.Id,
-      ExpiredAt: DateTimeOffset.UtcNow.AddHours(1)
+      // TODO: change
+      ExpiredAt: DateTimeOffset.UtcNow.AddHours(12)
     );
 
     var authToken = JwtBuilder

@@ -1,18 +1,12 @@
-using Beloyal.API.Chats;
 using Beloyal.API.Companies;
-using Beloyal.API.Messengers.EnsureTgUser;
+using Beloyal.API.Messengers.OnTgMessage;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace Beloyal.API.Messengers;
 
-public class TgContext(
-  ApplicationDbContext dbContext,
-  ChatContext chatContext,
-  EnsureTgUserHandler ensureTgUserHandler
-) : IMessengerContext<TgBot, TelegramBotClient>
+public class TgContext(ApplicationDbContext dbContext, IServiceScopeFactory sf)
+  : IMessengerContext<TgBot, TelegramBotClient>
 {
   static Dictionary<CompanyId, TelegramBotClient> Pool { get; set; } = new() { };
 
@@ -89,7 +83,11 @@ public class TgContext(
     {
       try
       {
-        await OnMessage(client, companyId, msg, u);
+        await using var scope = sf.CreateAsyncScope();
+
+        var handler = scope.ServiceProvider.GetRequiredService<OnTgMessageHandler>();
+
+        await handler.Handle(client, companyId, msg, u);
       }
       catch (Exception error)
       {
@@ -111,43 +109,5 @@ public class TgContext(
     {
       DisconnectClient(companyId);
     }
-  }
-
-  async Task OnMessage(TelegramBotClient client, CompanyId companyId, Message msg, UpdateType _)
-  {
-    var bot = await GetBot(companyId);
-    if (bot is null)
-    {
-      return;
-    }
-
-    if (
-      await ensureTgUserHandler.Handle(bot, client, companyId, msg)
-      is not EnsureTgUserResponse.Ok ok
-    )
-    {
-      return;
-    }
-    else if (msg.Text is not string { } text)
-    {
-      return;
-    }
-    else if (text.Contains("/start"))
-    {
-      await OnCustomerStart(ok);
-    }
-    else
-    {
-      await chatContext.EnsureConversation(ok.Customer);
-      await chatContext.SendMessage(ok.Customer, text);
-    }
-  }
-
-  async Task OnCustomerStart(EnsureTgUserResponse.Ok ok)
-  {
-    await ok.Client.SendMessage(
-      ok.Customer.User.TgUserId!,
-      $"{ok.Customer.CreatedAt} {ok.Customer.User.Phone}"
-    );
   }
 }
