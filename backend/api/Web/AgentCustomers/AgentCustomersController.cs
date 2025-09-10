@@ -1,4 +1,6 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Shops;
+using Beloyal.API.Web.AgentCustomers.AddBonus;
 using Beloyal.API.Web.AgentCustomers.GetCustomerByPublicToken;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,6 +25,21 @@ public class AgentCustomersController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure(), publicToken) switch
     {
       GetCustomerByPublicTokenResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPost("public-tokens/{publicToken}/add-bonus")]
+  [WithShopAccess]
+  public async Task<Results<Ok<AddBonusResponse.Ok>, BadRequest>> AddBonus(
+    [FromServices] AddBonusEndpoint endpoint,
+    [FromServices] ShopAccess? shopAccess,
+    [FromServices] Shop? shop,
+    [FromRoute(Name = "publicToken")] string publicToken,
+    [FromBody] AddBonusRequest req
+  ) =>
+    await endpoint.Handle(shopAccess.Ensure(), shop.Ensure(), publicToken, req) switch
+    {
+      AddBonusResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 }

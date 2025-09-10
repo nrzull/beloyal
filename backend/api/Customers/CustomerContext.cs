@@ -1,3 +1,4 @@
+using Beloyal.API.Auth;
 using Beloyal.API.Companies;
 using Beloyal.API.Messengers;
 using Beloyal.API.Types;
@@ -9,7 +10,8 @@ namespace Beloyal.API.Customers;
 public class CustomerContext(
   ApplicationDbContext dbContext,
   UserContext userContext,
-  CompanyContext companyContext
+  CompanyContext companyContext,
+  AuthContext authContext
 )
 {
   public async Task<List<Customer>> GetCustomers(CompanyId companyId) =>
@@ -24,6 +26,23 @@ public class CustomerContext(
     await dbContext
       .Customers.Include(v => v.User)
       .FirstOrDefaultAsync(v => v.Id == customerId.Value);
+
+  public async Task<Customer?> GetCustomerByPublicToken(CompanyId companyId, string publicToken)
+  {
+    var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
+    if (decoded is null)
+    {
+      return null;
+    }
+
+    var customer = await GetCustomer(CustomerId.From(decoded.CustomerId));
+    if (customer is null || customer.CompanyId != companyId.Value)
+    {
+      return null;
+    }
+
+    return customer!;
+  }
 
   public async Task<Customer?> GetCustomer(CompanyId companyId, UserId userId) =>
     await dbContext

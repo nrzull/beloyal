@@ -2,7 +2,9 @@
   <Card>
     <NThing>
       <template #header>
-        <BackButton @click="$router.push(`/customers/${publicToken}`)">
+        <BackButton
+          @click="isLoading ? null : $router.push(`/customers/${publicToken}`)"
+        >
           <Heading> Начислить бонусы </Heading>
         </BackButton>
       </template>
@@ -15,7 +17,9 @@
             :step="0"
             :min="0"
             :precision="2"
+            :disabled="isLoading"
             placeholder="Введите сумму оплаты"
+            v-model:value="income"
           >
             <template #prefix>
               <Icon variant="rub" />
@@ -25,12 +29,24 @@
 
         <NSpace vertical>
           <div>Комментарий <b>(необязательно)</b></div>
-          <NInput type="textarea" placeholder="Введите комментарий" />
+          <NInput
+            :disabled="isLoading"
+            type="textarea"
+            placeholder="Введите комментарий"
+          />
         </NSpace>
       </NSpace>
 
       <template #footer>
-        <NButton block size="large" type="primary">Начислить бонусы</NButton>
+        <NButton
+          :disabled="isLoading"
+          block
+          size="large"
+          type="primary"
+          @click="addBonus"
+        >
+          Начислить бонусы
+        </NButton>
       </template>
     </NThing>
   </Card>
@@ -39,8 +55,37 @@
 <script setup lang="ts">
 import type { Customer } from "~/api/customers";
 import { NInputNumber, NSpace, NInput, NButton, NThing } from "naive-ui";
-import { Card, Icon, Heading } from "@beloyal/shared";
+import { Card, Icon, Heading, wait } from "@beloyal/shared";
 import BackButton from "~/components/BackButton.vue";
+import { apiCustomersAddBonus } from "~/api/customers";
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 
-defineProps<{ customer: Customer; publicToken: string }>();
+const { publicToken } = defineProps<{
+  customer: Customer;
+  publicToken: string;
+}>();
+
+const emit = defineEmits<{ refresh: [] }>();
+
+const income = ref<number>();
+const isLoading = computed(() => wait.some([addBonus]));
+const router = useRouter();
+
+const addBonus = async () => {
+  if (!income.value || income.value <= 0) {
+    return;
+  }
+
+  try {
+    wait.start(addBonus);
+    await apiCustomersAddBonus({ publicToken, income: income.value });
+    emit("refresh");
+    router.push(`/customers/${publicToken}`);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    wait.end(addBonus);
+  }
+};
 </script>

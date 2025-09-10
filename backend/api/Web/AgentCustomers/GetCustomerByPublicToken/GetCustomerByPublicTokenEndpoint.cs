@@ -1,29 +1,22 @@
-using Beloyal.API.Auth;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 
 namespace Beloyal.API.Web.AgentCustomers.GetCustomerByPublicToken;
 
-public class GetCustomerByPublicTokenEndpoint(
-  AuthContext authContext,
-  CustomerContext customerContext
-)
+public class GetCustomerByPublicTokenEndpoint(CustomerContext customerContext)
 {
   public async Task<GetCustomerByPublicTokenResponse> Handle(
     CompanyAccess companyAccess,
     string publicToken
   )
   {
-    var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
-    if (decoded is null)
+    var customer = await customerContext.GetCustomerByPublicToken(
+      CompanyId.From(companyAccess),
+      publicToken
+    );
+    if (customer is null)
     {
       throw new Exception("invalid publicToken");
-    }
-
-    var customer = await customerContext.GetCustomer(CustomerId.From(decoded.CustomerId));
-    if (customer is null || customer.CompanyId != companyAccess.CompanyId)
-    {
-      throw new Exception("invalid customer");
     }
 
     return new GetCustomerByPublicTokenResponse.Ok(

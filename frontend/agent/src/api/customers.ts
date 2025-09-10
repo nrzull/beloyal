@@ -8,3 +8,16 @@ export const apiCustomersGetByPublicToken = (params: { publicToken: string }) =>
       data: { bonusAmount: number; phoneNumber: string; customerId: string };
     }>(`/api/agent/customers/public-tokens/${params.publicToken}`)
     .then((v) => v.data);
+
+export const apiCustomersAddBonus = (params: {
+  publicToken: string;
+  income: number;
+}) =>
+  apiClient
+    .post(
+      `/api/agent/customers/public-tokens/${params.publicToken}/add-bonus`,
+      {
+        income: params.income,
+      }
+    )
+    .then((v) => v.data);
