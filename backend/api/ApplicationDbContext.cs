@@ -218,25 +218,24 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey<Company>(v => v.Id);
     });
 
-    builder.Entity<Bonus>(bonusRecord =>
+    builder.Entity<Bonus>(bonus =>
     {
-      bonusRecord
+      bonus.Property(v => v.Status).HasConversion<string>();
+      bonus.Property(v => v.Type).HasConversion<string>();
+
+      bonus
         .HasOne(v => v.Customer)
         .WithMany()
         .HasForeignKey(v => v.CustomerId)
         .HasPrincipalKey(v => v.Id);
 
-      bonusRecord
+      bonus
         .HasOne(v => v.Agent)
         .WithMany()
         .HasForeignKey(v => v.AgentId)
         .HasPrincipalKey(v => v.Id);
 
-      bonusRecord
-        .HasOne(v => v.Shop)
-        .WithMany()
-        .HasForeignKey(v => v.ShopId)
-        .HasPrincipalKey(v => v.Id);
+      bonus.HasOne(v => v.Shop).WithMany().HasForeignKey(v => v.ShopId).HasPrincipalKey(v => v.Id);
     });
 
     builder.Entity<Chat>(chat =>

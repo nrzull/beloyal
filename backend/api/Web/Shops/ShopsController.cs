@@ -18,6 +18,7 @@ namespace Beloyal.API.Web.Shops;
 public class ShopsController : ControllerBase
 {
   [HttpGet]
+  [ProducesResponseType(typeof(GetShopsResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetShopsResponse.Ok>, BadRequest>> GetShops(
     [FromServices] GetShopsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -29,6 +30,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpPost]
+  [ProducesResponseType(typeof(CreateShopResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<CreateShopResponse.Ok>, BadRequest>> CreateShop(
     [FromServices] CreateShopEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -41,6 +43,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [ProducesResponseType(typeof(GetShopResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetShopResponse.Ok>, NotFound, BadRequest>> GetShop(
     [FromServices] GetShopEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -54,6 +57,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpGet("{id}/shop-accesses")]
+  [ProducesResponseType(typeof(GetShopAccessesResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetShopAccessesResponse.Ok>, BadRequest>> GetShopAccesses(
     [FromServices] GetShopAccessesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -66,6 +70,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpPost("{id}/shop-accesses")]
+  [ProducesResponseType(typeof(CreateShopAccessResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<CreateShopAccessResponse.Ok>, BadRequest>> CreateShopAccess(
     [FromServices] CreateShopAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

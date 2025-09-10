@@ -23,6 +23,7 @@ using Beloyal.API.Web.Messengers;
 using Beloyal.API.Web.Self;
 using Beloyal.API.Web.Shops;
 using Beloyal.API.Web.WhiteCompanies;
+using Scalar.AspNetCore;
 
 namespace Beloyal.API;
 
@@ -35,6 +36,7 @@ public class Program
     builder.SetupNpgsql();
     builder.SetupHttp();
     builder.SetupCors();
+    builder.SetupOpenApi();
     builder.Services.AddControllers();
 
     builder.Services.AddScoped<AuthContext>();
@@ -73,6 +75,11 @@ public class Program
     if (app.Environment.IsProduction())
     {
       app.UseHttpsRedirection();
+    }
+    else
+    {
+      app.MapOpenApi();
+      app.MapScalarApiReference("/api/scalar/v1");
     }
 
     app.UseAuthorization();

@@ -13,6 +13,7 @@ namespace Beloyal.API.Web.CompanyAccesses;
 [WithCompanyAccess]
 public class CompanyAccessesController : ControllerBase
 {
+  [HttpGet]
   public async Task<IActionResult> GetCompanyAccesses(
     [FromServices] GetAccessesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess

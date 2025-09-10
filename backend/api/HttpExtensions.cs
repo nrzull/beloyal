@@ -32,6 +32,11 @@ public static class HttpExtensions
     });
   }
 
+  public static void SetupOpenApi(this WebApplicationBuilder builder)
+  {
+    builder.Services.AddOpenApi();
+  }
+
   public static void UseCustomCors(this WebApplication app)
   {
     app.UseCors("generic");
