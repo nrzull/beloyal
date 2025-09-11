@@ -3,6 +3,7 @@ using Beloyal.API.Web.CompanyAccesses.GetAccess;
 using Beloyal.API.Web.CompanyAccesses.GetAccesses;
 using Beloyal.API.Web.CompanyAccesses.UpdateAccess;
 using Beloyal.API.Web.Filters;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beloyal.API.Web.CompanyAccesses;
@@ -14,38 +15,38 @@ namespace Beloyal.API.Web.CompanyAccesses;
 public class CompanyAccessesController : ControllerBase
 {
   [HttpGet]
-  public async Task<IActionResult> GetCompanyAccesses(
+  public async Task<Results<Ok<GetAccessesResponse.Ok>, BadRequest>> GetCompanyAccesses(
     [FromServices] GetAccessesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
   ) =>
     await endpoint.Handle(companyAccess.Ensure()) switch
     {
-      GetAccessesResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      GetAccessesResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpGet("{id}")]
-  public async Task<IActionResult> GetAccess(
+  public async Task<Results<NotFound, Ok<GetAccessResponse.Ok>, BadRequest>> GetAccess(
     [FromServices] GetAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
     [FromRoute(Name = "id")] Guid companyAccessId
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), CompanyAccessId.From(companyAccessId)) switch
     {
-      GetAccessResponse.NotFound => NotFound(),
-      GetAccessResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      GetAccessResponse.NotFound => TypedResults.NotFound(),
+      GetAccessResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpPatch("{id}")]
-  public async Task<IActionResult> UpdateCompanyAccess(
+  public async Task<Results<Ok<UpdateAccessResponse.Ok>, BadRequest>> UpdateCompanyAccess(
     [FromServices] UpdateAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
     [FromBody] UpdateAccessRequest req
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
-      UpdateAccessResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      UpdateAccessResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 }

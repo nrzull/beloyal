@@ -5,6 +5,7 @@ using Beloyal.API.Web.CompanyRoles.GetRole;
 using Beloyal.API.Web.CompanyRoles.GetRoles;
 using Beloyal.API.Web.CompanyRoles.UpdateRole;
 using Beloyal.API.Web.Filters;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beloyal.API.Web.CompanyRoles;
@@ -16,58 +17,60 @@ namespace Beloyal.API.Web.CompanyRoles;
 public class CompanyRolesController : ControllerBase
 {
   [HttpGet]
-  public async Task<IActionResult> GetRoles(
+  public async Task<Results<Ok<GetRolesResponse.Ok>, BadRequest>> GetRoles(
     [FromServices] GetRolesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
   ) =>
     await endpoint.Handle(companyAccess.Ensure()) switch
     {
-      GetRolesResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      GetRolesResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpGet("{id}")]
-  public async Task<IActionResult> GetRole(
+  public async Task<Results<Ok<GetRoleResponse.Ok>, NotFound, BadRequest>> GetRole(
     [FromServices] GetRoleEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
     [FromRoute(Name = "id")] Guid roleId
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), roleId) switch
     {
-      GetRoleResponse.NotFound => NotFound(),
-      GetRoleResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      GetRoleResponse.NotFound => TypedResults.NotFound(),
+      GetRoleResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpPost]
-  public async Task<IActionResult> CreateRole(
+  public async Task<Results<Ok<CreateRoleResponse.Ok>, BadRequest>> CreateRole(
     [FromServices] CreateRoleEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
     [FromBody] CreateRoleRequest req
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
-      CreateRoleResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      CreateRoleResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpPatch("{id}")]
-  public async Task<IActionResult> UpdateRole(
+  public async Task<Results<Ok<UpdateRoleResponse.Ok>, BadRequest>> UpdateRole(
     [FromServices] UpdateRoleEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
     [FromBody] UpdateRoleRequest req
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
-      UpdateRoleResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      UpdateRoleResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpGet("permissions")]
-  public IActionResult GetPermissions([FromServices] GetPermissionsEndpoint endpoint) =>
+  public Results<Ok<GetPermissionsResponse.Ok>, BadRequest> GetPermissions(
+    [FromServices] GetPermissionsEndpoint endpoint
+  ) =>
     endpoint.Handle() switch
     {
-      GetPermissionsResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      GetPermissionsResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 }

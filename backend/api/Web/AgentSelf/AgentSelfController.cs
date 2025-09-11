@@ -17,6 +17,7 @@ public class AgentSelfController(IHostEnvironment env) : ControllerBase
 {
   [HttpGet]
   [WithAccessToken]
+  [ProducesResponseType(typeof(GetSelfResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetSelfResponse.Ok>, BadRequest>> GetSelf(
     [FromServices] GetSelfEndpoint endpoint,
     [FromServices] User? user,

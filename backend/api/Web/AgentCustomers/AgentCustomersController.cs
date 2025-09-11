@@ -15,6 +15,7 @@ namespace Beloyal.API.Web.AgentCustomers;
 public class AgentCustomersController : ControllerBase
 {
   [HttpGet("public-tokens/{publicToken}")]
+  [ProducesResponseType(typeof(GetCustomerByPublicTokenResponse.Ok), StatusCodes.Status200OK)]
   public async Task<
     Results<Ok<GetCustomerByPublicTokenResponse.Ok>, BadRequest>
   > GetCustomerByPublicToken(
@@ -30,6 +31,7 @@ public class AgentCustomersController : ControllerBase
 
   [HttpPost("public-tokens/{publicToken}/add-bonus")]
   [WithShopAccess]
+  [ProducesResponseType(typeof(AddBonusResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<AddBonusResponse.Ok>, BadRequest>> AddBonus(
     [FromServices] AddBonusEndpoint endpoint,
     [FromServices] ShopAccess? shopAccess,

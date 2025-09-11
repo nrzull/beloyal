@@ -3,6 +3,7 @@ using Beloyal.API.Web.Auth.Confirm;
 using Beloyal.API.Web.Auth.Login;
 using Beloyal.API.Web.Auth.LoginAsTgCustomer;
 using Beloyal.API.Web.Filters;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beloyal.API.Web.Auth;
@@ -11,44 +12,53 @@ namespace Beloyal.API.Web.Auth;
 [Route("/api/auth")]
 public class AuthController(IHostEnvironment env) : ControllerBase
 {
+  public record LoginEndpointResponse(string? Code, DateTimeOffset ExpiredAt);
+
   [HttpPost]
-  public async Task<IActionResult> Login(
+  public async Task<Results<Ok<LoginEndpointResponse>, BadRequest>> Login(
     [FromBody] LoginRequest req,
     [FromServices] LoginEndpoint endpoint
   ) =>
     await endpoint.Handle(new(req.Phone)) switch
     {
-      LoginResponse.Ok ok => Ok(new { ok.ExpiredAt, Code = env.IsDevelopment() ? ok.Code : null }),
-      _ => BadRequest(),
+      LoginResponse.Ok ok => TypedResults.Ok(
+        new LoginEndpointResponse(
+          Code: env.IsDevelopment() ? ok.Code : null,
+          ExpiredAt: ok.ExpiredAt
+        )
+      ),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpPost("confirm")]
   [WithAccessToken]
-  public async Task<IActionResult> Confirm(
+  public async Task<Results<Ok, BadRequest>> Confirm(
     [FromBody] ConfirmRequest req,
     [FromServices] ConfirmEndpoint endpoint,
     [FromServices] AccessToken? accessToken
   ) =>
     await endpoint.Handle(new(req.Phone), req.Code, accessToken) switch
     {
-      ConfirmResponse.Ok ok => new Func<IActionResult>(() =>
+      ConfirmResponse.Ok ok => new Func<Ok>(() =>
       {
         HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
-        return Ok();
+        return TypedResults.Ok();
       })(),
-      _ => BadRequest(),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpPost("customer/telegram")]
-  public async Task<IActionResult> LoginAsCustomer(
+  public async Task<
+    Results<Ok<LoginAsTgCustomerResponse.Ok>, BadRequest<string>, BadRequest>
+  > LoginAsCustomer(
     [FromServices] LoginAsTgCustomerEndpoint endpoint,
     [FromBody] LoginAsTgCustomerRequest req
   ) =>
     await endpoint.Handle(req) switch
     {
-      LoginAsTgCustomerResponse.Ok ok => Ok(ok),
-      LoginAsTgCustomerResponse.InvalidUser => BadRequest("invalid user"),
-      _ => BadRequest(),
+      LoginAsTgCustomerResponse.Ok ok => TypedResults.Ok(ok),
+      LoginAsTgCustomerResponse.InvalidUser => TypedResults.BadRequest("invalid user"),
+      _ => TypedResults.BadRequest(),
     };
 
   [HttpGet("logout")]

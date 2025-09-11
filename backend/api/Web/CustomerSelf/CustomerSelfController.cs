@@ -1,6 +1,7 @@
 using Beloyal.API.Customers;
 using Beloyal.API.Web.CustomerSelf.GetCustomerSelf;
 using Beloyal.API.Web.Filters;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Beloyal.API.Web.CustomerSelf;
@@ -12,13 +13,13 @@ namespace Beloyal.API.Web.CustomerSelf;
 public class CustomerSelfController : ControllerBase
 {
   [HttpGet]
-  public async Task<IActionResult> GetCustomerSelf(
+  public async Task<Results<BadRequest, Ok<GetCustomerSelfResponse.Ok>>> GetCustomerSelf(
     [FromServices] GetCustomerSelfEndpoint endpoint,
     [FromServices] Customer? customer
   ) =>
     await endpoint.Handle(customer.Ensure()) switch
     {
-      GetCustomerSelfResponse.Ok ok => Ok(ok),
-      _ => BadRequest(),
+      GetCustomerSelfResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
     };
 }
