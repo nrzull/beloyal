@@ -6,11 +6,6 @@
     key-field="route"
     :options="[
       { type: 'route', label: 'Компании', route: '/self/company-accesses' },
-      {
-        type: 'route',
-        label: 'Приглашения',
-        route: '/self/company-access-invitations',
-      },
       { type: 'route', label: 'Выйти', route: '/auth' },
     ]"
   >

@@ -40,4 +40,16 @@ public class UserContext(ApplicationDbContext dbContext)
 
     return user;
   }
+
+  public async Task VerifyUser(User user)
+  {
+    if (user.VerifiedAt is not null)
+    {
+      return;
+    }
+
+    dbContext.Update(user);
+    user.VerifiedAt = DateTimeOffset.UtcNow;
+    await dbContext.SaveChangesAsync();
+  }
 }

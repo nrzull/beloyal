@@ -22,6 +22,7 @@ public class ConfirmEndpoint(
     }
 
     var user = await userContext.EnsureUser(phone);
+    await userContext.VerifyUser(user);
 
     var companyAccess = previousToken?.CompanyAccessId is Guid g
       ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))

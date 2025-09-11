@@ -8,6 +8,7 @@ public class CompanyAccess : IEnsurable
 {
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+  public DateTimeOffset? BlockedAt { get; set; }
 
   public Guid UserId { get; set; }
   public required User User { get; set; }

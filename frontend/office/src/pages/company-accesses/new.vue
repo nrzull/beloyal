@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новое приглашение</PageHeading>
+      <PageHeading>Новый пользователь</PageHeading>
     </template>
 
     <Card :class="$style.form">
@@ -25,8 +25,9 @@
         :disabled="isLoading"
         type="primary"
         @click="createCompanyAccessInvitation"
-        >Пригласить</NButton
       >
+        Добавить
+      </NButton>
     </Card>
   </Page>
 </template>
@@ -41,8 +42,8 @@ import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
-import { apiCompanyAccessInvitationsCreate } from "~/api/companyAccessInvitations";
 import { useRouter } from "vue-router";
+import { apiCompanyAccessesCreate } from "~/api/companyAccesses";
 
 const isLoading = computed(() => wait.some([createCompanyAccessInvitation]));
 const router = useRouter();
@@ -59,12 +60,12 @@ const createCompanyAccessInvitation = async () => {
   try {
     wait.start(createCompanyAccessInvitation);
 
-    await apiCompanyAccessInvitationsCreate({
+    await apiCompanyAccessesCreate({
       phone: phone.value,
       roleId: selectedRoleId.value,
     });
 
-    router.push("/company-access-invitations");
+    router.push("/company-accesses");
   } catch (e) {
     console.error(e);
   } finally {

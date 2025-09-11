@@ -13,6 +13,14 @@ export const apiCompanyAccessesGet = (params: { companyAccessId: string }) =>
     )
     .then((v) => v.data);
 
+export const apiCompanyAccessesCreate = (params: {
+  phone: string;
+  roleId: string;
+}) =>
+  apiClient
+    .post<{ data: CompanyAccess }>(`/api/company/company-accesses`, params)
+    .then((v) => v.data);
+
 export const apiCompanyAccessesUpdate = (params: {
   companyAccessId: string;
   roleId: string;

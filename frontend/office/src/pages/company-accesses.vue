@@ -2,6 +2,14 @@
   <Page>
     <template #top>
       <PageHeading>Пользователи</PageHeading>
+
+      <NButton
+        type="primary"
+        size="medium"
+        @click="$router.push('/company-accesses/new')"
+      >
+        Добавить пользователя
+      </NButton>
     </template>
 
     <Table
@@ -30,6 +38,7 @@ import type { CompanyAccess } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
+import { NButton } from "naive-ui";
 
 const companyAccesses = ref<CompanyAccess[]>([]);
 

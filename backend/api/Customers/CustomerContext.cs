@@ -69,6 +69,7 @@ public class CustomerContext(
     }
 
     var user = await userContext.EnsureUser(phone);
+    await userContext.VerifyUser(user);
     var customer = await CreateCustomer(user, null, tgBot);
 
     return customer;
@@ -94,6 +95,7 @@ public class CustomerContext(
     }
 
     var user = await userContext.EnsureUser(phone);
+    await userContext.VerifyUser(user);
     var customer = await CreateCustomer(user, maxBot);
 
     return customer;

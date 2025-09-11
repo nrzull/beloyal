@@ -20,10 +20,6 @@ export const router = createRouter({
           component: () => import("~/pages/welcome/company.vue"),
         },
         {
-          path: "invitations",
-          component: () => import("~/pages/welcome/invitations.vue"),
-        },
-        {
           path: "",
           component: () => import("~/pages/welcome.vue"),
         },
@@ -71,27 +67,16 @@ export const router = createRouter({
           path: "company-accesses",
           children: [
             {
+              path: "new",
+              component: () => import("~/pages/company-accesses/new.vue"),
+            },
+            {
               path: ":id",
               component: () => import("~/pages/company-accesses/_id.vue"),
             },
             {
               path: "",
               component: () => import("~/pages/company-accesses.vue"),
-            },
-          ],
-        },
-
-        {
-          path: "company-access-invitations",
-          children: [
-            {
-              path: "new",
-              component: () =>
-                import("~/pages/company-access-invitations/new.vue"),
-            },
-            {
-              path: "",
-              component: () => import("~/pages/company-access-invitations.vue"),
             },
           ],
         },

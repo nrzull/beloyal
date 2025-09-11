@@ -6,6 +6,4 @@ namespace Beloyal.API.Companies;
 public partial struct CompanyRoleId
 {
   public static CompanyRoleId From(CompanyRole v) => From(v.Id);
-
-  public static CompanyRoleId From(CompanyAccessInvitation v) => From(v.RoleId);
 };

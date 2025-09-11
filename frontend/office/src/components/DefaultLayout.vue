@@ -68,13 +68,6 @@ const companyMenu = computed(() => {
       children: [
         {
           type: "route",
-          route: "/company-access-invitations",
-          label: "Приглашения",
-          available: true,
-        },
-
-        {
-          type: "route",
           route: "/company-accesses",
           label: "Пользователи",
           available: true,

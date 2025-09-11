@@ -3,7 +3,6 @@ export * from "./adminRoles/types";
 export * from "./chats/types";
 export * from "./companies/types";
 export * from "./companyAccesses/types";
-export * from "./companyAccessInvitations/types";
 export * from "./companyRoles/types";
 export * from "./mailings/types";
 export * from "./messengers/types";

@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Web.CompanyAccesses.CreateAccess;
 using Beloyal.API.Web.CompanyAccesses.GetAccess;
 using Beloyal.API.Web.CompanyAccesses.GetAccesses;
 using Beloyal.API.Web.CompanyAccesses.UpdateAccess;
@@ -22,6 +23,18 @@ public class CompanyAccessesController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure()) switch
     {
       GetAccessesResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPost]
+  public async Task<Results<Ok<CreateAccessResponse.Ok>, BadRequest>> CreateCompanyAccess(
+    [FromServices] CreateAccessEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromBody] CreateAccessRequest req
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), req) switch
+    {
+      CreateAccessResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 

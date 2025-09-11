@@ -24,7 +24,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<Company> Companies { get; set; }
   public DbSet<CompanyAccess> CompanyAccesses { get; set; }
   public DbSet<CompanyRole> CompanyRoles { get; set; }
-  public DbSet<CompanyAccessInvitation> CompanyAccessInvitations { get; set; }
   public DbSet<Shop> Shops { get; set; }
   public DbSet<ShopAccess> ShopAccesses { get; set; }
   public DbSet<Customer> Customers { get; set; }
@@ -125,24 +124,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasOne(v => v.Company)
         .WithMany(v => v.Roles)
         .HasForeignKey(v => v.CompanyId)
-        .HasPrincipalKey(v => v.Id);
-    });
-
-    builder.Entity<CompanyAccessInvitation>(companyAccessInvitation =>
-    {
-      companyAccessInvitation.Property(v => v.Phone).HasMaxLength(32);
-      companyAccessInvitation.Property(v => v.Status).HasConversion<string>();
-
-      companyAccessInvitation
-        .HasOne(v => v.Company)
-        .WithMany(v => v.AccessInvitations)
-        .HasForeignKey(v => v.CompanyId)
-        .HasPrincipalKey(v => v.Id);
-
-      companyAccessInvitation
-        .HasOne(v => v.Role)
-        .WithMany()
-        .HasForeignKey(v => v.RoleId)
         .HasPrincipalKey(v => v.Id);
     });
 

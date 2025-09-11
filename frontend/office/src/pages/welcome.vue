@@ -6,15 +6,6 @@
       </NButton>
 
       <NButton
-        v-if="invitations.length"
-        @click="$router.push('/welcome/invitations')"
-      >
-        <NSpace :size="8" align="center" justify="center">
-          <div>Посмотреть приглашения</div>
-          <NBadge type="info" :value="invitations.length" />
-        </NSpace>
-      </NButton>
-      <NButton
         type="primary"
         :bordered="false"
         ghost
@@ -27,17 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import type { CompanyAccessInvitation } from "@beloyal/shared";
-import { apiSelfGetCompanyAccessInvitations } from "~/api/self";
-import { NButton, NBadge, NSpace } from "naive-ui";
+import { NButton } from "naive-ui";
 import { Card } from "@beloyal/shared";
-
-const invitations = ref<CompanyAccessInvitation[]>([]);
-
-apiSelfGetCompanyAccessInvitations().then(
-  (v) => (invitations.value = v.data.filter((vv) => vv.status === "Active"))
-);
 </script>
 
 <style module>

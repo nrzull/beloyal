@@ -1,3 +1,3 @@
 namespace Beloyal.API.Web.CompanyAccesses.CreateAccess;
 
-public record CreateAccessRequest(Guid UserId, Guid RoleId);
+public record CreateAccessRequest(string Phone, Guid RoleId);

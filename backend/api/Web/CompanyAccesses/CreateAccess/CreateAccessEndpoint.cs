@@ -21,7 +21,7 @@ public class CreateAccessEndpoint(CompanyContext companyContext, UserContext use
       throw new Exception("invalid role");
     }
 
-    var user = await userContext.GetById(UserId.From(req.UserId));
+    var user = await userContext.EnsureUser(new(req.Phone));
     var access = await companyContext.CreateCompanyAccess(company, user, role);
 
     return new CreateAccessResponse.Ok(CompanyAccessDTO.From(access));

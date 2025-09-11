@@ -20,7 +20,6 @@ public class Company
   public TgBot? TgBot { get; set; }
   public List<CompanyRole> Roles { get; set; } = [];
   public List<CompanyAccess> Accesses { get; set; } = [];
-  public List<CompanyAccessInvitation> AccessInvitations { get; set; } = [];
   public List<Shop> Shops { get; set; } = [];
   public List<Customer> Customers { get; set; } = [];
   public List<Mailing> Mailings { get; set; } = [];
