@@ -90,7 +90,7 @@ public class BonusContext(ApplicationDbContext dbContext)
     };
     dbContext.Add(bonusRecord);
 
-    dbContext.Update(bonusRecord.Customer);
+    dbContext.Update(customer);
     customer.BonusAmount -= bonus;
 
     await dbContext.SaveChangesAsync();

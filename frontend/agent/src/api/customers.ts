@@ -16,8 +16,17 @@ export const apiCustomersAddBonus = (params: {
   apiClient
     .post(
       `/api/agent/customers/public-tokens/${params.publicToken}/add-bonus`,
-      {
-        income: params.income,
-      }
+      { income: params.income }
+    )
+    .then((v) => v.data);
+
+export const apiCustomersSubtractBonus = (params: {
+  publicToken: string;
+  income: number;
+}) =>
+  apiClient
+    .post(
+      `/api/agent/customers/public-tokens/${params.publicToken}/subtract-bonus`,
+      { income: params.income }
     )
     .then((v) => v.data);

@@ -29,7 +29,7 @@ public class BonusContextTest : TestLifetime
     );
 
   [Fact]
-  public Task SubtractAndConfirmSubtractBonus() =>
+  public Task SubtractBonus() =>
     WithScope(
       async (scope, _) =>
       {
