@@ -1,12 +1,16 @@
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
-using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Bonuses;
 
 public class BonusContext(ApplicationDbContext dbContext)
 {
-  public async Task<Bonus> AddBonus(Customer customer, ShopAccess agent, decimal income)
+  public async Task<Bonus> AddBonus(
+    Customer customer,
+    ShopAccess agent,
+    decimal income,
+    string publicToken
+  )
   {
     if (income <= 0)
     {
@@ -24,7 +28,6 @@ public class BonusContext(ApplicationDbContext dbContext)
     var bonusRecord = new Bonus
     {
       Type = BonusType.AddBonus,
-      Status = BonusStatus.Done,
       Customer = customer,
       Agent = agent.CompanyAccess,
       Shop = agent.Shop,
@@ -32,6 +35,7 @@ public class BonusContext(ApplicationDbContext dbContext)
       Amount = appliedBonus,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
+      UsedToken = publicToken,
     };
 
     dbContext.Add(bonusRecord);
@@ -44,7 +48,12 @@ public class BonusContext(ApplicationDbContext dbContext)
     return bonusRecord;
   }
 
-  public async Task<Bonus> SubtractBonus(Customer customer, ShopAccess agent, decimal income)
+  public async Task<Bonus> SubtractBonus(
+    Customer customer,
+    ShopAccess agent,
+    decimal income,
+    string publicToken
+  )
   {
     if (income <= 0)
     {
@@ -63,70 +72,29 @@ public class BonusContext(ApplicationDbContext dbContext)
     var cashbackPercent = agent.Shop.Company.CashbackPercent;
     var cashbackThreshold = agent.Shop.Company.CashbackThreshold;
 
+    var incomeThreshold = income / 100 * cashbackThreshold;
+
+    var bonus = customer.BonusAmount > incomeThreshold ? incomeThreshold : customer.BonusAmount;
+
     var bonusRecord = new Bonus
     {
       Type = BonusType.SubtractBonus,
-      Status = BonusStatus.NeedConfirmation,
       Customer = customer,
       Shop = agent.Shop,
+      Amount = bonus,
       Agent = agent.CompanyAccess,
-      CashIncome = income,
+      CashIncome = income - bonus,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
-      ConfirmationCode = GenerateConfirmationCode(),
-      ConfirmationCodeExpiredAt = DateTimeOffset.UtcNow.AddMinutes(5),
+      UsedToken = publicToken,
     };
-
     dbContext.Add(bonusRecord);
-    await dbContext.SaveChangesAsync();
-
-    return bonusRecord;
-  }
-
-  public async Task<Bonus> ConfirmSubtractBonus(BonusId id, string confirmationCode)
-  {
-    var bonusRecord = await dbContext
-      .Bonuses.Include(v => v.Customer)
-      .FirstOrDefaultAsync(v =>
-        v.Id == id.Value
-        && v.ConfirmationCode == confirmationCode
-        && v.ConfirmationCodeExpiredAt > DateTimeOffset.UtcNow
-        && v.Status == BonusStatus.NeedConfirmation
-      );
-
-    if (bonusRecord is null)
-    {
-      throw new Exception("cannot confirm bonus subtraction");
-    }
-
-    if (bonusRecord.Customer.BonusAmount <= 0)
-    {
-      throw new Exception("invalid customer bonus");
-    }
-
-    dbContext.Update(bonusRecord);
-
-    var incomeThreshold = bonusRecord.CashIncome / 100 * bonusRecord.CashbackThreshold;
-
-    var bonus =
-      bonusRecord.Customer.BonusAmount > incomeThreshold
-        ? incomeThreshold
-        : bonusRecord.Customer.BonusAmount;
-
-    bonusRecord.Status = BonusStatus.Done;
-    bonusRecord.Amount = bonus;
-    bonusRecord.CashIncome -= bonus;
-    bonusRecord.ConfirmationCode = null;
-    bonusRecord.ConfirmationCodeExpiredAt = null;
 
     dbContext.Update(bonusRecord.Customer);
-    bonusRecord.Customer.BonusAmount -= bonus;
+    customer.BonusAmount -= bonus;
 
     await dbContext.SaveChangesAsync();
 
     return bonusRecord;
   }
-
-  string GenerateConfirmationCode() =>
-    string.Join("", Enumerable.Range(1, 6).Select(_v => Random.Shared.NextInt64(1, 9)).ToList());
 }

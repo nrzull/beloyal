@@ -23,7 +23,7 @@ public class AddBonusEndpoint(BonusContext bonusContext, CustomerContext custome
       throw new Exception("invalid publicToken");
     }
 
-    await bonusContext.AddBonus(customer, agent, req.Income);
+    await bonusContext.AddBonus(customer, agent, req.Income, publicToken);
 
     return new AddBonusResponse.Ok();
   }

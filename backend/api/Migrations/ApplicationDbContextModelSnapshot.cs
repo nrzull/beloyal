@@ -140,14 +140,6 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("cashback_threshold");
 
-                    b.Property<string>("ConfirmationCode")
-                        .HasColumnType("text")
-                        .HasColumnName("confirmation_code");
-
-                    b.Property<DateTimeOffset?>("ConfirmationCodeExpiredAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("confirmation_code_expired_at");
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -160,15 +152,15 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("status");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("type");
+
+                    b.Property<string>("UsedToken")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("used_token");
 
                     b.HasKey("Id")
                         .HasName("pk_bonuses");
@@ -181,6 +173,10 @@ namespace Beloyal.API.Migrations
 
                     b.HasIndex("ShopId")
                         .HasDatabaseName("ix_bonuses_shop_id");
+
+                    b.HasIndex("UsedToken")
+                        .IsUnique()
+                        .HasDatabaseName("ix_bonuses_used_token");
 
                     b.ToTable("bonuses", (string)null);
                 });
