@@ -148,6 +148,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
+                    b.Property<DateTimeOffset>("PublicTokenIssuedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("public_token_issued_at");
+
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid")
                         .HasColumnName("shop_id");
@@ -156,11 +160,6 @@ namespace Beloyal.API.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("type");
-
-                    b.Property<string>("UsedToken")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("used_token");
 
                     b.HasKey("Id")
                         .HasName("pk_bonuses");
@@ -173,10 +172,6 @@ namespace Beloyal.API.Migrations
 
                     b.HasIndex("ShopId")
                         .HasDatabaseName("ix_bonuses_shop_id");
-
-                    b.HasIndex("UsedToken")
-                        .IsUnique()
-                        .HasDatabaseName("ix_bonuses_used_token");
 
                     b.ToTable("bonuses", (string)null);
                 });

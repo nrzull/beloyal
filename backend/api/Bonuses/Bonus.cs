@@ -10,7 +10,8 @@ public class Bonus
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public required BonusType Type { get; set; }
-  public required string UsedToken { get; set; }
+
+  public required DateTimeOffset PublicTokenIssuedAt { get; set; }
 
   public decimal Amount { get; set; }
   public decimal CashIncome { get; set; }

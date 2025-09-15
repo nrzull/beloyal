@@ -1,5 +1,6 @@
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Bonuses;
 
@@ -9,12 +10,21 @@ public class BonusContext(ApplicationDbContext dbContext)
     Customer customer,
     ShopAccess agent,
     decimal income,
-    string publicToken
+    DateTimeOffset publicTokenIssuedAt
   )
   {
     if (income <= 0)
     {
       throw new Exception("invalid income");
+    }
+
+    if (
+      await dbContext.Bonuses.AnyAsync(v =>
+        v.CustomerId == customer.Id && v.PublicTokenIssuedAt >= publicTokenIssuedAt
+      )
+    )
+    {
+      throw new Exception("public token is stale");
     }
 
     await dbContext.Entry(agent).Reference(v => v.Shop).LoadAsync();
@@ -35,7 +45,7 @@ public class BonusContext(ApplicationDbContext dbContext)
       Amount = appliedBonus,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
-      UsedToken = publicToken,
+      PublicTokenIssuedAt = publicTokenIssuedAt,
     };
 
     dbContext.Add(bonusRecord);
@@ -52,7 +62,7 @@ public class BonusContext(ApplicationDbContext dbContext)
     Customer customer,
     ShopAccess agent,
     decimal income,
-    string publicToken
+    DateTimeOffset publicTokenIssuedAt
   )
   {
     if (income <= 0)
@@ -63,6 +73,15 @@ public class BonusContext(ApplicationDbContext dbContext)
     if (customer.BonusAmount <= 0)
     {
       throw new Exception("invalid customer bonus");
+    }
+
+    if (
+      await dbContext.Bonuses.AnyAsync(v =>
+        v.CustomerId == customer.Id && v.PublicTokenIssuedAt >= publicTokenIssuedAt
+      )
+    )
+    {
+      throw new Exception("public token is stale");
     }
 
     await dbContext.Entry(agent).Reference(v => v.Shop).LoadAsync();
@@ -86,7 +105,7 @@ public class BonusContext(ApplicationDbContext dbContext)
       CashIncome = income - bonus,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
-      UsedToken = publicToken,
+      PublicTokenIssuedAt = publicTokenIssuedAt,
     };
     dbContext.Add(bonusRecord);
 

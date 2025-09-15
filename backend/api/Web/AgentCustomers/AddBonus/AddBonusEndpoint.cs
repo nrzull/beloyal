@@ -1,10 +1,15 @@
+using Beloyal.API.Auth;
 using Beloyal.API.Bonuses;
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
 
 namespace Beloyal.API.Web.AgentCustomers.AddBonus;
 
-public class AddBonusEndpoint(BonusContext bonusContext, CustomerContext customerContext)
+public class AddBonusEndpoint(
+  BonusContext bonusContext,
+  CustomerContext customerContext,
+  AuthContext authContext
+)
 {
   public async Task<AddBonusResponse> Handle(
     ShopAccess agent,
@@ -17,13 +22,13 @@ public class AddBonusEndpoint(BonusContext bonusContext, CustomerContext custome
       CompanyId.From(shop),
       publicToken
     );
-
     if (customer is null)
     {
       throw new Exception("invalid publicToken");
     }
 
-    await bonusContext.AddBonus(customer, agent, req.Income, publicToken);
+    var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
+    await bonusContext.AddBonus(customer, agent, req.Income, decoded.IssuedAt);
 
     return new AddBonusResponse.Ok();
   }

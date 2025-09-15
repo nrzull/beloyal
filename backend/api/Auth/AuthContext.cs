@@ -56,7 +56,8 @@ public class AuthContext(ApplicationDbContext dbContext)
     var token = new CustomerAccessToken(
       CustomerId: customer.Id,
       // TODO: change
-      ExpiredAt: DateTimeOffset.UtcNow.AddHours(12)
+      ExpiredAt: DateTimeOffset.UtcNow.AddHours(12),
+      IssuedAt: DateTimeOffset.UtcNow
     );
 
     var authToken = JwtBuilder
@@ -64,6 +65,7 @@ public class AuthContext(ApplicationDbContext dbContext)
       .WithAlgorithm(new HMACSHA256Algorithm())
       .WithSecret(GetTokenSecret())
       .AddClaim("exp", token.ExpiredAt.ToUnixTimeSeconds())
+      .AddClaim("iat", token.IssuedAt.ToUnixTimeSeconds())
       .AddClaim("customer_id", token.CustomerId)
       .Encode();
 
@@ -72,6 +74,7 @@ public class AuthContext(ApplicationDbContext dbContext)
       .WithAlgorithm(new HMACSHA256Algorithm())
       .WithSecret(GetCustomerPublicSecret())
       .AddClaim("exp", token.ExpiredAt.ToUnixTimeSeconds())
+      .AddClaim("iat", token.IssuedAt.ToUnixTimeSeconds())
       .AddClaim("customer_id", token.CustomerId)
       .Encode();
 
@@ -102,21 +105,27 @@ public class AuthContext(ApplicationDbContext dbContext)
     return new EncodedAccessToken(Token: token, ExpiredAt: expiredAt);
   }
 
-  public CustomerAccessToken DecodeCustomerPublicAccessToken(string token)
+  public CustomerAccessToken DecodeCustomerToken(string token, string secret)
   {
     var decoded = JwtBuilder
       .Create()
       .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(GetCustomerPublicSecret())
+      .WithSecret(secret)
       .MustVerifySignature()
       .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
 
     decoded.TryGetValue("exp", out var _expiredAtSeconds);
+    decoded.TryGetValue("iat", out var _issuedAtSeconds);
     decoded.TryGetValue("customer_id", out var _customerId);
 
     if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
     {
       throw new Exception("exp is invalid");
+    }
+
+    if (!_issuedAtSeconds.TryGetInt64(out long issuedAtSeconds))
+    {
+      throw new Exception("iat is invalid");
     }
 
     if (!_customerId.TryGetGuid(out var customerId))
@@ -126,37 +135,16 @@ public class AuthContext(ApplicationDbContext dbContext)
 
     return new CustomerAccessToken(
       CustomerId: customerId,
-      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
+      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds),
+      IssuedAt: DateTimeOffset.FromUnixTimeSeconds(issuedAtSeconds)
     );
   }
 
-  public CustomerAccessToken DecodeCustomerAccessToken(string token)
-  {
-    var decoded = JwtBuilder
-      .Create()
-      .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(GetTokenSecret())
-      .MustVerifySignature()
-      .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
+  public CustomerAccessToken DecodeCustomerPublicAccessToken(string token) =>
+    DecodeCustomerToken(token, GetCustomerPublicSecret()!);
 
-    decoded.TryGetValue("exp", out var _expiredAtSeconds);
-    decoded.TryGetValue("customer_id", out var _customerId);
-
-    if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
-    {
-      throw new Exception("exp is invalid");
-    }
-
-    if (!_customerId.TryGetGuid(out var customerId))
-    {
-      throw new Exception("customer_id is invalid");
-    }
-
-    return new CustomerAccessToken(
-      CustomerId: customerId,
-      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
-    );
-  }
+  public CustomerAccessToken DecodeCustomerAccessToken(string token) =>
+    DecodeCustomerToken(token, GetTokenSecret()!);
 
   public AccessToken DecodeAccessToken(string token)
   {

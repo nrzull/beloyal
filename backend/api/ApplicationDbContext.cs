@@ -216,8 +216,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey(v => v.Id);
 
       bonus.HasOne(v => v.Shop).WithMany().HasForeignKey(v => v.ShopId).HasPrincipalKey(v => v.Id);
-
-      bonus.HasIndex(v => v.UsedToken).IsUnique();
     });
 
     builder.Entity<Chat>(chat =>

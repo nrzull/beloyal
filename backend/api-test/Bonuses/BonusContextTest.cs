@@ -22,7 +22,12 @@ public class BonusContextTest : TestLifetime
         var (customer, _) = await CustomerFixture.Customer(scope, company);
         var bonusContext = scope.Get<BonusContext>();
 
-        var bonusRecord = await bonusContext.AddBonus(customer, sAccess, 1000, "qwe");
+        var bonusRecord = await bonusContext.AddBonus(
+          customer,
+          sAccess,
+          1000,
+          DateTimeOffset.UtcNow
+        );
 
         Assert.Equal(100, customer.BonusAmount);
       }
@@ -43,10 +48,20 @@ public class BonusContextTest : TestLifetime
         var (customer, _) = await CustomerFixture.Customer(scope, company);
         var bonusContext = scope.Get<BonusContext>();
 
-        var bonusRecord = await bonusContext.AddBonus(customer, sAccess, 1000, "qwe");
+        var bonusRecord = await bonusContext.AddBonus(
+          customer,
+          sAccess,
+          1000,
+          DateTimeOffset.UtcNow
+        );
         Assert.Equal(100, customer.BonusAmount);
 
-        var subtractBonusRecord = await bonusContext.SubtractBonus(customer, sAccess, 75, "qwe2");
+        var subtractBonusRecord = await bonusContext.SubtractBonus(
+          customer,
+          sAccess,
+          75,
+          DateTimeOffset.UtcNow.AddMinutes(1)
+        );
 
         Assert.Equal(25, customer.BonusAmount);
         Assert.Equal(75, subtractBonusRecord.Amount);
