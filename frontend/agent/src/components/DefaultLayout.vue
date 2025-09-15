@@ -1,36 +1,17 @@
 <template>
-  <div :class="$style.defaultLayout">
-    <div :class="$style.content">
-      <RouterView />
-    </div>
-    <ViewFooter :class="$style.footer" />
-  </div>
+  <MobileLayout>
+    <template #footer="{ footerClass }">
+      <MobileFooter
+        :class="footerClass"
+        :items="[
+          { to: '/', title: 'Главная', iconVariant: 'home' },
+          { to: '/profile', title: 'Профиль', iconVariant: 'user' },
+        ]"
+      />
+    </template>
+  </MobileLayout>
 </template>
 
 <script setup lang="ts">
-import ViewFooter from "~/components/ViewFooter.vue";
+import { MobileLayout, MobileFooter } from "@beloyal/shared";
 </script>
-
-<style module>
-.defaultLayout {
-  display: grid;
-  grid-template-areas: "content" "footer";
-  grid-template-rows: 1fr 48px;
-  height: inherit;
-  max-width: 768px;
-  width: 100%;
-  margin: auto;
-}
-
-.content {
-  grid-area: content;
-  overflow: hidden;
-  word-break: break-all;
-  overflow-y: auto;
-  padding: 12px;
-}
-
-.footer {
-  grid-area: footer;
-}
-</style>

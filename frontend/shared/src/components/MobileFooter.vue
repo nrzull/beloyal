@@ -1,16 +1,10 @@
 <template>
   <div :class="$style.footer">
     <NTabs :value="$route.path" @update:value="$router.push($event)">
-      <NTab name="/">
-        <NSpace align="center">
-          <Icon variant="home" />
-          Главная
-        </NSpace>
-      </NTab>
-      <NTab name="/profile">
-        <NSpace align="center">
-          <Icon variant="user" />
-          Профиль
+      <NTab v-for="item in items" :key="item.title" :name="item.to">
+        <NSpace align="center" :size="[4, 0]">
+          <Icon :variant="item.iconVariant" />
+          {{ item.title }}
         </NSpace>
       </NTab>
     </NTabs>
@@ -19,7 +13,15 @@
 
 <script setup lang="ts">
 import { NTabs, NTab, NSpace } from "naive-ui";
-import { Icon } from "@beloyal/shared";
+import Icon, { type IconVariant } from "./Icon.vue";
+
+defineProps<{
+  items: Array<{
+    to: string;
+    title: string;
+    iconVariant: IconVariant;
+  }>;
+}>();
 </script>
 
 <style module>

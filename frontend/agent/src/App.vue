@@ -6,16 +6,10 @@
 
 <script setup lang="ts">
 import { NConfigProvider } from "naive-ui";
-import { onMounted } from "vue";
 import { theme } from "@beloyal/shared";
+import { useMobileVh } from "@beloyal/shared";
 
-const onResize = () => {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh1", `${vh}px`);
-};
-
-window.addEventListener("resize", onResize);
-onMounted(onResize);
+useMobileVh({ variableName: "--vh1" });
 </script>
 
 <style>

@@ -8,6 +8,10 @@ export const router = createRouter({
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
+          path: "history",
+          component: () => import("~/pages/history.vue"),
+        },
+        {
           path: "",
           component: () => import("~/pages/dashboard.vue"),
         },

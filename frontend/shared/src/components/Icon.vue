@@ -14,12 +14,26 @@ import location from "./Icon/assets/location.svg?raw";
 import coins from "./Icon/assets/coins.svg?raw";
 import rub from "./Icon/assets/rub.svg?raw";
 import back from "./Icon/assets/back.svg?raw";
+import history from "./Icon/assets/history.svg?raw";
 
-const icons = { user, home, qr, search, location, coins, rub, back } as const;
+const icons = {
+  user,
+  home,
+  qr,
+  search,
+  location,
+  coins,
+  rub,
+  back,
+  history,
+} as const;
 
-export type Variant = keyof typeof icons;
+export type IconVariant = keyof typeof icons;
 
-const { size = "s" } = defineProps<{ variant: Variant; size?: "s" | "m" }>();
+const { size = "s" } = defineProps<{
+  variant: IconVariant;
+  size?: "s" | "m";
+}>();
 </script>
 
 <style module>

@@ -1,7 +1,10 @@
 export * from "./api";
 export * from "./composables/wait";
 export * from "./composables/theme";
-export { default as Icon } from "./components/Icon.vue";
+export * from "./composables/useMobileVh";
+export { default as Icon, type IconVariant } from "./components/Icon.vue";
 export { default as Card } from "./components/Card.vue";
 export { default as AuthForm } from "./components/AuthForm.vue";
 export { default as Heading } from "./components/Heading.vue";
+export { default as MobileLayout } from "./components/MobileLayout.vue";
+export { default as MobileFooter } from "./components/MobileFooter.vue";

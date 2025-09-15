@@ -18,8 +18,10 @@ import { apiAuthLoginAsTelegramCustomer } from "~/api/auth";
 import { authToken } from "~/api/clients";
 import { publicToken } from "~/composables/publicToken";
 import { fetchSelf, self } from "~/composables/self";
+import { useMobileVh } from "@beloyal/shared";
 
 const route = useRoute();
+useMobileVh({ variableName: "--vh1" });
 
 onMounted(async () => {
   const initData = retrieveRawInitData();
@@ -38,6 +40,12 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style>
+body {
+  height: calc(var(--vh1) * 100);
+}
+</style>
 
 <style module>
 .provider {
