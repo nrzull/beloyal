@@ -64,7 +64,17 @@ public class AuthController(IHostEnvironment env) : ControllerBase
   [HttpGet("logout")]
   public IActionResult Logout()
   {
-    HttpContext.Response.Cookies.Delete(AuthContext.GetAccessTokenName());
+    HttpContext.Response.Cookies.Delete(
+      AuthContext.GetAccessTokenName(),
+      new()
+      {
+        Path = "/",
+        SameSite = env.IsProduction() ? SameSiteMode.None : SameSiteMode.Unspecified,
+        HttpOnly = true,
+        Secure = env.IsProduction(),
+        Domain = HttpContext.Request.Host.Host,
+      }
+    );
     return Ok();
   }
 }

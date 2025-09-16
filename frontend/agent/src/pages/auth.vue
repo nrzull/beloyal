@@ -4,7 +4,7 @@
       :auth-fn="apiAuth"
       :confirm-fn="apiAuthConfirm"
       :logout-fn="apiAuthLogout"
-      :profile="false"
+      :profile="self"
     />
   </div>
 </template>
@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { apiAuthLogout, apiAuth, apiAuthConfirm } from "~/api/auth";
 import { AuthForm } from "@beloyal/shared";
+import { self } from "~/composables/self";
 </script>
 
 <style module>

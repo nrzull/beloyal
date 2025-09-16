@@ -39,11 +39,21 @@
         </template>
       </NSelect>
     </NSpace>
+
+    <NButton
+      size="large"
+      type="primary"
+      ghost
+      block
+      @click="$router.push('/auth')"
+    >
+      Сменить учетную запись
+    </NButton>
   </NSpace>
 </template>
 
 <script setup lang="ts">
-import { NSelect, NSpace } from "naive-ui";
+import { NSelect, NSpace, NButton } from "naive-ui";
 import { Icon, wait, type CompanyAccess } from "@beloyal/shared";
 import { self, fetchSelf } from "~/composables/self";
 import { computed } from "vue";
