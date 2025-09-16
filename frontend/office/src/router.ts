@@ -27,6 +27,18 @@ export const router = createRouter({
     },
 
     {
+      path: "/self",
+      beforeEnter: [ensureSelf("/auth")],
+      component: () => import("~/components/DefaultLayout.vue"),
+      children: [
+        {
+          path: "company-accesses",
+          component: () => import("~/pages/self/company-accesses.vue"),
+        },
+      ],
+    },
+
+    {
       path: "/",
       beforeEnter: [ensureSelf("/auth"), ensureCompanyAccess("/welcome")],
       component: () => import("~/components/DefaultLayout.vue"),

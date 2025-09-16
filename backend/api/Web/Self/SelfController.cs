@@ -1,5 +1,6 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Users;
+using Beloyal.API.Web.AgentSelf.SetCompanyAccess;
 using Beloyal.API.Web.Filters;
 using Beloyal.API.Web.Self.CreateCompany;
 using Beloyal.API.Web.Self.GetSelf;
@@ -41,6 +42,22 @@ public class SelfController(IHostEnvironment env) : ControllerBase
     await endpoint.Handle(user.Ensure(), req) switch
     {
       CreateCompanyResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch("company-access")]
+  public async Task<Results<Ok, BadRequest>> SetCompanyAccess(
+    [FromServices] SetCompanyAccessEndpoint endpoint,
+    [FromServices] User? user,
+    [FromBody] SetCompanyAccessRequest req
+  ) =>
+    await endpoint.Handle(user.Ensure(), req) switch
+    {
+      SetCompanyAccessResponse.Ok ok => new Func<Ok>(() =>
+      {
+        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        return TypedResults.Ok();
+      })(),
       _ => TypedResults.BadRequest(),
     };
 }
