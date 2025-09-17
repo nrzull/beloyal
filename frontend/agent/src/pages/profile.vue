@@ -8,7 +8,7 @@
         size="large"
         :disabled="isLoading"
         placeholder="Выберите компанию"
-        :render-label="(v: CompanyAccess) => v.company.tin"
+        :render-label="(v: CompanyAccess) => v.company.title"
         :options="self.companyAccesses || []"
         label-field="id"
         value-field="id"

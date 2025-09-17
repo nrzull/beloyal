@@ -18,7 +18,6 @@ public static class CompanyFixture
   {
     var userContext = scope.Get<UserContext>();
     var companyContext = scope.Get<CompanyContext>();
-    var percent = new Percent(10);
 
     await companyContext.CreateWhiteCompany(new(tin), DateTimeOffset.UtcNow.AddMonths(1));
 
@@ -26,6 +25,7 @@ public static class CompanyFixture
     (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
       user,
       new(tin),
+      "title",
       new(cashbackPercent),
       new(cashbackThreshold),
       new(bonusMultiplier)

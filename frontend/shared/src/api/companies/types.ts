@@ -1,1 +1,6 @@
-export type Company = { id: string; createdAt: string; tin: string };
+export type Company = {
+  id: string;
+  createdAt: string;
+  title: string;
+  tin: string;
+};

@@ -11,6 +11,7 @@ public class CreateCompanyEndpoint(CompanyContext companyContext)
     await companyContext.CreateCompany(
       user,
       new Tin(req.Tin),
+      req.Title,
       new Percent(req.CashbackPercent),
       new Percent(req.CashbackThreshold, false),
       new Percent(req.BonusMultiplier, false)

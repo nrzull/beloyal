@@ -53,7 +53,7 @@ public class EnsureTgUserHandler(CustomerContext customerContext, UserContext us
     var url =
       $"{Environment.GetEnvironmentVariable("CUSTOMER_WEB_PUBLIC_URL")!}/telegram?tgBotId={tgBot.Id}";
 
-    var text = "Открыть кабинет";
+    var text = "Мой кабинет";
 
     if (
       await client.GetChatMenuButton(chatId: uid) is MenuButtonWebApp btn

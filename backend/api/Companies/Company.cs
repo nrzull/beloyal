@@ -12,6 +12,7 @@ public class Company
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public required string Tin { get; set; }
+  public required string Title { get; set; }
 
   public required decimal CashbackPercent { get; set; }
   public required decimal CashbackThreshold { get; set; }

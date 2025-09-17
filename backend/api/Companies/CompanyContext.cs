@@ -79,6 +79,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
   public async Task<(Company, CompanyRole, CompanyAccess)> CreateCompany(
     User user,
     Tin tin,
+    string title,
     Percent cashbackPercent,
     Percent cashbackThreshold,
     Percent bonusMultiplier
@@ -95,6 +96,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
     var company = new Company
     {
       Tin = tin.Value,
+      Title = title,
       CashbackPercent = cashbackPercent.Value,
       CashbackThreshold = cashbackThreshold.Value,
       BonusMultiplier = bonusMultiplier.Value,

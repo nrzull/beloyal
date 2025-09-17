@@ -289,6 +289,11 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("character varying(12)")
                         .HasColumnName("tin");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
                     b.HasKey("Id")
                         .HasName("pk_companies");
 

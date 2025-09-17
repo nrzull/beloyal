@@ -13,6 +13,7 @@ export const apiSelfGet = () =>
 
 export const apiSelfCreateCompany = (params: {
   tin: string;
+  title: string;
   cashbackPercent: number;
   cashbackThreshold: number;
   bonusMultiplier: number;

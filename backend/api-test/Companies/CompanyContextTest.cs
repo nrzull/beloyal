@@ -18,7 +18,7 @@ public class CompanyContextTest : TestLifetime
         var percent = new Percent(10);
 
         await Assert.ThrowsAnyAsync<Exception>(() =>
-          companyContext.CreateCompany(user, tin, percent, percent, new(1))
+          companyContext.CreateCompany(user, tin, "title", percent, percent, new(1))
         );
 
         var whiteCompany = await companyContext.CreateWhiteCompany(
@@ -29,6 +29,7 @@ public class CompanyContextTest : TestLifetime
         (Company company, var _, CompanyAccess access) = await companyContext.CreateCompany(
           user,
           tin,
+          "title",
           percent,
           percent,
           new(1)
@@ -70,12 +71,12 @@ public class CompanyContextTest : TestLifetime
         await companyContext.UpdateWhiteCompany(whiteCompany, DateTimeOffset.UtcNow.AddMonths(-2));
 
         await Assert.ThrowsAnyAsync<Exception>(() =>
-          companyContext.CreateCompany(user, tin, percent, percent, new(1))
+          companyContext.CreateCompany(user, tin, "title", percent, percent, new(1))
         );
 
         await companyContext.UpdateWhiteCompany(whiteCompany, DateTimeOffset.UtcNow.AddYears(1));
 
-        await companyContext.CreateCompany(user, tin, percent, percent, new(1));
+        await companyContext.CreateCompany(user, tin, "title", percent, percent, new(1));
       }
     );
 
@@ -97,7 +98,7 @@ public class CompanyContextTest : TestLifetime
         await companyContext.RemoveWhiteCompany(WhiteCompanyId.From(whiteCompany));
 
         await Assert.ThrowsAnyAsync<Exception>(() =>
-          companyContext.CreateCompany(user, tin, percent, percent, new(1))
+          companyContext.CreateCompany(user, tin, "title", percent, percent, new(1))
         );
       }
     );

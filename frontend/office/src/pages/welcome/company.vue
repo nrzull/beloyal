@@ -2,6 +2,11 @@
   <div :class="$style.company">
     <Card :class="$style.form">
       <NInput :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
+      <NInput
+        :disabled="isLoading"
+        placeholder="Название"
+        v-model:value="title"
+      />
       <NButton type="primary" :disabled="isLoading" @click="createCompany">
         Создать компанию
       </NButton>
@@ -26,11 +31,12 @@ import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 
 const tin = ref();
+const title = ref();
 const router = useRouter();
 const isLoading = computed(() => wait.some([createCompany]));
 
 const createCompany = async () => {
-  if (!tin.value) {
+  if (!tin.value || !title.value) {
     return;
   }
 
@@ -42,6 +48,7 @@ const createCompany = async () => {
       cashbackThreshold: 25,
       bonusMultiplier: 10,
       tin: tin.value,
+      title: title.value,
     });
 
     router.push("/");
