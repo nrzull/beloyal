@@ -2,6 +2,7 @@
   <Card :class="$style.authForm">
     <template v-if="!expiredAt">
       <NInput
+        ref="phoneRef"
         :disabled="isLoading"
         placeholder="Номер телефона"
         v-model:value="phone"
@@ -11,7 +12,12 @@
       </NButton>
     </template>
     <template v-else>
-      <NInput disabled placeholder="Номер телефона" :value="phone" />
+      <NInput
+        disabled
+        ref="phoneRef"
+        placeholder="Номер телефона"
+        :value="phone"
+      />
       <NInput :disabled="isLoading" placeholder="Код" v-model:value="code" />
       <NButton :disabled="isLoading" @click="sendCode" type="primary">
         Отправить код
@@ -26,6 +32,9 @@ import { wait } from "../composables/wait";
 import { useRouter } from "vue-router";
 import Card from "./Card.vue";
 import { NInput, NButton } from "naive-ui";
+import { useTemplateRef } from "vue";
+import { usePhoneMask } from "../composables/usePhoneMask";
+import { unmaskPhone } from "../utils/phone";
 
 const { profile, logoutFn, authFn, confirmFn } = defineProps<{
   profile: any;
@@ -45,17 +54,22 @@ const expiredAt = ref();
 const code = ref();
 const phone = ref();
 
+const phoneRef = useTemplateRef("phoneRef");
+usePhoneMask(computed(() => phoneRef.value?.inputElRef!));
+
 const isLoading = computed(() => wait.some([sendPhone, sendCode]));
 
 const sendPhone = async () => {
-  if (!phone.value) {
+  const unmaskedPhone = unmaskPhone(phone.value);
+
+  if (!unmaskedPhone) {
     return;
   }
 
   try {
     wait.start(sendPhone);
 
-    const result = await authFn({ phone: phone.value });
+    const result = await authFn({ phone: unmaskedPhone });
     expiredAt.value = result.expiredAt;
     code.value = result.code;
   } catch (e) {
@@ -66,13 +80,15 @@ const sendPhone = async () => {
 };
 
 const sendCode = async () => {
-  if (!code.value) {
+  const unmaskedPhone = unmaskPhone(phone.value);
+
+  if (!code.value || !unmaskedPhone) {
     return;
   }
 
   try {
     wait.start(sendCode);
-    await confirmFn({ phone: phone.value, code: code.value });
+    await confirmFn({ phone: unmaskedPhone, code: code.value });
     router.push("/");
   } catch (e) {
     console.error(e);
