@@ -20,7 +20,7 @@ public class CreateCompanyEndpointTest : TestLifetime
         var tin = new Tin("1234567891");
         var percent = new Percent(10);
 
-        var req = new CreateCompanyRequest(tin.Value, percent.Value, percent.Value);
+        var req = new CreateCompanyRequest(tin.Value, percent.Value, percent.Value, new(1));
 
         await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(user, req));
 

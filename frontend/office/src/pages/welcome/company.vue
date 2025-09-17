@@ -38,8 +38,9 @@ const createCompany = async () => {
     wait.start(createCompany);
 
     await apiSelfCreateCompany({
-      cashbackPercent: 0,
-      cashbackThreshold: 100,
+      cashbackPercent: 10,
+      cashbackThreshold: 25,
+      bonusMultiplier: 10,
       tin: tin.value,
     });
 

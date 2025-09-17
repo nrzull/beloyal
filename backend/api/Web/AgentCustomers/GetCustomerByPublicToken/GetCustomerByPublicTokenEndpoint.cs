@@ -3,7 +3,10 @@ using Beloyal.API.Customers;
 
 namespace Beloyal.API.Web.AgentCustomers.GetCustomerByPublicToken;
 
-public class GetCustomerByPublicTokenEndpoint(CustomerContext customerContext)
+public class GetCustomerByPublicTokenEndpoint(
+  CustomerContext customerContext,
+  ApplicationDbContext dbContext
+)
 {
   public async Task<GetCustomerByPublicTokenResponse> Handle(
     CompanyAccess companyAccess,
@@ -19,9 +22,12 @@ public class GetCustomerByPublicTokenEndpoint(CustomerContext customerContext)
       throw new Exception("invalid publicToken");
     }
 
+    await dbContext.Entry(customer).Reference(v => v.Company).LoadAsync();
+
     return new GetCustomerByPublicTokenResponse.Ok(
       new(
         BonusAmount: customer.BonusAmount,
+        BonusMultiplier: customer.Company.BonusMultiplier,
         PhoneNumber: customer.User.Phone!,
         CustomerId: customer.Id
       )

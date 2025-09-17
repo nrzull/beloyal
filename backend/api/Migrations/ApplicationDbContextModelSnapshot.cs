@@ -267,6 +267,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<decimal>("BonusMultiplier")
+                        .HasColumnType("numeric")
+                        .HasColumnName("bonus_multiplier");
+
                     b.Property<decimal>("CashbackPercent")
                         .HasColumnType("numeric")
                         .HasColumnName("cashback_percent");

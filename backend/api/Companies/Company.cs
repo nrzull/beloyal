@@ -15,6 +15,7 @@ public class Company
 
   public required decimal CashbackPercent { get; set; }
   public required decimal CashbackThreshold { get; set; }
+  public required decimal BonusMultiplier { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

@@ -14,7 +14,11 @@ public class GetCustomerSelfEndpoint(CompanyContext companyContext)
     }
 
     return new GetCustomerSelfResponse.Ok(
-      new(CompanyName: customer.Company.Tin, BonusAmount: customer.BonusAmount)
+      new(
+        CompanyName: customer.Company.Tin,
+        BonusAmount: customer.BonusAmount,
+        BonusMultiplier: company.BonusMultiplier
+      )
     );
   }
 }

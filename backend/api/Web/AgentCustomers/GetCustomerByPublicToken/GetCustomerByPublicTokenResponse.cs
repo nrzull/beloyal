@@ -4,5 +4,10 @@ public abstract record GetCustomerByPublicTokenResponse
 {
   public record Ok(OkData Data) : GetCustomerByPublicTokenResponse;
 
-  public record OkData(decimal BonusAmount, string PhoneNumber, Guid CustomerId);
+  public record OkData(
+    decimal BonusAmount,
+    decimal BonusMultiplier,
+    string PhoneNumber,
+    Guid CustomerId
+  );
 }

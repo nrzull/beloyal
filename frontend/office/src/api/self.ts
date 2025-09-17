@@ -15,6 +15,7 @@ export const apiSelfCreateCompany = (params: {
   tin: string;
   cashbackPercent: number;
   cashbackThreshold: number;
+  bonusMultiplier: number;
 }) => apiClient.post("/api/self/company", params);
 
 export const apiSelfSetCompanyAccess = (params: { companyAccessId: string }) =>

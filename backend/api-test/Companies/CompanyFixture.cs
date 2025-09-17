@@ -12,7 +12,8 @@ public static class CompanyFixture
     string phone = "+123123123123",
     string tin = "0123456789",
     decimal cashbackPercent = 10,
-    decimal cashbackThreshold = 10
+    decimal cashbackThreshold = 10,
+    decimal bonusMultiplier = 1
   )
   {
     var userContext = scope.Get<UserContext>();
@@ -26,7 +27,8 @@ public static class CompanyFixture
       user,
       new(tin),
       new(cashbackPercent),
-      new(cashbackThreshold)
+      new(cashbackThreshold),
+      new(bonusMultiplier)
     );
 
     return (company, access, user);

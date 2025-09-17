@@ -5,7 +5,7 @@
         <Icon variant="coins" />
       </template>
 
-      У вас <b>{{ self?.bonusAmount }}</b> Бонусов
+      У вас <b>{{ self.bonusAmount * self.bonusMultiplier }}</b> Бонусов
     </NAlert>
 
     <div :class="$style.qrWrapper" v-html="qrImage"></div>

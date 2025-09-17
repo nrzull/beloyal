@@ -4,5 +4,5 @@ public abstract record GetCustomerSelfResponse
 {
   public record Ok(OkData Data) : GetCustomerSelfResponse;
 
-  public record OkData(string CompanyName, decimal BonusAmount);
+  public record OkData(string CompanyName, decimal BonusAmount, decimal BonusMultiplier);
 }

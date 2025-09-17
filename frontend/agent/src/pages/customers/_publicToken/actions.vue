@@ -6,7 +6,9 @@
           <Icon variant="coins" />
         </template>
 
-        У клиента <b>{{ customer.data.bonusAmount }}</b> Бонусов
+        У клиента
+        <b>{{ customer.data.bonusAmount * customer.data.bonusMultiplier }}</b>
+        Бонусов
       </NAlert>
 
       <RouterView :customer="customer" />
