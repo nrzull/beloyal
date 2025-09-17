@@ -1,3 +1,4 @@
+using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Companies;
 using Beloyal.API.Shops;
@@ -7,6 +8,7 @@ using Beloyal.API.Users;
 namespace Beloyal.API.Web.Auth.Confirm;
 
 public class ConfirmEndpoint(
+  AdminContext adminContext,
   AuthContext authContext,
   UserContext userContext,
   CompanyContext companyContext,
@@ -24,12 +26,18 @@ public class ConfirmEndpoint(
     var user = await userContext.EnsureUser(phone);
     await userContext.VerifyUser(user);
 
-    var companyAccess = previousToken?.CompanyAccessId is Guid g
-      ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))
+    var adminAccess = await adminContext.GetAccess(UserId.From(user));
+
+    var companyAccess =
+      previousToken?.CompanyAccessId is Guid g
+        ? await companyContext.GetAccess(UserId.From(user), CompanyAccessId.From(g))
+      : adminAccess is { } ? null
       : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
-    var shopAccess = previousToken?.ShopAccessId is Guid shopAccessId
-      ? await shopContext.GetAccess(ShopAccessId.From(shopAccessId))
+    var shopAccess =
+      companyAccess is null ? null
+      : previousToken?.ShopAccessId is Guid shopAccessId
+        ? await shopContext.GetAccess(ShopAccessId.From(shopAccessId))
       : null;
 
     if (shopAccess?.CompanyAccessId != companyAccess?.Id)

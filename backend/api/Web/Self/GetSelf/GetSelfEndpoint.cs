@@ -27,7 +27,9 @@ public class GetSelfEndpoint(
     EncodedAccessToken? newToken = default;
     if (companyAccess is null)
     {
-      companyAccess = (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
+      companyAccess = adminAccess is { }
+        ? null
+        : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
       newToken = authContext.EncodeAccessToken(user, companyAccess, null);
     }

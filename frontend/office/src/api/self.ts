@@ -19,5 +19,6 @@ export const apiSelfCreateCompany = (params: {
   bonusMultiplier: number;
 }) => apiClient.post("/api/self/company", params);
 
-export const apiSelfSetCompanyAccess = (params: { companyAccessId: string }) =>
-  apiClient.patch("/api/self/company-access", params).then((v) => v.data);
+export const apiSelfSetCompanyAccess = (params: {
+  companyAccessId: string | null;
+}) => apiClient.patch("/api/self/company-access", params).then((v) => v.data);

@@ -2,6 +2,15 @@
   <Page>
     <template #top>
       <Heading>Компании</Heading>
+
+      <NButton
+        v-if="self?.adminAccess && self.companyAccess"
+        type="primary"
+        size="medium"
+        @click="setCompanyAccess(null)"
+      >
+        Войти как администратор
+      </NButton>
     </template>
 
     <Table
@@ -35,7 +44,7 @@
           Активен
         </NButton>
         <NButton v-else size="small" @click="setCompanyAccess(item.id)">
-          Перейти
+          Войти
         </NButton>
       </template>
     </Table>
@@ -50,7 +59,7 @@ import { self } from "~/composables/self";
 import { NButton } from "naive-ui";
 import { apiSelfSetCompanyAccess } from "~/api/self";
 
-const setCompanyAccess = async (companyAccessId: string) => {
+const setCompanyAccess = async (companyAccessId: string | null) => {
   try {
     if (companyAccessId && self.value?.companyAccess?.id === companyAccessId) {
       return;
