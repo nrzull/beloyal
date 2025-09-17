@@ -13,7 +13,7 @@
       <div>
         <div :class="$style.team">
           {{
-            self?.companyAccess?.company?.tin || self?.adminAccess?.role?.name
+            self?.companyAccess?.company?.title || self?.adminAccess?.role?.name
           }}
         </div>
         <div :class="$style.phone">{{ self?.user.phone }}</div>

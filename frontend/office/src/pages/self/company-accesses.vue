@@ -7,13 +7,18 @@
     <Table
       :columns="[
         { key: 'company', title: 'Компания' },
+        { key: 'tin', title: 'ИНН' },
         { key: 'role', title: 'Роль' },
         { key: 'actions', width: 'max-content' },
       ]"
       :data="self?.companyAccesses || []"
     >
-      <template #company="{ item }">
+      <template #tin="{ item }">
         {{ item.company.tin }}
+      </template>
+
+      <template #company="{ item }">
+        {{ item.company.title }}
       </template>
 
       <template #role="{ item }">
