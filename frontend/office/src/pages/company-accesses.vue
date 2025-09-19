@@ -21,7 +21,7 @@
       :route-fn="(v) => `/company-accesses/${v.id}`"
     >
       <template #phone="{ item }">
-        {{ item.user?.phone }}
+        {{ maskPhone(item.user.phone) }}
       </template>
 
       <template #role="{ item }">
@@ -39,6 +39,7 @@ import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { NButton } from "naive-ui";
+import { maskPhone } from "@beloyal/shared";
 
 const companyAccesses = ref<CompanyAccess[]>([]);
 

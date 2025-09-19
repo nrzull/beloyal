@@ -15,7 +15,7 @@
       ]"
     >
       <template #phone="{ item }">
-        {{ item.phone }}
+        {{ maskPhone(item.phone) }}
       </template>
 
       <template #createdAt="{ item }">
@@ -41,7 +41,7 @@
       ]"
     >
       <template #phone="{ item }">
-        {{ item.user?.phone }}
+        {{ maskPhone(item.user?.phone) }}
       </template>
 
       <template #role="{ item }">
@@ -62,6 +62,7 @@ import type { Shop } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
 import { wait } from "@beloyal/shared";
 import { formatDate } from "~/utils/date";
+import { maskPhone } from "@beloyal/shared";
 
 const { shop } = defineProps<{ shop: Shop }>();
 

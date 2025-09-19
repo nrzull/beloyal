@@ -33,8 +33,8 @@ import { useRouter } from "vue-router";
 import Card from "./Card.vue";
 import { NInput, NButton } from "naive-ui";
 import { useTemplateRef } from "vue";
-import { usePhoneMask } from "../composables/usePhoneMask";
-import { unmaskPhone } from "../utils/phone";
+import { useMask } from "../composables/useMask";
+import { unmaskPhone, phoneMask } from "../utils/phone";
 
 const { profile, logoutFn, authFn, confirmFn } = defineProps<{
   profile: any;
@@ -55,7 +55,10 @@ const code = ref();
 const phone = ref();
 
 const phoneRef = useTemplateRef("phoneRef");
-usePhoneMask(computed(() => phoneRef.value?.inputElRef!));
+useMask(
+  computed(() => phoneRef.value?.inputElRef!),
+  phoneMask
+);
 
 const isLoading = computed(() => wait.some([sendPhone, sendCode]));
 

@@ -5,7 +5,9 @@
         <NBreadcrumbItem @click="$router.push('/company-accesses')">
           Пользователи
         </NBreadcrumbItem>
-        <NBreadcrumbItem>{{ companyAccess?.user?.phone }}</NBreadcrumbItem>
+        <NBreadcrumbItem>{{
+          maskPhone(companyAccess?.user?.phone!)
+        }}</NBreadcrumbItem>
       </NBreadcrumb>
     </template>
 
@@ -41,6 +43,7 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { Card } from "@beloyal/shared";
 import { wait } from "@beloyal/shared";
+import { maskPhone } from "@beloyal/shared";
 
 const route = useRoute();
 const router = useRouter();

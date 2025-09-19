@@ -1,5 +1,6 @@
 <template>
   <NDropdown
+    v-if="self"
     trigger="click"
     placement="right-start"
     @select="(v) => $router.push(v)"
@@ -16,7 +17,7 @@
             self?.companyAccess?.company?.title || self?.adminAccess?.role?.name
           }}
         </div>
-        <div :class="$style.phone">{{ self?.user.phone }}</div>
+        <div :class="$style.phone">{{ maskPhone(self.user.phone!) }}</div>
       </div>
     </div>
   </NDropdown>
@@ -25,6 +26,7 @@
 <script setup lang="ts">
 import { self } from "~/composables/self";
 import { NDropdown } from "naive-ui";
+import { maskPhone } from "@beloyal/shared";
 </script>
 
 <style module>
