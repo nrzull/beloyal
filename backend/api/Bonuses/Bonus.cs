@@ -11,8 +11,6 @@ public class Bonus
 
   public required BonusType Type { get; set; }
 
-  public required DateTimeOffset PublicTokenIssuedAt { get; set; }
-
   public decimal Amount { get; set; }
   public decimal CashIncome { get; set; }
   public decimal CashbackPercent { get; set; }

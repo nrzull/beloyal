@@ -68,4 +68,34 @@ public class BonusContextTest : TestLifetime
         Assert.Equal(0, subtractBonusRecord.CashIncome);
       }
     );
+
+  [Fact]
+  public Task GetLatestBonuses() =>
+    WithScope(
+      async (scope, _) =>
+      {
+        var (company, cAccess, _) = await CompanyFixture.Company(
+          scope,
+          cashbackPercent: 10,
+          cashbackThreshold: 100
+        );
+
+        var (shop, sAccess) = await ShopFixture.Shop(scope, company, cAccess);
+        var (customer, _) = await CustomerFixture.Customer(scope, company);
+        var (customer2, _) = await CustomerFixture.Customer(scope, company, phone: "+12312312312");
+        var bonusContext = scope.Get<BonusContext>();
+
+        await bonusContext.AddBonus(customer, sAccess, 1000, DateTimeOffset.UtcNow);
+
+        var b1 = await bonusContext.AddBonus(customer, sAccess, 1000, DateTimeOffset.UtcNow);
+
+        var b2 = await bonusContext.AddBonus(customer2, sAccess, 1000, DateTimeOffset.UtcNow);
+
+        var latest = await bonusContext.GetLatestBonuses();
+
+        Assert.Contains(latest, (v) => v.Id == b1.Id);
+        Assert.Contains(latest, (v) => v.Id == b2.Id);
+        Assert.Equal(2, latest.Count);
+      }
+    );
 }

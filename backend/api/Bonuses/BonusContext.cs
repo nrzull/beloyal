@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,36 @@ namespace Beloyal.API.Bonuses;
 
 public class BonusContext(ApplicationDbContext dbContext)
 {
+  public static Channel<Guid> NewBonusChannel { get; } = Channel.CreateUnbounded<Guid>();
+
+  public async Task<List<Bonus>> GetLatestBonuses()
+  {
+    var bonuses = (await dbContext.Bonuses.OrderByDescending(v => v.CreatedAt).ToListAsync())
+      .DistinctBy(v => v.CustomerId)
+      .ToList();
+
+    return bonuses;
+  }
+
+  public async Task<Bonus> BurnBonus(Customer customer)
+  {
+    if (customer.BonusAmount <= 0)
+    {
+      throw new Exception("customer does not have bonuses");
+    }
+
+    var bonus = new Bonus { Type = BonusType.BurnBonus, Customer = customer };
+    dbContext.Add(bonus);
+
+    dbContext.Update(customer);
+    customer.BonusAmount = 0;
+
+    await dbContext.SaveChangesAsync();
+    await NewBonusChannel.Writer.WriteAsync(bonus.Id);
+
+    return bonus;
+  }
+
   public async Task<Bonus> AddBonus(
     Customer customer,
     ShopAccess agent,
@@ -20,7 +51,7 @@ public class BonusContext(ApplicationDbContext dbContext)
 
     if (
       await dbContext.Bonuses.AnyAsync(v =>
-        v.CustomerId == customer.Id && v.PublicTokenIssuedAt >= publicTokenIssuedAt
+        v.CustomerId == customer.Id && v.CreatedAt >= publicTokenIssuedAt
       )
     )
     {
@@ -35,7 +66,7 @@ public class BonusContext(ApplicationDbContext dbContext)
     var cashbackThreshold = agent.Shop.Company.CashbackThreshold;
     var appliedBonus = income / 100 * cashbackPercent;
 
-    var bonusRecord = new Bonus
+    var bonus = new Bonus
     {
       Type = BonusType.AddBonus,
       Customer = customer,
@@ -45,17 +76,17 @@ public class BonusContext(ApplicationDbContext dbContext)
       Amount = appliedBonus,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
-      PublicTokenIssuedAt = publicTokenIssuedAt,
     };
 
-    dbContext.Add(bonusRecord);
+    dbContext.Add(bonus);
 
     dbContext.Update(customer);
     customer.BonusAmount += appliedBonus;
 
     await dbContext.SaveChangesAsync();
+    await NewBonusChannel.Writer.WriteAsync(bonus.Id);
 
-    return bonusRecord;
+    return bonus;
   }
 
   public async Task<Bonus> SubtractBonus(
@@ -77,7 +108,7 @@ public class BonusContext(ApplicationDbContext dbContext)
 
     if (
       await dbContext.Bonuses.AnyAsync(v =>
-        v.CustomerId == customer.Id && v.PublicTokenIssuedAt >= publicTokenIssuedAt
+        v.CustomerId == customer.Id && v.CreatedAt >= publicTokenIssuedAt
       )
     )
     {
@@ -93,27 +124,28 @@ public class BonusContext(ApplicationDbContext dbContext)
 
     var incomeThreshold = income / 100 * cashbackThreshold;
 
-    var bonus = customer.BonusAmount > incomeThreshold ? incomeThreshold : customer.BonusAmount;
+    var bonusAmount =
+      customer.BonusAmount > incomeThreshold ? incomeThreshold : customer.BonusAmount;
 
-    var bonusRecord = new Bonus
+    var bonus = new Bonus
     {
       Type = BonusType.SubtractBonus,
       Customer = customer,
       Shop = agent.Shop,
-      Amount = bonus,
+      Amount = bonusAmount,
       Agent = agent.CompanyAccess,
-      CashIncome = income - bonus,
+      CashIncome = income - bonusAmount,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
-      PublicTokenIssuedAt = publicTokenIssuedAt,
     };
-    dbContext.Add(bonusRecord);
+    dbContext.Add(bonus);
 
     dbContext.Update(customer);
-    customer.BonusAmount -= bonus;
+    customer.BonusAmount -= bonusAmount;
 
     await dbContext.SaveChangesAsync();
+    await NewBonusChannel.Writer.WriteAsync(bonus.Id);
 
-    return bonusRecord;
+    return bonus;
   }
 }

@@ -5,4 +5,5 @@ public enum BonusType
   AddBonus,
   SubtractBonus,
   RevertBonus,
+  BurnBonus,
 }

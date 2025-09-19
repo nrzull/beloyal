@@ -48,6 +48,7 @@ public class Program
     builder.Services.AddScoped<BonusContext>();
     builder.Services.AddScoped<ChatContext>();
     builder.Services.AddScoped<MailingContext>();
+    builder.Services.AddHostedService<BonusLifetimeBackgroundService>();
 
     builder.UseAuthEndpoints();
     builder.UseSelfEndpoints();

@@ -1,3 +1,4 @@
+using Beloyal.API.Bonuses;
 using Beloyal.API.Companies;
 using Beloyal.API.Messengers;
 using Beloyal.API.Types;
@@ -23,4 +24,6 @@ public class Customer : IEnsurable
 
   public Guid? TgBotId { get; set; }
   public TgBot? TgBot { get; set; }
+
+  public List<Bonus> Bonuses { get; set; } = [];
 }
