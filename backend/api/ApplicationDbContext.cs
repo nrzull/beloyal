@@ -205,7 +205,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 
       bonus
         .HasOne(v => v.Customer)
-        .WithMany()
+        .WithMany(v => v.Bonuses)
         .HasForeignKey(v => v.CustomerId)
         .HasPrincipalKey(v => v.Id);
 
@@ -280,6 +280,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany()
         .HasForeignKey(v => v.CustomerId)
         .HasPrincipalKey(v => v.Id);
+
+      mailingUnit.Property(v => v.Status).HasConversion<string>();
     });
   }
 

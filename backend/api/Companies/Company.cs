@@ -14,9 +14,10 @@ public class Company
   public required string Tin { get; set; }
   public required string Title { get; set; }
 
-  public required decimal CashbackPercent { get; set; }
-  public required decimal CashbackThreshold { get; set; }
-  public required decimal BonusMultiplier { get; set; }
+  public decimal CashbackPercent { get; set; } = 1;
+  public decimal CashbackThreshold { get; set; } = 30;
+  public decimal BonusMultiplier { get; set; } = 10;
+  public TimeSpan? BonusLifetime { get; set; } = TimeSpan.FromDays(180);
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

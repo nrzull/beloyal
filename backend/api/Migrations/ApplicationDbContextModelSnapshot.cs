@@ -148,10 +148,6 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
-                    b.Property<DateTimeOffset>("PublicTokenIssuedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("public_token_issued_at");
-
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid")
                         .HasColumnName("shop_id");
@@ -266,6 +262,10 @@ namespace Beloyal.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<TimeSpan?>("BonusLifetime")
+                        .HasColumnType("interval")
+                        .HasColumnName("bonus_lifetime");
 
                     b.Property<decimal>("BonusMultiplier")
                         .HasColumnType("numeric")
@@ -518,8 +518,9 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("mailing_id");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("status");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
