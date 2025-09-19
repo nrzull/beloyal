@@ -14,7 +14,8 @@ public class CreateCompanyEndpoint(CompanyContext companyContext)
       req.Title,
       new Percent(req.CashbackPercent),
       new Percent(req.CashbackThreshold, false),
-      new Percent(req.BonusMultiplier, false)
+      new Percent(req.BonusMultiplier, false),
+      TimeSpan.FromDays(req.BonusLifetimeInDays)
     );
 
     return new CreateCompanyResponse.Ok();

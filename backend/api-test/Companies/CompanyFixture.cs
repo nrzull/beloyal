@@ -28,7 +28,8 @@ public static class CompanyFixture
       "title",
       new(cashbackPercent),
       new(cashbackThreshold),
-      new(bonusMultiplier)
+      new(bonusMultiplier),
+      TimeSpan.FromDays(1)
     );
 
     return (company, access, user);

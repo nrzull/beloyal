@@ -263,7 +263,7 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<TimeSpan?>("BonusLifetime")
+                    b.Property<TimeSpan>("BonusLifetime")
                         .HasColumnType("interval")
                         .HasColumnName("bonus_lifetime");
 
@@ -738,7 +738,7 @@ namespace Beloyal.API.Migrations
                         .HasConstraintName("fk_bonuses_company_accesses_agent_id");
 
                     b.HasOne("Beloyal.API.Customers.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Bonuses")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -1014,6 +1014,11 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
                 {
                     b.Navigation("ShopAccesses");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Customers.Customer", b =>
+                {
+                    b.Navigation("Bonuses");
                 });
 
             modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>

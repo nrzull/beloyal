@@ -47,6 +47,7 @@ const createCompany = async () => {
       cashbackPercent: 10,
       cashbackThreshold: 25,
       bonusMultiplier: 10,
+      bonusLifetimeInDays: 180,
       tin: tin.value,
       title: title.value,
     });

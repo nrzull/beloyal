@@ -82,7 +82,8 @@ public class CompanyContext(ApplicationDbContext dbContext)
     string title,
     Percent cashbackPercent,
     Percent cashbackThreshold,
-    Percent bonusMultiplier
+    Percent bonusMultiplier,
+    TimeSpan bonusLifetime
   )
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
@@ -100,6 +101,7 @@ public class CompanyContext(ApplicationDbContext dbContext)
       CashbackPercent = cashbackPercent.Value,
       CashbackThreshold = cashbackThreshold.Value,
       BonusMultiplier = bonusMultiplier.Value,
+      BonusLifetime = bonusLifetime,
     };
 
     var role = new CompanyRole

@@ -11,7 +11,14 @@ public class BonusContext(ApplicationDbContext dbContext)
 
   public async Task<List<Bonus>> GetLatestBonuses()
   {
-    var bonuses = (await dbContext.Bonuses.OrderByDescending(v => v.CreatedAt).ToListAsync())
+    var bonuses = (
+      await dbContext
+        .Bonuses.Include(v => v.Customer)
+        .ThenInclude(v => v.Company)
+        .AsSplitQuery()
+        .OrderByDescending(v => v.CreatedAt)
+        .ToListAsync()
+    )
       .DistinctBy(v => v.CustomerId)
       .ToList();
 

@@ -5,5 +5,6 @@ public record CreateCompanyRequest(
   string Title,
   decimal CashbackPercent,
   decimal CashbackThreshold,
-  decimal BonusMultiplier
+  decimal BonusMultiplier,
+  uint BonusLifetimeInDays
 );
