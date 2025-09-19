@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import Profile from "~/components/Profile/Profile.vue";
-import Menu from "~/components/Menu/Menu.vue";
+import Profile from "~/components/Profile.vue";
+import Menu from "~/components/Menu.vue";
 import type { MenuItem } from "~/components/Menu/types";
 import { admin_white_companies_read, isAdmin } from "~/composables/self";
 
@@ -117,7 +117,6 @@ const menu = computed(() =>
   display: grid;
   grid-template-areas: "aside main";
   grid-template-columns: max-content 1fr;
-  gap: 12px;
   width: inherit;
   height: inherit;
 }
@@ -128,7 +127,7 @@ const menu = computed(() =>
   overflow-x: clip;
   display: flex;
   flex-flow: column;
-  background-color: rgba(0, 0, 0, 0.025);
+  border-right: 2px solid rgba(0, 0, 0, 0.025);
 }
 
 .main {

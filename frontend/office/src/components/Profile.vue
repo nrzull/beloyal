@@ -11,36 +11,38 @@
     ]"
   >
     <div :class="$style.profile">
-      <div>
+      <NSpace vertical :size="[0, 2]">
         <div :class="$style.team">
           {{
             self?.companyAccess?.company?.title || self?.adminAccess?.role?.name
           }}
         </div>
         <div :class="$style.phone">{{ maskPhone(self.user.phone!) }}</div>
-      </div>
+      </NSpace>
+      <Icon :class="$style.menuButton" variant="menu" />
     </div>
   </NDropdown>
 </template>
 
 <script setup lang="ts">
 import { self } from "~/composables/self";
-import { NDropdown } from "naive-ui";
-import { maskPhone } from "@beloyal/shared";
+import { NDropdown, NSpace } from "naive-ui";
+import { maskPhone, Icon } from "@beloyal/shared";
 </script>
 
 <style module>
 .profile {
-  border-radius: 12px;
-  padding: 12px 24px;
-  margin: 12px 12px 0;
+  margin-top: 12px;
+  padding-top: 12px;
+  padding-left: 36px;
+  padding-right: 24px;
+  padding-bottom: 12px;
+
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 4px;
   cursor: pointer;
-  background-color: #fafafa;
   user-select: none;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.025);
 }
 
 .team {
@@ -56,5 +58,13 @@ import { maskPhone } from "@beloyal/shared";
   font-size: 12px;
   font-weight: 500;
   opacity: 0.5;
+}
+
+.profile:hover .menuButton {
+  color: var(--color-primary);
+}
+
+.menuButton {
+  color: var(--color-grey-500);
 }
 </style>

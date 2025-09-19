@@ -15,6 +15,8 @@ import coins from "./Icon/assets/coins.svg?raw";
 import rub from "./Icon/assets/rub.svg?raw";
 import back from "./Icon/assets/back.svg?raw";
 import history from "./Icon/assets/history.svg?raw";
+import menu from "./Icon/assets/menu.svg?raw";
+import chevronRight from "./Icon/assets/chevronRight.svg?raw";
 
 const icons = {
   user,
@@ -26,6 +28,8 @@ const icons = {
   rub,
   back,
   history,
+  menu,
+  chevronRight,
 } as const;
 
 export type IconVariant = keyof typeof icons;
