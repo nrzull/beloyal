@@ -10,16 +10,16 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
 
   public async Task ProcessExistingBonuses(CancellationToken ct)
   {
-    await using var scope = sf.CreateAsyncScope();
-    var bonusContext = scope.ServiceProvider.GetRequiredService<BonusContext>();
-
-    var bonuses = await bonusContext.GetLatestBonuses();
-    var now = DateTimeOffset.UtcNow;
-
-    PeriodicTimer time = new(TimeSpan.FromSeconds(10));
+    PeriodicTimer time = new(TimeSpan.FromHours(1));
 
     while (await time.WaitForNextTickAsync(ct))
     {
+      await using var scope = sf.CreateAsyncScope();
+      var bonusContext = scope.ServiceProvider.GetRequiredService<BonusContext>();
+
+      var bonuses = await bonusContext.GetLatestBonuses();
+      var now = DateTimeOffset.UtcNow;
+
       foreach (var bonus in bonuses)
       {
         if (bonus.Customer.BonusAmount <= 0)
@@ -27,17 +27,17 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
           continue;
         }
 
-        if (bonus.Customer.Company.BonusLifetime is not { } bonusLifetime)
-        {
-          continue;
-        }
-
-        var deadline = bonus.CreatedAt.Add(bonusLifetime);
+        var deadline = bonus.CreatedAt.Add(bonus.Customer.Company.BonusLifetime);
         if (deadline < now)
         {
-          Console.WriteLine(
-            $"Should burn {bonus.Customer.BonusAmount} for customer {bonus.Customer.Id}"
-          );
+          try
+          {
+            await bonusContext.BurnBonus(bonus.Customer);
+          }
+          catch (Exception e)
+          {
+            Console.WriteLine(e);
+          }
         }
       }
     }
