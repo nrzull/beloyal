@@ -1,3 +1,4 @@
+import type { Bonus } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
 
 export type Customer = Awaited<ReturnType<typeof apiCustomersGetByPublicToken>>;
@@ -19,7 +20,7 @@ export const apiCustomersAddBonus = (params: {
   income: number;
 }) =>
   apiClient
-    .post(
+    .post<{ data: Bonus }>(
       `/api/agent/customers/public-tokens/${params.publicToken}/add-bonus`,
       { income: params.income }
     )
@@ -30,7 +31,7 @@ export const apiCustomersSubtractBonus = (params: {
   income: number;
 }) =>
   apiClient
-    .post(
+    .post<{ data: Bonus }>(
       `/api/agent/customers/public-tokens/${params.publicToken}/subtract-bonus`,
       { income: params.income }
     )
