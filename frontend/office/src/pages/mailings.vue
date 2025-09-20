@@ -1,15 +1,15 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Рассылки</PageHeading>
+      <Heading>Рассылки</Heading>
 
-      <NButton
+      <Button
         type="primary"
         size="medium"
         @click="$router.push('/mailings/new')"
       >
         Новая рассылка
-      </NButton>
+      </Button>
     </template>
 
     <Table
@@ -30,10 +30,9 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { NButton } from "naive-ui";
 import { ref } from "vue";
 import type { Mailing } from "@beloyal/shared";
+import { Button, Heading } from "@beloyal/shared";
 import { apiMailingsGetAll } from "~/api/mailings";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";

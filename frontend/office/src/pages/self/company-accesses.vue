@@ -3,14 +3,14 @@
     <template #top>
       <Heading>Компании</Heading>
 
-      <NButton
+      <Button
         v-if="self?.adminAccess && self.companyAccess"
         type="primary"
         size="medium"
         @click="setCompanyAccess(null)"
       >
         Войти как администратор
-      </NButton>
+      </Button>
     </template>
 
     <Table
@@ -35,17 +35,17 @@
       </template>
 
       <template #actions="{ item }">
-        <NButton
+        <Button
           disabled
           v-if="item.id === self?.companyAccess?.id"
           size="small"
           type="primary"
         >
           Активен
-        </NButton>
-        <NButton v-else size="small" @click="setCompanyAccess(item.id)">
+        </Button>
+        <Button v-else size="small" @click="setCompanyAccess(item.id)">
           Войти
-        </NButton>
+        </Button>
       </template>
     </Table>
   </Page>
@@ -53,10 +53,9 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, wait } from "@beloyal/shared";
+import { Heading, wait, Button } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
 import { self } from "~/composables/self";
-import { NButton } from "naive-ui";
 import { apiSelfSetCompanyAccess } from "~/api/self";
 
 const setCompanyAccess = async (companyAccessId: string | null) => {

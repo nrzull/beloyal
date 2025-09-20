@@ -2,9 +2,9 @@
   <div class="v-space-24">
     <div :class="$style.top">
       <slot name="tabs"></slot>
-      <NButton type="primary" @click="addShopAccessModal = true">
+      <Button type="primary" @click="addShopAccessModal = true">
         Назначить сотрудника
-      </NButton>
+      </Button>
     </div>
 
     <Table
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { NButton, NModal } from "naive-ui";
+import { NModal } from "naive-ui";
 import { computed, ref } from "vue";
 import { apiCompanyAccessesGetAll } from "~/api/companyAccesses";
 import type { CompanyAccess } from "@beloyal/shared";
@@ -60,7 +60,7 @@ import type { ShopAccess } from "@beloyal/shared";
 import { apiShopsGetAccesses, apiShopsCreateAccess } from "~/api/shops";
 import type { Shop } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
-import { wait } from "@beloyal/shared";
+import { wait, Button } from "@beloyal/shared";
 import { formatDate } from "~/utils/date";
 import { maskPhone } from "@beloyal/shared";
 

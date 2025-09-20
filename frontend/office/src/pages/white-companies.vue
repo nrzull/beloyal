@@ -1,14 +1,14 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Белый список</PageHeading>
-      <NButton
+      <Heading>Белый список</Heading>
+      <Button
         type="primary"
         size="medium"
         @click="$router.push('/white-companies/new')"
       >
         Добавить компанию
-      </NButton>
+      </Button>
     </template>
 
     <Table
@@ -29,11 +29,10 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { NButton } from "naive-ui";
 import { apiWhiteCompaniesGetAll } from "~/api/whiteCompanies";
 import { ref } from "vue";
 import type { WhiteCompany } from "@beloyal/shared";
+import { Button, Heading } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
 import { formatDistanceStrictDate, formatDate } from "~/utils/date";
 

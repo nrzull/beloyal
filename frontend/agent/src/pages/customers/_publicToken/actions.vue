@@ -1,6 +1,6 @@
 <template>
   <Card>
-    <NSpace vertical>
+    <Space vertical>
       <NAlert type="info" title="Бонусы">
         <template #icon>
           <Icon variant="coins" />
@@ -13,30 +13,30 @@
 
       <RouterView :customer="customer" />
 
-      <NButton
+      <Button
         block
         type="primary"
         size="large"
         @click="$router.push(`/customers/${publicToken}/add-bonuses`)"
       >
         Начислить
-      </NButton>
+      </Button>
 
-      <NButton
+      <Button
         block
         v-if="customer.data.bonusAmount > 0"
         @click="$router.push(`/customers/${publicToken}/subtract-bonuses`)"
       >
         Списать
-      </NButton>
-    </NSpace>
+      </Button>
+    </Space>
   </Card>
 </template>
 
 <script setup lang="ts">
 import { type Customer } from "~/api/customers";
-import { NButton, NSpace, NAlert } from "naive-ui";
-import { Card, Icon } from "@beloyal/shared";
+import { NAlert } from "naive-ui";
+import { Space, Card, Icon, Button } from "@beloyal/shared";
 
 defineProps<{ customer: Customer; publicToken: string }>();
 </script>

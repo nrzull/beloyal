@@ -10,18 +10,18 @@
     </template>
 
     <Card class="v-space-12">
-      <NInput :disabled="isLoading" placeholder="Токен" v-model:value="token" />
-      <NButton type="primary" :disabled="isLoading" @click="createTgBot">
+      <Input :disabled="isLoading" placeholder="Токен" v-model:value="token" />
+      <Button type="primary" :disabled="isLoading" @click="createTgBot">
         Добавить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { NBreadcrumb, NBreadcrumbItem, NButton, NInput } from "naive-ui";
-import { Card } from "@beloyal/shared";
+import { NBreadcrumb, NBreadcrumbItem } from "naive-ui";
+import { Card, Button, Input } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiMessengersCreateTgBot } from "~/api/messengers";

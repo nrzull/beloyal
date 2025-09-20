@@ -1,10 +1,10 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Торговые точки</PageHeading>
-      <NButton type="primary" size="medium" @click="$router.push('/shops/new')">
+      <Heading>Торговые точки</Heading>
+      <Button type="primary" size="medium" @click="$router.push('/shops/new')">
         Добавить точку
-      </NButton>
+      </Button>
     </template>
 
     <Table
@@ -25,11 +25,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
-import { NButton } from "naive-ui";
 import type { Shop } from "@beloyal/shared";
+import { Button, Heading } from "@beloyal/shared";
 import { apiShopsGetAll } from "~/api/shops";
 
 const shops = ref<Shop[]>([]);

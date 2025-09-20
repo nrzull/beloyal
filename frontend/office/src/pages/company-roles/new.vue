@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новая роль</PageHeading>
+      <Heading>Новая роль</Heading>
     </template>
 
     <Card class="v-space-24">
@@ -12,19 +12,17 @@
         v-model:selected-permissions="activePermissions"
       />
 
-      <NButton :disabled="isLoading" @click="createRole" type="primary">
+      <Button :disabled="isLoading" @click="createRole" type="primary">
         Добавить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { NButton } from "naive-ui";
 import { computed, ref } from "vue";
-import { Card } from "@beloyal/shared";
+import { Heading, Card, Button } from "@beloyal/shared";
 import {
   apiCompanyRolesGetPermissions,
   apiCompanyRolesCreate,

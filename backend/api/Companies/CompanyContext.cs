@@ -147,6 +147,23 @@ public class CompanyContext(ApplicationDbContext dbContext)
     return access;
   }
 
+  public async Task UpdateCompanyCashback(
+    Company company,
+    Percent cashbackPercent,
+    Percent cashbackThreshold,
+    Percent bonusMultiplier,
+    TimeSpan bonusLifetime
+  )
+  {
+    dbContext.Update(company);
+    company.CashbackPercent = cashbackPercent.Value;
+    company.CashbackThreshold = cashbackThreshold.Value;
+    company.BonusMultiplier = bonusMultiplier.Value;
+    company.BonusLifetime = bonusLifetime;
+
+    await dbContext.SaveChangesAsync();
+  }
+
   public async Task UpdateCompanyAccess(CompanyAccess access, CompanyRole role)
   {
     if (role.CompanyId != access.CompanyId)

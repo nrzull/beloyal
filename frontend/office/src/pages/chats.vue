@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Чаты</PageHeading>
+      <Heading>Чаты</Heading>
     </template>
 
     <Messenger />
@@ -10,6 +10,6 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
+import { Heading } from "@beloyal/shared";
 import Messenger from "~/components/Chats/Messenger.vue";
 </script>

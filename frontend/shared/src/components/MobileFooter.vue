@@ -2,18 +2,19 @@
   <div :class="$style.footer">
     <NTabs :value="$route.path" @update:value="$router.push($event)">
       <NTab v-for="item in items" :key="item.title" :name="item.to">
-        <NSpace align="center" :size="[4, 0]">
+        <Space align="center" :size="[4, 0]">
           <Icon :variant="item.iconVariant" />
           {{ item.title }}
-        </NSpace>
+        </Space>
       </NTab>
     </NTabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import { NTabs, NTab, NSpace } from "naive-ui";
+import { NTabs, NTab } from "naive-ui";
 import Icon, { type IconVariant } from "./Icon.vue";
+import Space from "./Space";
 
 defineProps<{
   items: Array<{

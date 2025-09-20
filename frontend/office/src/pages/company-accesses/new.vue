@@ -1,11 +1,11 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новый пользователь</PageHeading>
+      <Heading>Новый пользователь</Heading>
     </template>
 
     <Card :class="$style.form">
-      <NInput
+      <Input
         :disabled="isLoading"
         placeholder="Номер телефона"
         v-model:value="phone"
@@ -21,23 +21,22 @@
         :options="companyRoles"
       />
 
-      <NButton
+      <Button
         :disabled="isLoading"
         type="primary"
         @click="createCompanyAccessInvitation"
       >
         Добавить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { Card } from "@beloyal/shared";
+import { Input, Card, Button, Heading } from "@beloyal/shared";
 
-import { NButton, NInput, NSelect } from "naive-ui";
+import { NSelect } from "naive-ui";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";

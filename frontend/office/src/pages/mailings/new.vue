@@ -30,25 +30,18 @@
         value-field="id"
         :options="shops"
       />
-      <NInput type="textarea" placeholder="Текст" v-model:value="text" />
-      <NButton :disabled="isLoading" type="primary" @click="createMailing">
+      <Input type="textarea" placeholder="Текст" v-model:value="text" />
+      <Button :disabled="isLoading" type="primary" @click="createMailing">
         Создать рассылку
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import {
-  NBreadcrumb,
-  NBreadcrumbItem,
-  NButton,
-  NInput,
-  NSelect,
-  NSwitch,
-} from "naive-ui";
-import { Card } from "@beloyal/shared";
+import { NBreadcrumb, NBreadcrumbItem, NSelect, NSwitch } from "naive-ui";
+import { Input, Card, Button } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 

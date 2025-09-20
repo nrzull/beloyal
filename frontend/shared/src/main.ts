@@ -9,3 +9,6 @@ export { default as AuthForm } from "./components/AuthForm.vue";
 export { default as Heading } from "./components/Heading.vue";
 export { default as MobileLayout } from "./components/MobileLayout.vue";
 export { default as MobileFooter } from "./components/MobileFooter.vue";
+export { default as Button } from "./components/Button";
+export { default as Input } from "./components/Input";
+export { default as Space } from "./components/Space";

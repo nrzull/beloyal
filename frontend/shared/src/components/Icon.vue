@@ -17,6 +17,7 @@ import back from "./Icon/assets/back.svg?raw";
 import history from "./Icon/assets/history.svg?raw";
 import menu from "./Icon/assets/menu.svg?raw";
 import chevronRight from "./Icon/assets/chevronRight.svg?raw";
+import percent from "./Icon/assets/percent.svg?raw";
 
 const icons = {
   user,
@@ -30,6 +31,7 @@ const icons = {
   history,
   menu,
   chevronRight,
+  percent,
 } as const;
 
 export type IconVariant = keyof typeof icons;

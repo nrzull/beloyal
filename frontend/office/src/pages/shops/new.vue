@@ -1,28 +1,26 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новая торговая точка</PageHeading>
+      <Heading>Новая торговая точка</Heading>
     </template>
 
     <Card class="v-space-12">
-      <NInput
+      <Input
         :disabled="isLoading"
         placeholder="Название"
         v-model:value="name"
       />
 
-      <NButton :disabled="isLoading" type="primary" @click="createShop">
+      <Button :disabled="isLoading" type="primary" @click="createShop">
         Добавить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { Card } from "@beloyal/shared";
-import { NButton, NInput } from "naive-ui";
+import { Heading, Card, Button, Input } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";

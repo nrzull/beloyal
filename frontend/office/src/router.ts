@@ -76,6 +76,20 @@ export const router = createRouter({
           ],
         },
         {
+          path: "specials",
+          children: [
+            {
+              path: "bonuses",
+              component: () => import("~/pages/specials/bonuses.vue"),
+            },
+
+            {
+              path: "promotions",
+              component: () => import("~/pages/specials/promotions.vue"),
+            },
+          ],
+        },
+        {
           path: "company-accesses",
           children: [
             {

@@ -1,25 +1,24 @@
 <template>
   <div :class="$style.welcome">
     <Card :class="$style.form">
-      <NButton type="primary" @click="$router.push('/welcome/company')">
+      <Button type="primary" @click="$router.push('/welcome/company')">
         Создать компанию
-      </NButton>
+      </Button>
 
-      <NButton
+      <Button
         type="primary"
         :bordered="false"
         ghost
         @click="$router.push('/auth')"
       >
         Сменить учетную запись
-      </NButton>
+      </Button>
     </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { NButton } from "naive-ui";
-import { Card } from "@beloyal/shared";
+import { Card, Button } from "@beloyal/shared";
 </script>
 
 <style module>

@@ -2,7 +2,7 @@
   <div class="v-space-24">
     <div :class="$style.top">
       <slot name="tabs"></slot>
-      <NButton type="primary">Добавить акцию</NButton>
+      <Button type="primary">Добавить акцию</Button>
     </div>
 
     <Table
@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import { NButton } from "naive-ui";
 import { ref } from "vue";
 import Table from "~/components/Table/Table.vue";
+import { Button } from "@beloyal/shared";
 
 const promotions = ref<any[]>([]);
 </script>
