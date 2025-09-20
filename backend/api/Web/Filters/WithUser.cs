@@ -11,7 +11,10 @@ public class WithUserFilter(UserContext userContext) : IAsyncActionFilter
 {
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {
-    if (ctx.HttpContext.Items["accessToken"] is AccessToken token)
+    if (
+      ctx.HttpContext.Items.ContainsKey("accessToken")
+      && ctx.HttpContext.Items["accessToken"] is AccessToken token
+    )
     {
       var user = await userContext.GetById(UserId.From(token.UserId));
       ctx.HttpContext.Items["user"] = user;

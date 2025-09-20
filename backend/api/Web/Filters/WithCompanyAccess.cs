@@ -12,7 +12,8 @@ public class WithCompanyAccessFilter(CompanyContext companyContext) : IAsyncActi
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {
     if (
-      ctx.HttpContext.Items["accessToken"] is AccessToken token
+      ctx.HttpContext.Items.ContainsKey("accessToken")
+      && ctx.HttpContext.Items["accessToken"] is AccessToken token
       && token.CompanyAccessId is Guid id
     )
     {

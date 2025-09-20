@@ -9,15 +9,26 @@ public class HubAuthMiddleware(AuthContext authContext) : IMiddleware
     if (ctx.Request.Path.StartsWithSegments("/api/ws"))
     {
       ctx.Request.Cookies.TryGetValue(AuthContext.GetAccessTokenName(), out var token);
+      if (token is { Length: > 1 } t1)
+      {
+        var decodedAccessToken = authContext.DecodeAccessToken(t1);
+        ctx.Items["accessToken"] = decodedAccessToken;
+      }
 
-      if (token is not { Length: > 1 })
+      ctx.Request.Headers.TryGetValue("Authorization", out var rawCustomerTokens);
+
+      var customerToken = rawCustomerTokens.FirstOrDefault()?.Replace("Bearer ", "");
+      if (customerToken is { Length: > 1 } t2)
+      {
+        var decodedToken = authContext.DecodeCustomerAccessToken(t2);
+        ctx.Items["customerAccessToken"] = decodedToken;
+      }
+
+      if (ctx.Items["accessToken"] is null && ctx.Items["customerAccessToken"] is null)
       {
         ctx.Response.StatusCode = 401;
         return;
       }
-
-      var decodedAccessToken = authContext.DecodeAccessToken(token!);
-      ctx.Items["accessToken"] = decodedAccessToken;
     }
 
     await next(ctx);
