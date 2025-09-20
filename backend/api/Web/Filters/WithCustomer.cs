@@ -11,7 +11,10 @@ public class WithCustomerFilter(CustomerContext customerContext) : IAsyncActionF
 {
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {
-    if (ctx.HttpContext.Items["customerAccessToken"] is CustomerAccessToken token)
+    if (
+      ctx.HttpContext.Items.ContainsKey("customerAccessToken")
+      && ctx.HttpContext.Items["customerAccessToken"] is CustomerAccessToken token
+    )
     {
       var customer = await customerContext.GetCustomer(CustomerId.From(token.CustomerId));
 

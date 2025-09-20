@@ -10,7 +10,10 @@ public class WithAccessTokenFilter() : IAsyncActionFilter
 {
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {
-    if (ctx.HttpContext.Items["accessToken"] is AccessToken token)
+    if (
+      ctx.HttpContext.Items.ContainsKey("accessToken")
+      && ctx.HttpContext.Items["accessToken"] is AccessToken token
+    )
     {
       ctx.ActionArguments["accessToken"] = token;
     }

@@ -19,11 +19,12 @@ import { authToken } from "~/api/clients";
 import { publicToken } from "~/composables/publicToken";
 import { fetchSelf, self } from "~/composables/self";
 import { useMobileVh } from "@beloyal/shared";
+import { wsClient } from "~/api/clients";
 
 const route = useRoute();
 useMobileVh({ variableName: "--vh1" });
 
-onMounted(async () => {
+const refresh = async () => {
   const initData = retrieveRawInitData();
   if (initData) {
     const { hash } = parseInitDataQuery(initData);
@@ -38,7 +39,10 @@ onMounted(async () => {
     publicToken.value = result.data.publicToken.token;
     await fetchSelf();
   }
-});
+};
+
+onMounted(refresh);
+wsClient.on("Refresh", refresh);
 </script>
 
 <style>
