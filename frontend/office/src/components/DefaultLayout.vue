@@ -47,8 +47,8 @@ const companyMenu = computed(() => {
       children: [
         {
           type: "route",
-          route: "/specials/cashback",
-          label: "Кэшбэк",
+          route: "/specials/bonuses",
+          label: "Бонусы",
           available: true,
         },
 

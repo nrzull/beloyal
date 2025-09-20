@@ -14,6 +14,7 @@ using Beloyal.API.Web.AgentCustomers;
 using Beloyal.API.Web.AgentSelf;
 using Beloyal.API.Web.Auth;
 using Beloyal.API.Web.Chats;
+using Beloyal.API.Web.Company;
 using Beloyal.API.Web.CompanyAccesses;
 using Beloyal.API.Web.CompanyRoles;
 using Beloyal.API.Web.CustomerSelf;
@@ -64,6 +65,7 @@ public class Program
     builder.UseCustomerSelfEndpoints();
     builder.UseAgentSelfEndpoints();
     builder.UseAgentCustomersEndpoints();
+    builder.UseCompanyEndpoints();
 
     builder.UseTgBotHandlers();
 

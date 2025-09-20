@@ -4,3 +4,10 @@ export type Company = {
   title: string;
   tin: string;
 };
+
+export type CompanyCashback = {
+  cashbackPercent: number;
+  cashbackThreshold: number;
+  bonusMultiplier: number;
+  bonusLifetimeInDays: number;
+};

@@ -79,8 +79,8 @@ export const router = createRouter({
           path: "specials",
           children: [
             {
-              path: "cashback",
-              component: () => import("~/pages/specials/cashback.vue"),
+              path: "bonuses",
+              component: () => import("~/pages/specials/bonuses.vue"),
             },
 
             {
