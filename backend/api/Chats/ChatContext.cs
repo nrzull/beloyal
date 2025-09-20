@@ -58,6 +58,9 @@ public class ChatContext(ApplicationDbContext dbContext)
       .Include(v => v.Messages)
       .ThenInclude(v => v.Agent)
       .ThenInclude(v => v!.User)
+      .Include(v => v.Customer)
+      .ThenInclude(v => v.User)
+      .AsSplitQuery()
       .ToListAsync();
 
     return chats.OrderDescending(new MessageCreatedAtComparer()).ToList();

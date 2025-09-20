@@ -1,4 +1,4 @@
-export type Chat = { id: string; previewMessage?: ChatMessage };
+export type Chat = { id: string; name: string; previewMessage?: ChatMessage };
 
 export type ChatMessage = {
   id: string;
@@ -8,4 +8,5 @@ export type ChatMessage = {
   customerId?: string;
   readAt?: string;
   createdAt: string;
+  chatId: string;
 };

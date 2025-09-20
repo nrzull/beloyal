@@ -5,6 +5,7 @@
         v-for="chat in chats.keys()"
         :key="chat.id"
         :chat="chat"
+        :messages="chats.get(chat) || []"
         :loading="isLoading"
         :active="activeChat === chat"
         @click="activeChat = chat"
@@ -25,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onUnmounted, ref } from "vue";
 import {
   apiChatsGetAll,
   apiChatsGetAllMessages,
@@ -35,12 +36,11 @@ import type { Chat, ChatMessage } from "@beloyal/shared";
 import { wait } from "@beloyal/shared";
 import ChatPreview from "~/components/Chats/Messenger/ChatPreview.vue";
 import ChatConversation from "~/components/Chats/Messenger/ChatConversation.vue";
+import { wsClient } from "~/api/clients";
 
 const isLoading = computed(() => wait.some([fetchChats]));
-
 const chats = ref<Map<Chat, ChatMessage[]>>(new Map());
 const activeChat = ref<Chat>();
-
 const inputHistory = ref<Map<Chat, string>>(new Map());
 
 const fetchChats = async () => {
@@ -71,16 +71,7 @@ const sendMessage = async (chat: Chat) => {
     wait.start(sendMessage);
 
     inputHistory.value.set(chat, "");
-
-    const { data: message } = await apiChatsCreateMessage({
-      chatId: chat.id,
-      content: input,
-    });
-
-    const messages = chats.value.get(chat);
-    if (messages) {
-      messages.unshift(message);
-    }
+    await apiChatsCreateMessage({ chatId: chat.id, content: input });
   } catch (e) {
     console.error(e);
 
@@ -91,6 +82,22 @@ const sendMessage = async (chat: Chat) => {
     wait.end(sendMessage);
   }
 };
+
+const onChatMessage = (message: ChatMessage) => {
+  const chat = Array.from(chats.value.keys()).find(
+    (v) => v.id === message.chatId
+  );
+
+  if (!chat) {
+    console.error("TODO: fetch chat with preview message");
+  } else {
+    const messages = chats.value.get(chat);
+    messages?.unshift(message);
+  }
+};
+
+wsClient.on("ChatMessage", onChatMessage);
+onUnmounted(() => wsClient.off("ChatMessage", onChatMessage));
 
 fetchChats();
 </script>

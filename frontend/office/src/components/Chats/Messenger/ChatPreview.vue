@@ -1,26 +1,36 @@
 <template>
-  <div
-    v-if="chat.previewMessage"
-    :class="[$style.chatPreview, { [$style.active]: active }]"
-  >
+  <div :class="[$style.chatPreview, { [$style.active]: active }]">
     <div :class="$style.top">
-      <div :class="$style.sender">{{ chat.previewMessage.name }}</div>
-      <div :class="$style.timestamp">
-        {{ formatMessageTimestamp(chat.previewMessage.createdAt) }}
+      <div :class="$style.sender">{{ chat.name || chat.id }}</div>
+      <div v-if="lastMessage" :class="$style.timestamp">
+        {{ formatMessageTimestamp(lastMessage.createdAt) }}
       </div>
     </div>
 
-    <div :class="$style.content">
-      {{ chat.previewMessage.content }}
+    <div v-if="lastMessage" :class="$style.content">
+      <span v-if="isYourLastMessage">Вы:</span>
+      {{ lastMessage.content }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Chat } from "@beloyal/shared";
+import type { Chat, ChatMessage } from "@beloyal/shared";
+import { computed } from "vue";
 import { formatMessageTimestamp } from "~/utils/date";
+import { self } from "~/composables/self";
 
-defineProps<{ chat: Chat; active?: boolean; loading: boolean }>();
+const { messages, chat } = defineProps<{
+  chat: Chat;
+  active?: boolean;
+  loading: boolean;
+  messages: ChatMessage[];
+}>();
+
+const lastMessage = computed(() => messages[0] || chat.previewMessage);
+const isYourLastMessage = computed(
+  () => self.value?.companyAccess?.id === lastMessage?.value?.agentId
+);
 </script>
 
 <style module>
