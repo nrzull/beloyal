@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новая торговая точка</PageHeading>
+      <Heading>Новая торговая точка</Heading>
     </template>
 
     <Card class="v-space-12">
@@ -20,8 +20,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { Card, Button, Input } from "@beloyal/shared";
+import { Heading, Card, Button, Input } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";

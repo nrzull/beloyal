@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новая роль</PageHeading>
+      <Heading>Новая роль</Heading>
     </template>
 
     <Card class="v-space-24">
@@ -21,9 +21,8 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
 import { computed, ref } from "vue";
-import { Card, Button } from "@beloyal/shared";
+import { Heading, Card, Button } from "@beloyal/shared";
 import {
   apiCompanyRolesGetPermissions,
   apiCompanyRolesCreate,

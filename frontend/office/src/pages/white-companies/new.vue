@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новая компания</PageHeading>
+      <Heading>Новая компания</Heading>
     </template>
 
     <Card :class="$style.form">
@@ -15,8 +15,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { Input, Button, Card } from "@beloyal/shared";
+import { Heading, Input, Button, Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiWhiteCompaniesCreate } from "~/api/whiteCompanies";

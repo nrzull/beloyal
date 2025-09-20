@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Новый пользователь</PageHeading>
+      <Heading>Новый пользователь</Heading>
     </template>
 
     <Card :class="$style.form">
@@ -34,8 +34,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
-import { Input, Card, Button } from "@beloyal/shared";
+import { Input, Card, Button, Heading } from "@beloyal/shared";
 
 import { NSelect } from "naive-ui";
 import { computed, ref } from "vue";

@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Пользователи</PageHeading>
+      <Heading>Пользователи</Heading>
 
       <Button
         type="primary"
@@ -36,9 +36,8 @@ import { ref } from "vue";
 import { apiCompanyAccessesGetAll } from "~/api/companyAccesses";
 import type { CompanyAccess } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
-import { maskPhone, Button } from "@beloyal/shared";
+import { maskPhone, Button, Heading } from "@beloyal/shared";
 
 const companyAccesses = ref<CompanyAccess[]>([]);
 

@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template #top>
-      <PageHeading>Рассылки</PageHeading>
+      <Heading>Рассылки</Heading>
 
       <Button
         type="primary"
@@ -30,10 +30,9 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import PageHeading from "~/components/PageHeading.vue";
 import { ref } from "vue";
 import type { Mailing } from "@beloyal/shared";
-import { Button } from "@beloyal/shared";
+import { Button, Heading } from "@beloyal/shared";
 import { apiMailingsGetAll } from "~/api/mailings";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
