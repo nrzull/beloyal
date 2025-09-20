@@ -22,9 +22,9 @@
         :options="companyRoles"
       />
 
-      <NButton :disabled="isLoading" type="primary" @click="updateAccess">
+      <Button :disabled="isLoading" type="primary" @click="updateAccess">
         Сохранить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
@@ -34,7 +34,7 @@ import { computed, ref } from "vue";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
-import { NBreadcrumb, NBreadcrumbItem, NSelect, NButton } from "naive-ui";
+import { NBreadcrumb, NBreadcrumbItem, NSelect } from "naive-ui";
 import type { CompanyAccess } from "@beloyal/shared";
 import {
   apiCompanyAccessesGet,
@@ -43,7 +43,7 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { Card } from "@beloyal/shared";
 import { wait } from "@beloyal/shared";
-import { maskPhone } from "@beloyal/shared";
+import { maskPhone, Button } from "@beloyal/shared";
 
 const route = useRoute();
 const router = useRouter();

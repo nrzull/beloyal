@@ -9,7 +9,7 @@
       />
     </div>
     <div :class="$style.inputWrapper">
-      <NInput
+      <Input
         ref="input"
         size="large"
         type="textarea"
@@ -20,7 +20,7 @@
         v-model:value="proxyInput"
       >
         <template #suffix>
-          <NButton
+          <Button
             :type="input ? 'primary' : 'tertiary'"
             size="large"
             :bordered="!!input"
@@ -28,15 +28,15 @@
             @click="$emit('send', chat)"
           >
             Отправить
-          </NButton>
+          </Button>
         </template>
-      </NInput>
+      </Input>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { NInput, NButton } from "naive-ui";
+import { Button, Input } from "@beloyal/shared";
 import type { Chat, ChatMessage as TChatMessage } from "@beloyal/shared";
 import { computed, onMounted, useTemplateRef, watch } from "vue";
 import ChatMessage from "~/components/Chats/Messenger/ChatMessage.vue";

@@ -1,13 +1,12 @@
 <template>
-  <NSpace :class="$style.backButton" align="center" :size="[4, 0]">
+  <Space :class="$style.backButton" align="center" :size="[4, 0]">
     <Icon :class="$style.icon" size="m" variant="back" />
     <slot></slot>
-  </NSpace>
+  </Space>
 </template>
 
 <script setup lang="ts">
-import { Icon } from "@beloyal/shared";
-import { NSpace } from "naive-ui";
+import { Icon, Space } from "@beloyal/shared";
 </script>
 
 <style module>

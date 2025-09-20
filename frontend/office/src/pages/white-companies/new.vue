@@ -5,10 +5,10 @@
     </template>
 
     <Card :class="$style.form">
-      <NInput :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
-      <NButton type="primary" :disabled="isLoading" @click="createWhiteCompany">
+      <Input :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
+      <Button type="primary" :disabled="isLoading" @click="createWhiteCompany">
         Добавить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
@@ -16,8 +16,7 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
-import { Card } from "@beloyal/shared";
-import { NButton, NInput } from "naive-ui";
+import { Input, Button, Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiWhiteCompaniesCreate } from "~/api/whiteCompanies";

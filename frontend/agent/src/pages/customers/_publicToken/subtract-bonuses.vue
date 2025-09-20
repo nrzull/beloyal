@@ -9,8 +9,8 @@
         </BackButton>
       </template>
 
-      <NSpace vertical :size="[0, 16]">
-        <NSpace vertical>
+      <Space vertical :size="[0, 16]">
+        <Space vertical>
           <div>Сумма оплаты</div>
           <NInputNumber
             :input-props="{ type: 'number' }"
@@ -25,20 +25,20 @@
               <Icon variant="rub" />
             </template>
           </NInputNumber>
-        </NSpace>
+        </Space>
 
-        <NSpace vertical>
+        <Space vertical>
           <div>Комментарий <b>(необязательно)</b></div>
-          <NInput
+          <Input
             :disabled="isLoading"
             type="textarea"
             placeholder="Введите комментарий"
           />
-        </NSpace>
-      </NSpace>
+        </Space>
+      </Space>
 
       <template #footer>
-        <NButton
+        <Button
           :disabled="isLoading"
           block
           size="large"
@@ -46,7 +46,7 @@
           @click="subtractBonus"
         >
           Списать бонусы
-        </NButton>
+        </Button>
       </template>
     </NThing>
   </Card>
@@ -54,8 +54,16 @@
 
 <script setup lang="ts">
 import type { Customer } from "~/api/customers";
-import { NInputNumber, NSpace, NInput, NButton, NThing } from "naive-ui";
-import { Card, Icon, Heading, wait } from "@beloyal/shared";
+import { NInputNumber, NThing } from "naive-ui";
+import {
+  Card,
+  Icon,
+  Space,
+  Heading,
+  Input,
+  wait,
+  Button,
+} from "@beloyal/shared";
 import BackButton from "~/components/BackButton.vue";
 import { apiCustomersSubtractBonus } from "~/api/customers";
 import { computed, ref } from "vue";

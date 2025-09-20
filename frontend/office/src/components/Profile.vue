@@ -11,14 +11,14 @@
     ]"
   >
     <div :class="$style.profile">
-      <NSpace vertical :size="[0, 2]">
+      <Space vertical :size="[0, 2]">
         <div :class="$style.team">
           {{
             self?.companyAccess?.company?.title || self?.adminAccess?.role?.name
           }}
         </div>
         <div :class="$style.phone">{{ maskPhone(self.user.phone!) }}</div>
-      </NSpace>
+      </Space>
       <Icon :class="$style.menuButton" variant="menu" />
     </div>
   </NDropdown>
@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 import { self } from "~/composables/self";
-import { NDropdown, NSpace } from "naive-ui";
-import { maskPhone, Icon } from "@beloyal/shared";
+import { NDropdown } from "naive-ui";
+import { maskPhone, Space, Icon } from "@beloyal/shared";
 </script>
 
 <style module>

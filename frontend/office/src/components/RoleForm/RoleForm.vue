@@ -1,6 +1,6 @@
 <template>
   <div class="v-space-16">
-    <NInput :disabled="loading" placeholder="Название" v-model:value="name" />
+    <Input :disabled="loading" placeholder="Название" v-model:value="name" />
 
     <div :class="$style.switch">
       <NSwitch
@@ -40,7 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import { NInput, NSwitch } from "naive-ui";
+import { NSwitch } from "naive-ui";
+import { Input } from "@beloyal/shared";
 import { computed } from "vue";
 import {
   permissionTitles,

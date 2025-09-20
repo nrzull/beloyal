@@ -12,9 +12,9 @@
         v-model:selected-permissions="activePermissions"
       />
 
-      <NButton type="primary" :disabled="isLoading" @click="updateRole">
+      <Button type="primary" :disabled="isLoading" @click="updateRole">
         Сохранить
-      </NButton>
+      </Button>
     </Card>
   </Page>
 </template>
@@ -22,9 +22,8 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
-import { NButton } from "naive-ui";
 import { computed, ref } from "vue";
-import { Card } from "@beloyal/shared";
+import { Card, Button } from "@beloyal/shared";
 import {
   apiCompanyRolesGetPermissions,
   apiCompanyRolesGet,

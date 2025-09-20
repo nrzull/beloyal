@@ -1,6 +1,6 @@
 <template>
-  <NSpace v-if="self" vertical :size="[0, 24]">
-    <NSpace vertical>
+  <Space v-if="self" vertical :size="[0, 24]">
+    <Space vertical>
       <div>Компания</div>
 
       <NSelect
@@ -19,9 +19,9 @@
           <Icon variant="location" />
         </template>
       </NSelect>
-    </NSpace>
+    </Space>
 
-    <NSpace vertical>
+    <Space vertical>
       <div>Торговая точка</div>
       <NSelect
         :key="selectedShopId"
@@ -38,9 +38,9 @@
           <Icon variant="location" />
         </template>
       </NSelect>
-    </NSpace>
+    </Space>
 
-    <NButton
+    <Button
       size="large"
       type="primary"
       ghost
@@ -48,13 +48,13 @@
       @click="$router.push('/auth')"
     >
       Сменить учетную запись
-    </NButton>
-  </NSpace>
+    </Button>
+  </Space>
 </template>
 
 <script setup lang="ts">
-import { NSelect, NSpace, NButton } from "naive-ui";
-import { Icon, wait, type CompanyAccess } from "@beloyal/shared";
+import { NSelect } from "naive-ui";
+import { Icon, Space, Button, wait, type CompanyAccess } from "@beloyal/shared";
 import { self, fetchSelf } from "~/composables/self";
 import { computed } from "vue";
 import { apiSelfSetCompanyAccess, apiSelfSetShopAccess } from "~/api/self";

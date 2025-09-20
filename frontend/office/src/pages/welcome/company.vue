@@ -1,30 +1,29 @@
 <template>
   <div :class="$style.company">
     <Card :class="$style.form">
-      <NInput :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
-      <NInput
+      <Input :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
+      <Input
         :disabled="isLoading"
         placeholder="Название"
         v-model:value="title"
       />
-      <NButton type="primary" :disabled="isLoading" @click="createCompany">
+      <Button type="primary" :disabled="isLoading" @click="createCompany">
         Создать компанию
-      </NButton>
-      <NButton
+      </Button>
+      <Button
         :disabled="isLoading"
         type="primary"
         ghost
         @click="$router.push('/welcome')"
       >
         Назад
-      </NButton>
+      </Button>
     </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Card } from "@beloyal/shared";
-import { NButton, NInput } from "naive-ui";
+import { Input, Button, Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
 import { wait } from "@beloyal/shared";

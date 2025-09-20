@@ -41,10 +41,24 @@ const companyMenu = computed(() => {
     },
 
     {
-      type: "route",
-      route: "/promotions",
-      label: "Акции",
+      type: "group",
+      label: "Акции и скидки",
       available: true,
+      children: [
+        {
+          type: "route",
+          route: "/specials/cashback",
+          label: "Кэшбэк",
+          available: true,
+        },
+
+        {
+          type: "route",
+          route: "/specials/promotions",
+          label: "Акции",
+          available: true,
+        },
+      ],
     },
 
     {

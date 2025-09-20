@@ -2,13 +2,13 @@
   <Page>
     <template #top>
       <PageHeading>Роли</PageHeading>
-      <NButton
+      <Button
         type="primary"
         size="medium"
         @click="$router.push('/company-roles/new')"
       >
         Добавить роль
-      </NButton>
+      </Button>
     </template>
 
     <Table
@@ -30,11 +30,11 @@
 import { ref } from "vue";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
+import { Button } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import PageHeading from "~/components/PageHeading.vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
-import { NButton } from "naive-ui";
 
 const companyRoles = ref<CompanyRole[]>([]);
 

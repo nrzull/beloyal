@@ -1,27 +1,27 @@
 <template>
   <Card :class="$style.authForm">
     <template v-if="!expiredAt">
-      <NInput
+      <Input
         ref="phoneRef"
         :disabled="isLoading"
         placeholder="Номер телефона"
         v-model:value="phone"
       />
-      <NButton type="primary" :disabled="isLoading" @click="sendPhone">
+      <Button type="primary" :disabled="isLoading" @click="sendPhone">
         Получить код
-      </NButton>
+      </Button>
     </template>
     <template v-else>
-      <NInput
+      <Input
         disabled
         ref="phoneRef"
         placeholder="Номер телефона"
         :value="phone"
       />
-      <NInput :disabled="isLoading" placeholder="Код" v-model:value="code" />
-      <NButton :disabled="isLoading" @click="sendCode" type="primary">
+      <Input :disabled="isLoading" placeholder="Код" v-model:value="code" />
+      <Button :disabled="isLoading" @click="sendCode" type="primary">
         Отправить код
-      </NButton>
+      </Button>
     </template>
   </Card>
 </template>
@@ -31,7 +31,8 @@ import { computed, ref } from "vue";
 import { wait } from "../composables/wait";
 import { useRouter } from "vue-router";
 import Card from "./Card.vue";
-import { NInput, NButton } from "naive-ui";
+import Button from "./Button";
+import Input from "./Input";
 import { useTemplateRef } from "vue";
 import { useMask } from "../composables/useMask";
 import { unmaskPhone, phoneMask } from "../utils/phone";

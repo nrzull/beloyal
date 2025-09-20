@@ -1,5 +1,5 @@
 <template>
-  <NSpace v-if="self" vertical :size="[0, 24]">
+  <Space v-if="self" vertical :size="[0, 24]">
     <NAlert type="info" title="Бонусы">
       <template #icon>
         <Icon variant="coins" />
@@ -9,16 +9,16 @@
     </NAlert>
 
     <div :class="$style.qrWrapper" v-html="qrImage"></div>
-  </NSpace>
+  </Space>
 </template>
 
 <script setup lang="ts">
-import { NSpace, NAlert } from "naive-ui";
+import { NAlert } from "naive-ui";
 import { self } from "~/composables/self";
 import QrcodeGenerator from "qrcode-generator";
 import { publicToken } from "~/composables/publicToken";
 import { computed } from "vue";
-import { Icon } from "@beloyal/shared";
+import { Space, Icon } from "@beloyal/shared";
 
 const qrImage = computed(() => {
   const qr = QrcodeGenerator(0, "L");
