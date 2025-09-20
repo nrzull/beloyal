@@ -1,6 +1,7 @@
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Messengers;
+using Microsoft.AspNetCore.SignalR;
 using Telegram.Bot;
 
 namespace Beloyal.API.Web.Chats.CreateMessage;
@@ -8,7 +9,8 @@ namespace Beloyal.API.Web.Chats.CreateMessage;
 public class CreateMessageEndpoint(
   ChatContext chatContext,
   ApplicationDbContext dbContext,
-  TgContext tgContext
+  TgContext tgContext,
+  IHubContext<ApplicationHub> appHub
 )
 {
   public async Task<CreateMessageResponse> Handle(
@@ -49,8 +51,12 @@ public class CreateMessageEndpoint(
 
     await client.SendMessage(customer.User.TgUserId, req.Content);
 
+    await appHub
+      .Clients.Clients(ApplicationHub.GetCompanyConnections(CompanyId.From(companyAccess)) ?? [])!
+      .SendAsync("ChatMessage", ChatMessageDTO.From(msg));
+
     await tc.CommitAsync();
 
-    return new CreateMessageResponse.Ok(ChatMessageDTO.From(msg));
+    return new CreateMessageResponse.Ok();
   }
 }

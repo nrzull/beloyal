@@ -5,18 +5,19 @@
       <Menu :items="menu" />
     </div>
 
-    <div :class="$style.main">
+    <div v-if="done" :class="$style.main">
       <RouterView />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import Profile from "~/components/Profile.vue";
 import Menu from "~/components/Menu.vue";
 import type { MenuItem } from "~/components/Menu/types";
 import { admin_white_companies_read, isAdmin } from "~/composables/self";
+import { wsClient } from "~/api/clients";
 
 const adminMenu = computed(() => {
   const base: MenuItem[] = [
@@ -124,6 +125,9 @@ const companyMenu = computed(() => {
 const menu = computed(() =>
   isAdmin.value ? adminMenu.value : companyMenu.value
 );
+
+const done = ref(false);
+wsClient.start().then(() => (done.value = true));
 </script>
 
 <style module>

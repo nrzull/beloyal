@@ -20,6 +20,7 @@ using Beloyal.API.Web.CompanyRoles;
 using Beloyal.API.Web.CustomerSelf;
 using Beloyal.API.Web.Mailings;
 using Beloyal.API.Web.Messengers;
+using Beloyal.API.Web.Middlewares;
 using Beloyal.API.Web.Self;
 using Beloyal.API.Web.Shops;
 using Beloyal.API.Web.WhiteCompanies;
@@ -39,6 +40,8 @@ public class Program
     builder.SetupOpenApi();
     builder.Services.AddControllers();
 
+    builder.Services.AddTransient<HubAuthMiddleware>();
+
     builder.Services.AddScoped<AuthContext>();
     builder.Services.AddScoped<UserContext>();
     builder.Services.AddScoped<AdminContext>();
@@ -50,6 +53,7 @@ public class Program
     builder.Services.AddScoped<ChatContext>();
     builder.Services.AddScoped<MailingContext>();
     builder.Services.AddHostedService<BonusLifetimeBackgroundService>();
+    builder.Services.AddSignalR();
 
     builder.UseAuthEndpoints();
     builder.UseSelfEndpoints();
@@ -83,8 +87,10 @@ public class Program
       app.MapScalarApiReference("/api/scalar/v1");
     }
 
+    app.UseMiddleware<HubAuthMiddleware>();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapHub<ApplicationHub>("/api/ws");
 
     await using var scope = app.Services.CreateAsyncScope();
     var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();

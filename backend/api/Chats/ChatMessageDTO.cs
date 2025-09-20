@@ -7,6 +7,7 @@ public record ChatMessageDTO(
   string? Content,
   Guid? AgentId,
   Guid? CustomerId,
+  Guid ChatId,
   string Name
 )
 {
@@ -17,6 +18,7 @@ public record ChatMessageDTO(
       ReadAt: v.ReadAt,
       AgentId: v.AgentId,
       CustomerId: v.CustomerId,
+      ChatId: v.ChatId,
       Content: v.Content,
       Name: v.Agent is { } g ? g.User!.Phone!
         : v.Customer is { } c ? c.User!.Phone!

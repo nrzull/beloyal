@@ -16,8 +16,5 @@ export const apiChatsCreateMessage = (params: {
   content: string;
 }) =>
   apiClient
-    .post<{ data: ChatMessage }>(
-      `/api/company/chats/${params.chatId}/messages`,
-      params
-    )
+    .post(`/api/company/chats/${params.chatId}/messages`, params)
     .then((v) => v.data);
