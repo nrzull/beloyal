@@ -30,7 +30,7 @@ public class AddBonusEndpoint(
     }
 
     var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
-    await bonusContext.AddBonus(customer, agent, req.Income, decoded.IssuedAt);
+    var bonus = await bonusContext.AddBonus(customer, agent, req.Income, decoded.IssuedAt);
 
     var conn = ApplicationHub.GetCustomerConnection(CustomerId.From(decoded.CustomerId))!;
     var wsClient = appHub.Clients.Client(conn);
@@ -39,6 +39,6 @@ public class AddBonusEndpoint(
       await client.SendAsync("Refresh");
     }
 
-    return new AddBonusResponse.Ok();
+    return new AddBonusResponse.Ok(BonusDTO.From(bonus));
   }
 }

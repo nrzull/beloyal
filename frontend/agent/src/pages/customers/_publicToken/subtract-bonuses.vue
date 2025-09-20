@@ -87,9 +87,18 @@ const subtractBonus = async () => {
 
   try {
     wait.start(subtractBonus);
-    await apiCustomersSubtractBonus({ publicToken, income: income.value });
+
+    const result = await apiCustomersSubtractBonus({
+      publicToken,
+      income: income.value,
+    });
+
     emit("refresh");
-    router.push(`/customers/${publicToken}`);
+
+    router.push({
+      path: `/customers/${publicToken}/final`,
+      query: result.data,
+    });
   } catch (e) {
     console.error(e);
   } finally {

@@ -30,7 +30,7 @@ public class SubtractBonusEndpoint(
     }
 
     var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
-    await bonusContext.SubtractBonus(customer, agent, req.Income, decoded.IssuedAt);
+    var bonus = await bonusContext.SubtractBonus(customer, agent, req.Income, decoded.IssuedAt);
 
     var conn = ApplicationHub.GetCustomerConnection(CustomerId.From(decoded.CustomerId))!;
     var wsClient = appHub.Clients.Client(conn);
@@ -39,6 +39,6 @@ public class SubtractBonusEndpoint(
       await client.SendAsync("Refresh");
     }
 
-    return new SubtractBonusResponse.Ok();
+    return new SubtractBonusResponse.Ok(BonusDTO.From(bonus));
   }
 }

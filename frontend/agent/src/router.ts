@@ -1,10 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createMemoryHistory } from "vue-router";
 import { ensureShop } from "~/middlewares/ensureShop";
 import { ensureSelf } from "~/middlewares/ensureSelf";
 
 export const router = createRouter({
-  // TODO: change to createMemoryHistory
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createMemoryHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/auth",
@@ -25,6 +24,11 @@ export const router = createRouter({
           beforeEnter: [ensureShop("/profile")],
           component: () => import("~/pages/customers/_publicToken.vue"),
           children: [
+            {
+              path: "final",
+              component: () =>
+                import("~/pages/customers/_publicToken/final.vue"),
+            },
             {
               path: "add-bonuses",
               component: () =>

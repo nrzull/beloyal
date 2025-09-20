@@ -87,9 +87,18 @@ const addBonus = async () => {
 
   try {
     wait.start(addBonus);
-    await apiCustomersAddBonus({ publicToken, income: income.value });
+
+    const result = await apiCustomersAddBonus({
+      publicToken,
+      income: income.value,
+    });
+
     emit("refresh");
-    router.push(`/customers/${publicToken}`);
+
+    router.push({
+      path: `/customers/${publicToken}/final`,
+      query: result.data,
+    });
   } catch (e) {
     console.error(e);
   } finally {

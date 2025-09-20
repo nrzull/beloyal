@@ -10,3 +10,4 @@ export * from "./shopAccesses/types";
 export * from "./shops/types";
 export * from "./users/types";
 export * from "./whiteCompanies/types";
+export * from "./bonuses/types";
