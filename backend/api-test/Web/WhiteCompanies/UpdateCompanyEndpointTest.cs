@@ -19,7 +19,9 @@ public class UpdateCompanyEndpointTest : TestLifetime
           DateTimeOffset.UtcNow
         );
 
-        var result = await scope.Get<UpdateCompanyEndpoint>().Handle(new(whiteCompany.Id, updated));
+        var result = await scope
+          .Get<UpdateCompanyEndpoint>()
+          .Handle(WhiteCompanyId.From(whiteCompany.Id), new(updated));
 
         Assert.IsType<UpdateCompanyResponse.Ok>(result);
 

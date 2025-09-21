@@ -1,5 +1,6 @@
 using Beloyal.API.Web.WhiteCompanies.AddCompany;
 using Beloyal.API.Web.WhiteCompanies.GetWhiteCompanies;
+using Beloyal.API.Web.WhiteCompanies.GetWhiteCompany;
 using Beloyal.API.Web.WhiteCompanies.UpdateCompany;
 
 namespace Beloyal.API.Web.WhiteCompanies;
@@ -11,5 +12,6 @@ public static class WhiteCompaniesExtensions
     builder.Services.AddScoped<AddCompanyEndpoint>();
     builder.Services.AddScoped<UpdateCompanyEndpoint>();
     builder.Services.AddScoped<GetWhiteCompaniesEndpoint>();
+    builder.Services.AddScoped<GetWhiteCompanyEndpoint>();
   }
 }

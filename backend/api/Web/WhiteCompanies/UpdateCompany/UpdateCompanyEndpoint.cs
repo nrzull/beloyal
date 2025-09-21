@@ -4,9 +4,9 @@ namespace Beloyal.API.Web.WhiteCompanies.UpdateCompany;
 
 public class UpdateCompanyEndpoint(CompanyContext companyContext)
 {
-  public async Task<UpdateCompanyResponse> Handle(UpdateCompanyRequest req)
+  public async Task<UpdateCompanyResponse> Handle(WhiteCompanyId id, UpdateCompanyRequest req)
   {
-    var whiteCompany = await companyContext.GetWhiteCompany(WhiteCompanyId.From(req.Id));
+    var whiteCompany = await companyContext.GetWhiteCompany(id);
     if (whiteCompany is null)
     {
       throw new Exception("invalid white company");
