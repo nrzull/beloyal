@@ -1,1 +1,1 @@
-export type WhiteCompany = { id: string; expiredAt: string };
+export type WhiteCompany = { id: string; expiredAt: string; tin: string };

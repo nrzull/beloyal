@@ -17,6 +17,7 @@
         { key: 'tin', title: 'ИНН' },
         { key: 'expiredAt', title: 'Срок действия' },
       ]"
+      :route-fn="(v) => `/white-companies/${v.id}`"
     >
       <template #expiredAt="{ item }">
         {{ formatDistanceStrictDate(new Date(), item.expiredAt) }} ({{

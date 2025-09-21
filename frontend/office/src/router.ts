@@ -133,6 +133,10 @@ export const router = createRouter({
               component: () => import("~/pages/white-companies/new.vue"),
             },
             {
+              path: ":id",
+              component: () => import("~/pages/white-companies/_id.vue"),
+            },
+            {
               path: "",
               component: () => import("~/pages/white-companies.vue"),
             },
