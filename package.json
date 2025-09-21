@@ -24,6 +24,7 @@
     "frontend/office",
     "frontend/customer",
     "frontend/agent",
-    "frontend/shared"
+    "frontend/shared",
+    "frontend/links"
   ]
 }
