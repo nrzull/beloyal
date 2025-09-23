@@ -1,8 +1,14 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
-// @ts-ignore
-const { OFFICE_WEB_PORT, API_WEB_PUBLIC_URL } = process.env;
+const {
+  OFFICE_WEB_PORT,
+  OFFICE_WEB_PUBLIC_URL,
+  API_WEB_PUBLIC_URL,
+  LINKS_WEB_PUBLIC_URL,
+} =
+  // @ts-ignore
+  process.env;
 
 export default defineConfig({
   plugins: [vue()],
@@ -17,10 +23,11 @@ export default defineConfig({
 
   server: {
     port: Number(OFFICE_WEB_PORT),
-    allowedHosts: [new URL(API_WEB_PUBLIC_URL).host],
+    allowedHosts: [new URL(OFFICE_WEB_PUBLIC_URL).host],
   },
 
   define: {
     API_WEB_PUBLIC_URL: JSON.stringify(API_WEB_PUBLIC_URL),
+    LINKS_WEB_PUBLIC_URL: JSON.stringify(LINKS_WEB_PUBLIC_URL),
   },
 });

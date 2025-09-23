@@ -11,3 +11,8 @@ export type CompanyCashback = {
   bonusMultiplier: number;
   bonusLifetimeInDays: number;
 };
+
+export type CompanyLink = {
+  type: "telegram";
+  url: string;
+};

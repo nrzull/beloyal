@@ -174,6 +174,11 @@ export const router = createRouter({
         },
 
         {
+          path: "qr-stickers",
+          component: () => import("~/pages/qr-stickers.vue"),
+        },
+
+        {
           path: "",
           component: () => import("~/pages/redirect.vue"),
         },
