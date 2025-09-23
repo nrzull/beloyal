@@ -24,6 +24,9 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @agent *args:
   cd frontend/agent && {{args}}
 
+@links *args:
+  cd frontend/links && {{args}}
+
 @devops:
   docker compose up -d
 
@@ -37,22 +40,26 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "just api dotnet run" \
   "just office npm run dev" \
   "just customer npm run dev" \
-  "just agent npm run dev"
+  "just agent npm run dev" \
+  "just links npm run dev"
 
 @dev:
   CUSTOMER_WEB_PUBLIC_URL=https://dev.beloyal.ru/customer \
   AGENT_WEB_PUBLIC_URL=https://dev.beloyal.ru/agent \
   API_WEB_PUBLIC_URL=https://dev.beloyal.ru \
   OFFICE_WEB_PUBLIC_URL=https://dev.beloyal.ru/office \
-  npx concurrently -n api,office,customer,agent,apibore,officebore,customerbore,agentbore \
+  LINKS_WEB_PUBLIC_URL=https://dev.beloyal.ru/links \
+  npx concurrently -n api,office,customer,agent,links,apibore,officebore,customerbore,agentbore,linksbore \
   "just api dotnet run" \
   "just office npm run dev" \
   "just customer npm run dev" \
   "just agent npm run dev" \
+  "just links npm run dev" \
   "bore local 8080 --to dev.beloyal.ru --port 8080" \
   "bore local 3000 --to dev.beloyal.ru --port 3000" \
   "bore local 3001 --to dev.beloyal.ru --port 3001" \
-  "bore local 3002 --to dev.beloyal.ru --port 3002"
+  "bore local 3002 --to dev.beloyal.ru --port 3002" \
+  "bore local 3003 --to dev.beloyal.ru --port 3003"
 
 @build:
   just api dotnet build
@@ -60,6 +67,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   just office npm run build
   just customer npm run build
   just agent npm run build
+  just links npm run build
 
 @test:
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database drop --force

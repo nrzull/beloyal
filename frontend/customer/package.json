@@ -8,8 +8,6 @@
   },
   "dependencies": {
     "@beloyal/shared": "file:../shared",
-    "@microsoft/signalr": "9.0.6",
-    "@telegram-apps/sdk-vue": "2.0.31",
-    "qrcode-generator": "2.0.4"
+    "@telegram-apps/sdk-vue": "2.0.31"
   }
 }

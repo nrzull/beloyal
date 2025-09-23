@@ -32,6 +32,10 @@ dev.beloyal.ru {
   handle /agent* {
     reverse_proxy localhost:3002
   }
+
+  handle /links* {
+    reverse_proxy localhost:3003
+  }
 }
 
 

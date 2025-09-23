@@ -63,10 +63,24 @@ const companyMenu = computed(() => {
     },
 
     {
-      type: "route",
-      route: "/mailings",
-      label: "Рассылки",
+      type: "group",
+      label: "Маркетинг",
       available: true,
+      children: [
+        {
+          type: "route",
+          route: "/mailings",
+          label: "Рассылки",
+          available: true,
+        },
+
+        {
+          type: "route",
+          route: "/qr-stickers",
+          label: "QR-Наклейки",
+          available: true,
+        },
+      ],
     },
 
     {
