@@ -1,10 +1,11 @@
+using Beloyal.API.Shops;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Companies;
 
-public class CompanyContext(ApplicationDbContext dbContext)
+public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopContext)
 {
   public async Task<List<WhiteCompany>> GetWhiteCompanies() =>
     await dbContext.WhiteCompanies.Include(v => v.Company).ToListAsync();
@@ -121,10 +122,13 @@ public class CompanyContext(ApplicationDbContext dbContext)
       Role = role,
     };
 
+    var shop = new Shop { Company = company, Name = "Мой магазин" };
+    var shopAccess = new ShopAccess { CompanyAccess = access, Shop = shop };
+
     dbContext.Update(whiteCompany);
     whiteCompany.Company = company;
 
-    dbContext.AddRange(company, role, access);
+    dbContext.AddRange(company, role, access, shop, shopAccess);
     await dbContext.SaveChangesAsync();
 
     return (company, role, access);
@@ -146,6 +150,15 @@ public class CompanyContext(ApplicationDbContext dbContext)
 
     dbContext.Add(access);
     await dbContext.SaveChangesAsync();
+
+    var shops = await shopContext.GetShops(CompanyId.From(company));
+    var shop = shops.FirstOrDefault();
+
+    if (shop is { } && shops.Count == 1)
+    {
+      var shopAccess = new ShopAccess { CompanyAccess = access, Shop = shop };
+      dbContext.Add(shopAccess);
+    }
 
     return access;
   }
