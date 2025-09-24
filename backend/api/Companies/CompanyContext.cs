@@ -12,6 +12,9 @@ public class CompanyContext(ApplicationDbContext dbContext)
   public async Task<WhiteCompany?> GetWhiteCompany(WhiteCompanyId id) =>
     await dbContext.WhiteCompanies.FirstOrDefaultAsync(v => v.Id == id.Value);
 
+  public async Task<WhiteCompany?> GetWhiteCompany(CompanyId id) =>
+    await dbContext.WhiteCompanies.FirstOrDefaultAsync(v => v.CompanyId == id.Value);
+
   public async Task<WhiteCompany> CreateWhiteCompany(Tin tin, DateTimeOffset expiredAt)
   {
     var whiteCompany = new WhiteCompany { Tin = tin.Value, ExpiredAt = expiredAt };

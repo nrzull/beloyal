@@ -18,6 +18,24 @@ public class WithCompanyAccessFilter(CompanyContext companyContext) : IAsyncActi
     )
     {
       var companyAccess = await companyContext.GetAccess(CompanyAccessId.From(id));
+      companyAccess.Ensure();
+
+      var whiteCompany = await companyContext.GetWhiteCompany(CompanyId.From(companyAccess));
+
+      if (whiteCompany is null || whiteCompany.ExpiredAt < DateTimeOffset.UtcNow)
+      {
+        ctx.Result = new ObjectResult("white company is expired or not exists")
+        {
+          StatusCode = 403,
+        };
+        return;
+      }
+
+      if (companyAccess.BlockedAt is not null)
+      {
+        ctx.Result = new ObjectResult("company access is blocked") { StatusCode = 403 };
+        return;
+      }
 
       ctx.HttpContext.Items["companyAccess"] = companyAccess;
       ctx.ActionArguments["companyAccess"] = companyAccess;
