@@ -671,10 +671,22 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text")
+                        .HasColumnName("last_name");
+
                     b.Property<string>("MaxUserId")
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)")
                         .HasColumnName("max_user_id");
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnType("text")
+                        .HasColumnName("middle_name");
 
                     b.Property<string>("Phone")
                         .IsRequired()

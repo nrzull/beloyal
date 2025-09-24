@@ -6,6 +6,7 @@
     @select="(v) => $router.push(v)"
     key-field="route"
     :options="[
+      { type: 'route', label: 'Профиль', route: '/self/profile' },
       { type: 'route', label: 'Компании', route: '/self/company-accesses' },
       { type: 'route', label: 'Выйти', route: '/auth' },
     ]"

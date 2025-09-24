@@ -32,6 +32,11 @@ export const router = createRouter({
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
+          path: "profile",
+          component: () => import("~/pages/self/profile.vue"),
+        },
+
+        {
           path: "company-accesses",
           component: () => import("~/pages/self/company-accesses.vue"),
         },

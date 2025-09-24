@@ -11,6 +11,12 @@ export const apiSelfGet = () =>
     }>("/api/self")
     .then((v) => v.data);
 
+export const apiSelfUpdate = (params: {
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
+}) => apiClient.patch<unknown>("/api/self", params).then((v) => v.data);
+
 export const apiSelfCreateCompany = (params: {
   tin: string;
   title: string;

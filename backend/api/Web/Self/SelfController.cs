@@ -4,6 +4,7 @@ using Beloyal.API.Web.AgentSelf.SetCompanyAccess;
 using Beloyal.API.Web.Filters;
 using Beloyal.API.Web.Self.CreateCompany;
 using Beloyal.API.Web.Self.GetSelf;
+using Beloyal.API.Web.Self.UpdateSelf;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,18 @@ public class SelfController(IHostEnvironment env) : ControllerBase
         HttpContext.SetAccessTokenCookie(newToken, env.IsProduction());
         return TypedResults.Ok(ok);
       })(),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch]
+  public async Task<Results<Ok, BadRequest>> UpdateSelf(
+    [FromServices] UpdateSelfEndpoint endpoint,
+    [FromServices] User? user,
+    [FromBody] UpdateSelfRequest req
+  ) =>
+    await endpoint.Handle(user.Ensure(), req) switch
+    {
+      UpdateSelfResponse.Ok => TypedResults.Ok(),
       _ => TypedResults.BadRequest(),
     };
 

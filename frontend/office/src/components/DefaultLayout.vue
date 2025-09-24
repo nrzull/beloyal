@@ -1,4 +1,6 @@
 <template>
+  <UserCredentialsModal />
+
   <div :class="$style.default">
     <div :class="$style.aside">
       <Profile />
@@ -18,6 +20,7 @@ import Menu from "~/components/Menu.vue";
 import type { MenuItem } from "~/components/Menu/types";
 import { admin_white_companies_read, isAdmin } from "~/composables/self";
 import { wsClient } from "~/api/clients";
+import UserCredentialsModal from "~/components/UserCredentials/UserCredentialsModal.vue";
 
 const adminMenu = computed(() => {
   const base: MenuItem[] = [

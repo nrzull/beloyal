@@ -52,4 +52,20 @@ public class UserContext(ApplicationDbContext dbContext)
     user.VerifiedAt = DateTimeOffset.UtcNow;
     await dbContext.SaveChangesAsync();
   }
+
+  public async Task UpdateUserInfo(
+    User user,
+    string? firstName,
+    string? lastName,
+    string? middleName
+  )
+  {
+    dbContext.Update(user);
+
+    user.FirstName = firstName;
+    user.LastName = lastName;
+    user.MiddleName = middleName;
+
+    await dbContext.SaveChangesAsync();
+  }
 }

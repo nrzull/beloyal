@@ -12,6 +12,10 @@ public class User : IEnsurable
   public DateTimeOffset? VerifiedAt { get; set; }
 
   public required string Phone { get; set; }
+
+  public string? FirstName { get; set; }
+  public string? LastName { get; set; }
+  public string? MiddleName { get; set; }
   public string? MaxUserId { get; set; }
   public string? TgUserId { get; set; }
 
