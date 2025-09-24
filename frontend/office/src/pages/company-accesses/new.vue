@@ -6,6 +6,7 @@
 
     <Card :class="$style.form">
       <Input
+        ref="phoneRef"
         :disabled="isLoading"
         placeholder="Номер телефона"
         v-model:value="phone"
@@ -34,11 +35,11 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Input, Card, Button, Heading } from "@beloyal/shared";
+import { Input, Card, Button, Heading, unmaskPhone } from "@beloyal/shared";
 
 import { NSelect } from "naive-ui";
-import { computed, ref } from "vue";
-import { wait } from "@beloyal/shared";
+import { computed, ref, useTemplateRef } from "vue";
+import { wait, useMask, phoneMask } from "@beloyal/shared";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
 import { useRouter } from "vue-router";
@@ -49,10 +50,18 @@ const router = useRouter();
 const phone = ref<string>();
 const selectedRoleId = ref<string>();
 
+const phoneRef = useTemplateRef("phoneRef");
+useMask(
+  computed(() => phoneRef.value?.inputElRef!),
+  phoneMask
+);
+
 const companyRoles = ref<CompanyRole[]>([]);
 
 const createCompanyAccessInvitation = async () => {
-  if (!phone.value || !selectedRoleId.value) {
+  const unmaskedPhone = unmaskPhone(phone.value);
+
+  if (!unmaskedPhone || !selectedRoleId.value) {
     return;
   }
 
@@ -60,7 +69,7 @@ const createCompanyAccessInvitation = async () => {
     wait.start(createCompanyAccessInvitation);
 
     await apiCompanyAccessesCreate({
-      phone: phone.value,
+      phone: unmaskedPhone,
       roleId: selectedRoleId.value,
     });
 

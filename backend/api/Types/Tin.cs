@@ -27,8 +27,8 @@ public class Tin
     {
       RuleFor(v => v.Value)
         .NotEmpty()
-        .Must(v => v.Split().All(v => int.TryParse(v, out var _)))
-        .Must(v => v.Count() == 10 || v.Count() == 12);
+        .Must(v => v.ToList().All(vv => int.TryParse(vv.ToString(), out var _)))
+        .Must(v => v.Length == 10 || v.Length == 12);
     }
   }
 };

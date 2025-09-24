@@ -149,7 +149,6 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     };
 
     dbContext.Add(access);
-    await dbContext.SaveChangesAsync();
 
     var shops = await shopContext.GetShops(CompanyId.From(company));
     var shop = shops.FirstOrDefault();
@@ -159,6 +158,8 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
       var shopAccess = new ShopAccess { CompanyAccess = access, Shop = shop };
       dbContext.Add(shopAccess);
     }
+
+    await dbContext.SaveChangesAsync();
 
     return access;
   }

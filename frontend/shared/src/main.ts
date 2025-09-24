@@ -2,6 +2,7 @@ export * from "./api";
 export * from "./composables/wait";
 export * from "./composables/theme";
 export * from "./composables/useMobileVh";
+export * from "./composables/useMask";
 export * from "./utils/phone";
 export * from "./utils/bonus";
 export { default as Icon, type IconVariant } from "./components/Icon.vue";
