@@ -48,16 +48,29 @@ const companyMenu = computed(() => {
       children: [
         {
           type: "route",
-          route: "/specials/bonuses",
-          label: "Бонусы",
+          route: "/promotions",
+          label: "Акции",
           available: true,
         },
 
         {
           type: "route",
-          route: "/specials/promotions",
-          label: "Акции",
+          route: "/bonus-settings",
+          label: "Бонусы",
           available: true,
+        },
+      ],
+    },
+
+    {
+      type: "group",
+      label: "Аналитика",
+      available: true,
+      children: [
+        {
+          type: "route",
+          route: "/operations",
+          label: "Операции",
         },
       ],
     },

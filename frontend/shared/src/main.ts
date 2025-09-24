@@ -3,6 +3,7 @@ export * from "./composables/wait";
 export * from "./composables/theme";
 export * from "./composables/useMobileVh";
 export * from "./utils/phone";
+export * from "./utils/bonus";
 export { default as Icon, type IconVariant } from "./components/Icon.vue";
 export { default as Card } from "./components/Card.vue";
 export { default as AuthForm } from "./components/AuthForm.vue";
