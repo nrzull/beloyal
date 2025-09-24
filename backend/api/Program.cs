@@ -21,6 +21,7 @@ using Beloyal.API.Web.CustomerSelf;
 using Beloyal.API.Web.Mailings;
 using Beloyal.API.Web.Messengers;
 using Beloyal.API.Web.Middlewares;
+using Beloyal.API.Web.Operations;
 using Beloyal.API.Web.Self;
 using Beloyal.API.Web.Shops;
 using Beloyal.API.Web.WhiteCompanies;
@@ -70,6 +71,7 @@ public class Program
     builder.UseAgentSelfEndpoints();
     builder.UseAgentCustomersEndpoints();
     builder.UseCompanyEndpoints();
+    builder.UseOperationsExtensions();
 
     builder.UseTgBotHandlers();
 
