@@ -16,7 +16,9 @@ public class RemoveShopAccessEndpointTest : TestLifetime
         var shop = await shopContext.CreateShop(company, "qwe");
         var shopAccess = await shopContext.CreateAccess(shop, access);
 
-        var result = await scope.Get<RemoveShopAccessEndpoint>().Handle(new(shopAccess.Id));
+        var result = await scope
+          .Get<RemoveShopAccessEndpoint>()
+          .Handle(access.Ensure(), ShopAccessId.From(shopAccess));
 
         Assert.IsType<RemoveShopAccessResponse.Ok>(result);
       }

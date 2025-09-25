@@ -34,7 +34,7 @@
       :selected-fn="
         (v) => shopAccesses.some((vv) => vv.companyAccessId === v.id)
       "
-      @row="addShopAccess"
+      @row="toggleShopAccess"
       :columns="[
         { key: 'phone', title: 'Номер телефона' },
         { key: 'role', title: 'Роль' },
@@ -57,7 +57,11 @@ import { computed, ref } from "vue";
 import { apiCompanyAccessesGetAll } from "~/api/companyAccesses";
 import type { CompanyAccess } from "@beloyal/shared";
 import type { ShopAccess } from "@beloyal/shared";
-import { apiShopsGetAccesses, apiShopsCreateAccess } from "~/api/shops";
+import {
+  apiShopsGetAccesses,
+  apiShopsCreateAccess,
+  apiShopsRemoveAccess,
+} from "~/api/shops";
 import type { Shop } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
 import { wait, Button } from "@beloyal/shared";
@@ -69,7 +73,32 @@ const { shop } = defineProps<{ shop: Shop }>();
 const addShopAccessModal = ref(false);
 const shopAccesses = ref<ShopAccess[]>([]);
 const availableCompanyAccesses = ref<CompanyAccess[]>([]);
-const isLoading = computed(() => wait.some([addShopAccess, fetchShopAccesses]));
+const isLoading = computed(() =>
+  wait.some([removeShopAccess, addShopAccess, fetchShopAccesses])
+);
+
+const removeShopAccess = async (v: CompanyAccess) => {
+  const access = shopAccesses.value.find((vv) => vv.companyAccessId == v.id);
+
+  if (isLoading.value || !access) {
+    return;
+  }
+
+  try {
+    wait.start(removeShopAccess);
+    await apiShopsRemoveAccess({ shopId: shop.id, shopAccessId: access?.id });
+    await fetchShopAccesses();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    wait.end(removeShopAccess);
+  }
+};
+
+const toggleShopAccess = async (v: CompanyAccess) =>
+  shopAccesses.value.some((vv) => vv.companyAccessId === v.id)
+    ? removeShopAccess(v)
+    : addShopAccess(v);
 
 const addShopAccess = async (v: CompanyAccess) => {
   if (

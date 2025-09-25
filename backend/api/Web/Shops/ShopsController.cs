@@ -6,6 +6,7 @@ using Beloyal.API.Web.Shops.CreateShopAccess;
 using Beloyal.API.Web.Shops.GetShop;
 using Beloyal.API.Web.Shops.GetShopAccesses;
 using Beloyal.API.Web.Shops.GetShops;
+using Beloyal.API.Web.Shops.RemoveShopAccess;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -79,6 +80,18 @@ public class ShopsController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
       CreateShopAccessResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpDelete("{id}/shop-accesses/{shopAccessId}")]
+  public async Task<Results<Ok<RemoveShopAccessResponse.Ok>, BadRequest>> RemoveShopAccess(
+    [FromServices] RemoveShopAccessEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "shopAccessId")] Guid shopAccessId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), ShopAccessId.From(shopAccessId)) switch
+    {
+      RemoveShopAccessResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 }

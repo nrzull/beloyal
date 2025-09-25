@@ -73,7 +73,7 @@ public class ShopContext(ApplicationDbContext dbContext)
     );
 
   public async Task<ShopAccess?> GetAccess(ShopAccessId id) =>
-    await dbContext.ShopAccesses.FirstOrDefaultAsync(v => v.Id == id.Value);
+    await dbContext.ShopAccesses.Include(v => v.Shop).FirstOrDefaultAsync(v => v.Id == id.Value);
 
   public async Task<List<ShopAccess>> GetAccesses(ShopId shopId) =>
     await dbContext

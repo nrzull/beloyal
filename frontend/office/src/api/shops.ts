@@ -31,3 +31,13 @@ export const apiShopsCreateAccess = (params: {
       params
     )
     .then((v) => v.data);
+
+export const apiShopsRemoveAccess = (params: {
+  shopId: string;
+  shopAccessId: string;
+}) =>
+  apiClient
+    .delete<{ data: ShopAccess }>(
+      `/api/company/shops/${params.shopId}/shop-accesses/${params.shopAccessId}`
+    )
+    .then((v) => v.data);
