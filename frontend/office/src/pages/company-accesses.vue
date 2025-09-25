@@ -16,12 +16,17 @@
       :data="companyAccesses"
       :columns="[
         { key: 'phone', title: 'Номер телефона' },
+        { key: 'name', title: 'Имя' },
         { key: 'role', title: 'Роль' },
       ]"
       :route-fn="(v) => `/company-accesses/${v.id}`"
     >
       <template #phone="{ item }">
         {{ maskPhone(item.user.phone) }}
+      </template>
+
+      <template #name="{ item }">
+        {{ buildFullName(item.user) }}
       </template>
 
       <template #role="{ item }">
@@ -37,7 +42,7 @@ import { apiCompanyAccessesGetAll } from "~/api/companyAccesses";
 import type { CompanyAccess } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import Table from "~/components/Table/Table.vue";
-import { maskPhone, Button, Heading } from "@beloyal/shared";
+import { maskPhone, Button, Heading, buildFullName } from "@beloyal/shared";
 
 const companyAccesses = ref<CompanyAccess[]>([]);
 

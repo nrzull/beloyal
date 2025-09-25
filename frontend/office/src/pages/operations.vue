@@ -27,7 +27,9 @@
       </template>
 
       <template #agent="{ item }">
-        {{ maskPhone(item.agent?.user?.phone) }}
+        {{
+          buildFullName(item.agent?.user) || maskPhone(item.agent?.user?.phone)
+        }}
       </template>
 
       <template #createdAt="{ item }">
@@ -46,7 +48,7 @@ import { ref } from "vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
 import { apiCompanyGetCashback } from "~/api/company";
-import { maskPhone } from "@beloyal/shared";
+import { maskPhone, buildFullName } from "@beloyal/shared";
 import { translateBonusType } from "@beloyal/shared";
 
 const operations = ref<Operation[]>([]);

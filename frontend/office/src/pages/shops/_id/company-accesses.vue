@@ -11,11 +11,16 @@
       :data="shopAccesses"
       :columns="[
         { key: 'phone', title: 'Номер телефона' },
+        { key: 'name', title: 'Имя' },
         { key: 'createdAt', title: 'Создано' },
       ]"
     >
       <template #phone="{ item }">
         {{ maskPhone(item.phone) }}
+      </template>
+
+      <template #name="{ item }">
+        {{ buildFullName(item) }}
       </template>
 
       <template #createdAt="{ item }">
@@ -37,11 +42,16 @@
       @row="toggleShopAccess"
       :columns="[
         { key: 'phone', title: 'Номер телефона' },
+        { key: 'name', title: 'Имя' },
         { key: 'role', title: 'Роль' },
       ]"
     >
       <template #phone="{ item }">
         {{ maskPhone(item.user?.phone) }}
+      </template>
+
+      <template #name="{ item }">
+        {{ buildFullName(item) }}
       </template>
 
       <template #role="{ item }">
@@ -66,7 +76,7 @@ import type { Shop } from "@beloyal/shared";
 import Table from "~/components/Table/Table.vue";
 import { wait, Button } from "@beloyal/shared";
 import { formatDate } from "~/utils/date";
-import { maskPhone } from "@beloyal/shared";
+import { maskPhone, buildFullName } from "@beloyal/shared";
 
 const { shop } = defineProps<{ shop: Shop }>();
 
