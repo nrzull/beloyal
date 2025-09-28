@@ -47,7 +47,14 @@ public class BonusContext(ApplicationDbContext dbContext)
       throw new Exception("customer does not have bonuses");
     }
 
-    var bonus = new Bonus { Type = BonusType.BurnBonus, Customer = customer };
+    var bonus = new Bonus
+    {
+      Type = BonusType.BurnBonus,
+      Customer = customer,
+      Amount = customer.BonusAmount,
+      Status = BonusStatus.Done,
+    };
+
     dbContext.Add(bonus);
 
     dbContext.Update(customer);
@@ -89,6 +96,10 @@ public class BonusContext(ApplicationDbContext dbContext)
     var cashbackThreshold = agent.Shop.Company.CashbackThreshold;
     var appliedBonus = income / 100 * cashbackPercent;
 
+    DateTimeOffset? scheduledAt = agent.Shop.Company.BonusScheduling is TimeSpan { } bs
+      ? DateTimeOffset.UtcNow.Add(bs)
+      : null;
+
     var bonus = new Bonus
     {
       Type = BonusType.AddBonus,
@@ -99,12 +110,16 @@ public class BonusContext(ApplicationDbContext dbContext)
       Amount = appliedBonus,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
+      Status = scheduledAt is { } ? BonusStatus.Scheduled : BonusStatus.Done,
+      ScheduledAt = scheduledAt,
     };
-
     dbContext.Add(bonus);
 
-    dbContext.Update(customer);
-    customer.BonusAmount += appliedBonus;
+    if (scheduledAt is null)
+    {
+      dbContext.Update(customer);
+      customer.BonusAmount += appliedBonus;
+    }
 
     await dbContext.SaveChangesAsync();
     await NewBonusChannel.Writer.WriteAsync(bonus.Id);
@@ -161,6 +176,7 @@ public class BonusContext(ApplicationDbContext dbContext)
       CashIncome = income - bonusAmount,
       CashbackPercent = cashbackPercent,
       CashbackThreshold = cashbackThreshold,
+      Status = BonusStatus.Done,
     };
     dbContext.Add(bonus);
 

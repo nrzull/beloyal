@@ -17,10 +17,17 @@ public class TestWebApplicationFactory() : WebApplicationFactory<Program>
       var lifetimeService = services.FirstOrDefault(v =>
         v.ImplementationType == typeof(BonusLifetimeBackgroundService)
       );
-
       if (lifetimeService is { })
       {
         services.Remove(lifetimeService);
+      }
+
+      var schedulingService = services.FirstOrDefault(v =>
+        v.ImplementationType == typeof(BonusSchedulingBackgroundService)
+      );
+      if (schedulingService is { })
+      {
+        services.Remove(schedulingService);
       }
     });
 

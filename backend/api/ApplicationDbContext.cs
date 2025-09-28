@@ -203,6 +203,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     builder.Entity<Bonus>(bonus =>
     {
       bonus.Property(v => v.Type).HasConversion<string>();
+      bonus.Property(v => v.Status).HasConversion<string>();
 
       bonus
         .HasOne(v => v.Customer)

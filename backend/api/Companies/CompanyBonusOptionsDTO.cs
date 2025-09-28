@@ -6,7 +6,8 @@ public record CompanyBonusOptionsDTO(
   decimal BonusMultiplier,
   ushort BonusLifetimeInDays,
   ushort? BonusFrequencyInDays,
-  ushort? BonusFrequencyCount
+  ushort? BonusFrequencyCount,
+  string? BonusScheduling
 )
 {
   public static CompanyBonusOptionsDTO From(Company v) =>
@@ -18,6 +19,7 @@ public record CompanyBonusOptionsDTO(
       BonusFrequencyCount: v.BonusFrequency?.Count,
       BonusFrequencyInDays: v.BonusFrequency is { }
         ? (ushort)v.BonusFrequency.Frequency.TotalDays
-        : null
+        : null,
+      BonusScheduling: v.BonusScheduling is { } bs ? System.Xml.XmlConvert.ToString(bs) : null
     );
 };
