@@ -93,6 +93,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       company.Property(v => v.Tin).HasMaxLength(12);
       company.HasIndex(v => v.Tin).IsUnique();
+      company.OwnsOne(v => v.BonusFrequency);
     });
 
     builder.Entity<CompanyAccess>(companyAccess =>

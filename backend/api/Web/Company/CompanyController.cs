@@ -1,7 +1,7 @@
 using Beloyal.API.Companies;
-using Beloyal.API.Web.Company.GetCashback;
+using Beloyal.API.Web.Company.GetBonusOptions;
 using Beloyal.API.Web.Company.GetPublicLinks;
-using Beloyal.API.Web.Company.SetCashback;
+using Beloyal.API.Web.Company.SetBonusOptions;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -15,25 +15,25 @@ namespace Beloyal.API.Web.Company;
 public class CompanyController : ControllerBase
 {
   [HttpGet("cashback")]
-  public async Task<Results<Ok<GetCashbackResponse.Ok>, BadRequest>> GetCashback(
-    [FromServices] GetCashbackEndpoint endpoint,
+  public async Task<Results<Ok<GetBonusOptionsResponse.Ok>, BadRequest>> GetBonusOptions(
+    [FromServices] GetBonusOptionsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
   ) =>
     await endpoint.Handle(companyAccess.Ensure()) switch
     {
-      GetCashbackResponse.Ok ok => TypedResults.Ok(ok),
+      GetBonusOptionsResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 
   [HttpPatch("cashback")]
-  public async Task<Results<Ok<SetCashbackResponse.Ok>, BadRequest>> SetCashback(
-    [FromServices] SetCashbackEndpoint endpoint,
+  public async Task<Results<Ok<SetBonusOptionsResponse.Ok>, BadRequest>> SetBonusOptions(
+    [FromServices] SetBonusOptionsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
-    [FromBody] CompanyCashbackDTO req
+    [FromBody] CompanyBonusOptionsDTO req
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
-      SetCashbackResponse.Ok ok => TypedResults.Ok(ok),
+      SetBonusOptionsResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 

@@ -5,11 +5,13 @@ export type Company = {
   tin: string;
 };
 
-export type CompanyCashback = {
+export type CompanyBonusOptions = {
   cashbackPercent: number;
   cashbackThreshold: number;
   bonusMultiplier: number;
   bonusLifetimeInDays: number;
+  bonusFrequencyCount?: number;
+  bonusFrequencyInDays?: number;
 };
 
 export type CompanyLink = {

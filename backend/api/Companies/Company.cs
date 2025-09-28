@@ -3,6 +3,7 @@ using Beloyal.API.Customers;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
+using Beloyal.API.Types;
 
 namespace Beloyal.API.Companies;
 
@@ -18,6 +19,7 @@ public class Company
   public required decimal CashbackThreshold { get; set; }
   public required decimal BonusMultiplier { get; set; }
   public required TimeSpan BonusLifetime { get; set; }
+  public CompanyBonusFrequency? BonusFrequency { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

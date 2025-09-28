@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@beloyal/shared": "file:../shared",
-    "@microsoft/signalr": "9.0.6"
+    "@microsoft/signalr": "9.0.6",
+    "tinyduration": "3.4.1"
   }
 }
