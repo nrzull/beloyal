@@ -1,10 +1,20 @@
 import type { Bonus } from "../api";
 
-const translations: Record<Bonus["type"], string> = {
+const typeTranslations: Record<Bonus["type"], string> = {
   AddBonus: "Начисление",
   BurnBonus: "Сгорание",
   RevertBonus: "Возврат",
   SubtractBonus: "Списание",
 };
 
-export const translateBonusType = (v: Bonus["type"]) => translations[v] || v;
+const statusTranslations: Record<Bonus["status"], string> = {
+  Cancelled: "Отменено",
+  Done: "Завершено",
+  Scheduled: "Отложено",
+};
+
+export const translateBonusType = (v: Bonus["type"]) =>
+  typeTranslations[v] || v;
+
+export const translateBonusStatus = (v: Bonus["status"]) =>
+  statusTranslations[v] || v;

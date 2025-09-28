@@ -6,16 +6,35 @@
 
     <Table
       :data="operations"
+      :loading="isLoading"
       :columns="[
+        { key: 'status', title: 'Статус', width: 'max-content' },
         { key: 'createdAt', title: 'Дата' },
         { key: 'type', title: 'Операция' },
         { key: 'cashIncome', title: 'Прибыль' },
         { key: 'shop', title: 'Торговая точка' },
         { key: 'agent', title: 'Сотрудник' },
+        { key: 'actions', width: 'max-content' },
       ]"
     >
       <template #type="{ item }">
         {{ translateBonusType(item.bonus.type) }}
+      </template>
+
+      <template #status="{ item }">
+        <NTag
+          round
+          size="small"
+          :type="
+            item.bonus.status === 'Done'
+              ? 'success'
+              : item.bonus.status === 'Cancelled'
+              ? 'error'
+              : 'info'
+          "
+        >
+          {{ translateBonusStatus(item.bonus.status) }}
+        </NTag>
       </template>
 
       <template #cashIncome="{ item }">
@@ -35,26 +54,61 @@
       <template #createdAt="{ item }">
         {{ formatDate(item.bonus.createdAt) }}
       </template>
+
+      <template #actions="{ item }">
+        <Button
+          v-if="item.bonus.status !== 'Cancelled'"
+          size="tiny"
+          type="error"
+          :disabled="isLoading"
+          @click="cancel(item)"
+        >
+          Отменить
+        </Button>
+      </template>
     </Table>
   </Page>
 </template>
 
 <script setup lang="ts">
-import { Heading, type CompanyBonusOptions } from "@beloyal/shared";
+import { Button, Heading, wait } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
-import { apiOperationsGetAll } from "~/api/operations";
+import { apiOperationsCancel, apiOperationsGetAll } from "~/api/operations";
 import type { Operation } from "~/api/operations/types";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Table from "~/components/Table/Table.vue";
 import { formatDate } from "~/utils/date";
-import { apiCompanyGetBonusOptions } from "~/api/company";
 import { maskPhone, buildFullName } from "@beloyal/shared";
-import { translateBonusType } from "@beloyal/shared";
+import { translateBonusType, translateBonusStatus } from "@beloyal/shared";
+import { NTag } from "naive-ui";
 
 const operations = ref<Operation[]>([]);
 
-const cashback = ref<CompanyBonusOptions>();
+const isLoading = computed(() => wait.some([fetchOperations, cancel]));
 
-apiOperationsGetAll().then((v) => (operations.value = v.data));
-apiCompanyGetBonusOptions().then((v) => (cashback.value = v.data));
+const fetchOperations = async () => {
+  try {
+    wait.start(fetchOperations);
+    const result = await apiOperationsGetAll();
+    operations.value = result.data;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    wait.end(fetchOperations);
+  }
+};
+
+const cancel = async (v: Operation) => {
+  try {
+    wait.start(cancel);
+    await apiOperationsCancel({ bonusId: v.bonus.id });
+    await fetchOperations();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    wait.end(cancel);
+  }
+};
+
+fetchOperations();
 </script>
