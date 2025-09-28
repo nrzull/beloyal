@@ -243,6 +243,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
+                    b.Property<Guid?>("MailingUnitId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("mailing_unit_id");
+
                     b.Property<DateTimeOffset?>("ReadAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("read_at");
@@ -261,6 +265,10 @@ namespace Beloyal.API.Migrations
 
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_chat_messages_customer_id");
+
+                    b.HasIndex("MailingUnitId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_chat_messages_mailing_unit_id");
 
                     b.ToTable("chat_messages", (string)null);
                 });
@@ -826,6 +834,11 @@ namespace Beloyal.API.Migrations
                         .HasForeignKey("CustomerId")
                         .HasConstraintName("fk_chat_messages_customers_customer_id");
 
+                    b.HasOne("Beloyal.API.Mailings.MailingUnit", "MailingUnit")
+                        .WithOne("ChatMessage")
+                        .HasForeignKey("Beloyal.API.Chats.ChatMessage", "MailingUnitId")
+                        .HasConstraintName("fk_chat_messages_mailing_units_mailing_unit_id");
+
                     b.Navigation("Agent");
 
                     b.Navigation("Chat");
@@ -833,6 +846,8 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("MailingUnit");
                 });
 
             modelBuilder.Entity("Beloyal.API.Companies.Company", b =>
@@ -1077,6 +1092,11 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>
                 {
                     b.Navigation("Units");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Mailings.MailingUnit", b =>
+                {
+                    b.Navigation("ChatMessage");
                 });
 
             modelBuilder.Entity("Beloyal.API.Messengers.MaxBot", b =>

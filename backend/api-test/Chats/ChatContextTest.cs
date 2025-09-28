@@ -32,7 +32,7 @@ public class ChatContextTest : TestLifetime
         var (customer, _) = await CustomerFixture.Customer(scope, company);
         var chatContext = scope.Get<ChatContext>();
 
-        var msg = await chatContext.SendMessage(customer, "hello?");
+        var msg = await chatContext.CreateMessage(customer, "hello?");
         var chat = await chatContext.EnsureConversation(customer);
 
         Assert.Equal(customer.Id, msg.CustomerId);
@@ -49,9 +49,9 @@ public class ChatContextTest : TestLifetime
         var (customer, _) = await CustomerFixture.Customer(scope, company);
         var chatContext = scope.Get<ChatContext>();
 
-        var msg1 = await chatContext.SendMessage(customer, "hello?");
-        var msg2 = await chatContext.SendMessage(customer, "hello world?");
-        var msg3 = await chatContext.SendMessage(customer, "hello again?");
+        var msg1 = await chatContext.CreateMessage(customer, "hello?");
+        var msg2 = await chatContext.CreateMessage(customer, "hello world?");
+        var msg3 = await chatContext.CreateMessage(customer, "hello again?");
 
         var chat = await chatContext.GetChat(CustomerId.From(customer));
         var messages = await chatContext.GetChatMessages(

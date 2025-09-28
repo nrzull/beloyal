@@ -1,5 +1,6 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Mailings;
 
 namespace Beloyal.API.Chats;
 
@@ -22,4 +23,7 @@ public class ChatMessage
 
   public Guid ChatId { get; set; }
   public required Chat Chat { get; set; }
+
+  public Guid? MailingUnitId { get; set; }
+  public MailingUnit? MailingUnit { get; set; }
 }

@@ -1,5 +1,6 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Mailings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Chats;
@@ -80,15 +81,15 @@ public class ChatContext(ApplicationDbContext dbContext)
     return chat;
   }
 
-  public async Task<ChatMessage> SendMessage(Customer customer, string content)
+  public async Task<ChatMessage> CreateMessage(Customer customer, string content)
   {
     var chat = await EnsureConversation(customer);
 
     var message = new ChatMessage
     {
-      Content = content,
-      Customer = customer,
       Chat = chat,
+      Customer = customer,
+      Content = content,
     };
     dbContext.Add(message);
     await dbContext.SaveChangesAsync();
@@ -96,15 +97,51 @@ public class ChatContext(ApplicationDbContext dbContext)
     return message;
   }
 
-  public async Task<ChatMessage> SendMessage(CompanyAccess agent, Customer customer, string content)
+  public async Task<ChatMessage> CreateMessage(Company company, Customer customer, string content)
   {
     var chat = await EnsureConversation(customer);
 
     var message = new ChatMessage
     {
-      Content = content,
-      Agent = agent,
       Chat = chat,
+      Company = company,
+      Content = content,
+    };
+    dbContext.Add(message);
+    await dbContext.SaveChangesAsync();
+
+    return message;
+  }
+
+  public async Task<ChatMessage> CreateMessage(MailingUnit unit, Customer customer, string content)
+  {
+    var chat = await EnsureConversation(customer);
+
+    var message = new ChatMessage
+    {
+      Chat = chat,
+      MailingUnit = unit,
+      Content = content,
+    };
+    dbContext.Add(message);
+    await dbContext.SaveChangesAsync();
+
+    return message;
+  }
+
+  public async Task<ChatMessage> CreateMessage(
+    CompanyAccess agent,
+    Customer customer,
+    string content
+  )
+  {
+    var chat = await EnsureConversation(customer);
+
+    var message = new ChatMessage
+    {
+      Chat = chat,
+      Agent = agent,
+      Content = content,
     };
     dbContext.Add(message);
     await dbContext.SaveChangesAsync();

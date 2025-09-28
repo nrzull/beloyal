@@ -1,7 +1,9 @@
+using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 
@@ -10,7 +12,9 @@ namespace Beloyal.API.Mailings;
 public class MailingContext(
   ApplicationDbContext dbContext,
   CustomerContext customerContext,
-  TgContext tgContext
+  TgContext tgContext,
+  ChatContext chatContext,
+  IHubContext<ApplicationHub> appHub
 )
 {
   public async Task<List<Mailing>> GetMailings(CompanyId companyId) =>
@@ -63,6 +67,8 @@ public class MailingContext(
 
   public async Task StartUnit(MailingUnit unit)
   {
+    await using var tc = await dbContext.MaybeTransactionAsync();
+
     var customer = await customerContext.GetCustomer(CustomerId.From(unit.CustomerId));
     if (customer is null)
     {
@@ -94,6 +100,13 @@ public class MailingContext(
     dbContext.Update(unit);
     unit.Status = MailingUnitStatus.Done;
 
+    var msg = await chatContext.CreateMessage(unit, customer, unit.Mailing.Content);
+
     await dbContext.SaveChangesAsync();
+    await tc.CommitAsync();
+
+    await appHub
+      .Clients.Clients(ApplicationHub.GetCompanyConnections(CompanyId.From(customer)) ?? [])!
+      .SendAsync("ChatMessage", ChatMessageDTO.From(msg));
   }
 }

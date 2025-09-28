@@ -40,7 +40,7 @@ public class OnTgMessageHandler(
     else
     {
       await chatContext.EnsureConversation(ok.Customer);
-      var newMessage = await chatContext.SendMessage(ok.Customer, text);
+      var newMessage = await chatContext.CreateMessage(ok.Customer, text);
       await appHub
         .Clients.Clients(ApplicationHub.GetCompanyConnections(companyId) ?? [])!
         .SendAsync("ChatMessage", ChatMessageDTO.From(newMessage));
