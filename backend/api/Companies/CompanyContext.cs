@@ -134,6 +134,20 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     return (company, role, access);
   }
 
+  public async Task BlockAccess(CompanyAccess companyAccess)
+  {
+    dbContext.Update(companyAccess);
+    companyAccess.BlockedAt = DateTimeOffset.UtcNow;
+    await dbContext.SaveChangesAsync();
+  }
+
+  public async Task UnblockAccess(CompanyAccess companyAccess)
+  {
+    dbContext.Update(companyAccess);
+    companyAccess.BlockedAt = null;
+    await dbContext.SaveChangesAsync();
+  }
+
   public async Task<CompanyAccess> CreateCompanyAccess(Company company, User user, CompanyRole role)
   {
     if (role.CompanyId != company.Id)

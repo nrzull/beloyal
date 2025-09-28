@@ -7,4 +7,5 @@ export type CompanyAccess = {
   company: Company;
   role: CompanyRole;
   user: User;
+  blockedAt?: string;
 };

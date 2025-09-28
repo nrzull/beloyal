@@ -1,7 +1,9 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Web.CompanyAccesses.BlockAccess;
 using Beloyal.API.Web.CompanyAccesses.CreateAccess;
 using Beloyal.API.Web.CompanyAccesses.GetAccess;
 using Beloyal.API.Web.CompanyAccesses.GetAccesses;
+using Beloyal.API.Web.CompanyAccesses.UnblockAccess;
 using Beloyal.API.Web.CompanyAccesses.UpdateAccess;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -60,6 +62,30 @@ public class CompanyAccessesController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {
       UpdateAccessResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch("{id}/block")]
+  public async Task<Results<Ok<BlockAccessResponse.Ok>, BadRequest>> BlockCompanyAccess(
+    [FromServices] BlockAccessEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid companyAccessId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), CompanyAccessId.From(companyAccessId)) switch
+    {
+      BlockAccessResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch("{id}/unblock")]
+  public async Task<Results<Ok<UnblockAccessResponse.Ok>, BadRequest>> UnblockCompanyAccess(
+    [FromServices] UnblockAccessEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid companyAccessId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), CompanyAccessId.From(companyAccessId)) switch
+    {
+      UnblockAccessResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 }
