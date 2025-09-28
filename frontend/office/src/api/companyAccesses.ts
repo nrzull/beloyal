@@ -13,6 +13,22 @@ export const apiCompanyAccessesGet = (params: { companyAccessId: string }) =>
     )
     .then((v) => v.data);
 
+export const apiCompanyAccessesBlock = (params: { companyAccessId: string }) =>
+  apiClient
+    .patch<unknown>(
+      `/api/company/company-accesses/${params.companyAccessId}/block`
+    )
+    .then((v) => v.data);
+
+export const apiCompanyAccessesUnblock = (params: {
+  companyAccessId: string;
+}) =>
+  apiClient
+    .patch<unknown>(
+      `/api/company/company-accesses/${params.companyAccessId}/unblock`
+    )
+    .then((v) => v.data);
+
 export const apiCompanyAccessesCreate = (params: {
   phone: string;
   roleId: string;
