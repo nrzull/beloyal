@@ -9,4 +9,5 @@ export type ChatMessage = {
   readAt?: string;
   createdAt: string;
   chatId: string;
+  mailingUnitId?: string;
 };

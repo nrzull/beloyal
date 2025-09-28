@@ -258,6 +258,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany()
         .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
+
+      chatMessage
+        .HasOne(v => v.MailingUnit)
+        .WithOne(v => v.ChatMessage)
+        .HasForeignKey<ChatMessage>(v => v.MailingUnitId)
+        .HasPrincipalKey<MailingUnit>(v => v.Id);
     });
 
     builder.Entity<Mailing>(mailing =>

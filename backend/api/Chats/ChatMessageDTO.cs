@@ -8,7 +8,8 @@ public record ChatMessageDTO(
   Guid? AgentId,
   Guid? CustomerId,
   Guid ChatId,
-  string Name
+  string Name,
+  Guid? MailingUnitId
 )
 {
   public static ChatMessageDTO From(ChatMessage v) =>
@@ -22,6 +23,9 @@ public record ChatMessageDTO(
       Content: v.Content,
       Name: v.Agent is { } g ? g.User!.Phone!
         : v.Customer is { } c ? c.User!.Phone!
-        : throw new Exception("no agent nor customer")
+        : v.MailingUnitId is { } ? "Рассылка"
+        : v.CompanyId is { } ? "Компания"
+        : "Неизвестно",
+      MailingUnitId: v.MailingUnitId
     );
 };
