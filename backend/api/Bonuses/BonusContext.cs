@@ -182,7 +182,9 @@ public class BonusContext(ApplicationDbContext dbContext)
       var from = DateTimeOffset.UtcNow.Subtract(freq.Frequency);
 
       var lastBonuses = await dbContext
-        .Bonuses.Where(v => v.CustomerId == customer.Id && v.CreatedAt >= from)
+        .Bonuses.Where(v =>
+          v.CustomerId == customer.Id && v.CreatedAt >= from && v.Type != BonusType.BurnBonus
+        )
         .CountAsync();
 
       if (lastBonuses >= freq.Count)
