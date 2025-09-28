@@ -4,7 +4,7 @@
       <Heading>Бонусы</Heading>
     </template>
 
-    <Card v-if="companyCashback">
+    <Card v-if="bonusOptions">
       <Space vertical :size="[0, 16]">
         <Space vertical>
           <div>Процент кэшбэка</div>
@@ -14,7 +14,7 @@
             :min="1"
             :max="100"
             :precision="0"
-            v-model:value="companyCashback.cashbackPercent"
+            v-model:value="bonusOptions.cashbackPercent"
           >
             <template #prefix>
               <Icon
@@ -33,7 +33,7 @@
             :max="100"
             placeholder="Укажите процент"
             :precision="0"
-            v-model:value="companyCashback.cashbackThreshold"
+            v-model:value="bonusOptions.cashbackThreshold"
           >
             <template #prefix>
               <Icon
@@ -52,7 +52,7 @@
             :max="100"
             :precision="0"
             placeholder="Укажите процент"
-            v-model:value="companyCashback.bonusMultiplier"
+            v-model:value="bonusOptions.bonusMultiplier"
           />
         </Space>
 
@@ -63,14 +63,92 @@
             :min="1"
             :precision="0"
             placeholder="Укажите число, через сколько дней должны сгореть бонусы"
-            v-model:value="companyCashback.bonusLifetimeInDays"
+            v-model:value="bonusOptions.bonusLifetimeInDays"
           />
         </Space>
 
         <Card with-border>
           <NThing>
             <template #header>
-              <Heading>Лимит операций (антифрод)</Heading>
+              <Heading>Отсрочка начислений</Heading>
+            </template>
+
+            <template #header-extra>
+              <Button
+                v-if="!scheduling"
+                type="primary"
+                ghost
+                size="small"
+                @click="scheduling = newScheduling()"
+              >
+                Добавить
+              </Button>
+              <Button
+                v-else
+                type="error"
+                ghost
+                size="small"
+                @click="scheduling = null"
+              >
+                Удалить
+              </Button>
+            </template>
+
+            <Space v-if="scheduling" vertical :size="[0, 16]">
+              <Space vertical>
+                <div>Дней</div>
+                <NInputNumber
+                  size="large"
+                  :min="0"
+                  :precision="0"
+                  placeholder="Укажите число"
+                  :value="scheduling.days"
+                  @update:value="scheduling = { ...scheduling, days: $event! }"
+                />
+              </Space>
+
+              <Space vertical>
+                <div>Часов</div>
+                <NInputNumber
+                  size="large"
+                  :min="0"
+                  :max="23"
+                  :precision="0"
+                  placeholder="Укажите число"
+                  :value="scheduling.hours"
+                  @update:value="scheduling = { ...scheduling, hours: $event! }"
+                />
+              </Space>
+
+              <Space vertical>
+                <div>Минут</div>
+                <NInputNumber
+                  size="large"
+                  :min="0"
+                  :max="59"
+                  :precision="0"
+                  placeholder="Укажите число"
+                  :value="scheduling.minutes"
+                  @update:value="
+                    scheduling = { ...scheduling, minutes: $event! }
+                  "
+                />
+              </Space>
+            </Space>
+          </NThing>
+        </Card>
+
+        <Card with-border>
+          <NThing>
+            <template #header>
+              <Space vertical :size="[0, 2]">
+                <Heading>Лимит операций (антифрод)</Heading>
+                <Subheading type="notice"
+                  >Клиент сможет совершить
+                  {{ bonusOptions.bonusFrequencyCount }} операций в течение
+                  {{ bonusOptions.bonusFrequencyInDays }} дней</Subheading
+                >
+              </Space>
             </template>
 
             <Space vertical :size="[0, 16]">
@@ -81,7 +159,7 @@
                   :min="1"
                   :precision="0"
                   placeholder="Укажите число, в течение скольких дней можно совершить N операций"
-                  v-model:value="companyCashback.bonusFrequencyInDays"
+                  v-model:value="bonusOptions.bonusFrequencyInDays"
                 />
               </Space>
 
@@ -92,7 +170,7 @@
                   :min="1"
                   :precision="0"
                   placeholder="Укажите число"
-                  v-model:value="companyCashback.bonusFrequencyCount"
+                  v-model:value="bonusOptions.bonusFrequencyCount"
                 />
               </Space>
             </Space>
@@ -104,7 +182,7 @@
           block
           size="large"
           :disabled="isLoading"
-          @click="setCashback"
+          @click="setBonusOptions"
         >
           Сохранить
         </Button>
@@ -116,28 +194,42 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { Heading, wait, type CompanyBonusOptions } from "@beloyal/shared";
-import { Card, Button, Space, Icon } from "@beloyal/shared";
+import { Card, Button, Space, Icon, Subheading } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import {
   apiCompanyGetBonusOptions,
   apiCompanySetBonusOptions,
 } from "~/api/company";
 import { NInputNumber, NThing } from "naive-ui";
+import { parse, serialize, type Duration } from "tinyduration";
 
-const companyCashback = ref<CompanyBonusOptions>();
+const bonusOptions = ref<CompanyBonusOptions>();
 
-const isLoading = computed(() => wait.some([setCashback]));
+const scheduling = computed({
+  get: () =>
+    bonusOptions.value?.bonusScheduling
+      ? parse(bonusOptions.value.bonusScheduling)
+      : null,
 
-const setCashback = async () => {
+  set: (v) => {
+    bonusOptions.value!.bonusScheduling = v ? serialize(v) : null;
+  },
+});
+
+const newScheduling = (): Duration => ({ days: 0, hours: 1, minutes: 0 });
+
+const isLoading = computed(() => wait.some([setBonusOptions]));
+
+const setBonusOptions = async () => {
   try {
-    wait.start(setCashback);
-    await apiCompanySetBonusOptions(companyCashback.value!);
+    wait.start(setBonusOptions);
+    await apiCompanySetBonusOptions(bonusOptions.value!);
   } catch (e) {
     console.error(e);
   } finally {
-    wait.end(setCashback);
+    wait.end(setBonusOptions);
   }
 };
 
-apiCompanyGetBonusOptions().then((v) => (companyCashback.value = v.data));
+apiCompanyGetBonusOptions().then((v) => (bonusOptions.value = v.data));
 </script>

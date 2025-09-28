@@ -8,8 +8,10 @@ public class Bonus
 {
   public Guid Id { get; set; }
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+  public DateTimeOffset? ScheduledAt { get; set; }
 
   public required BonusType Type { get; set; }
+  public required BonusStatus Status { get; set; }
 
   public decimal Amount { get; set; }
   public decimal CashIncome { get; set; }

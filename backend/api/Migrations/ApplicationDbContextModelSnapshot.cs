@@ -148,9 +148,18 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
+                    b.Property<DateTimeOffset?>("ScheduledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scheduled_at");
+
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid")
                         .HasColumnName("shop_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -270,6 +279,10 @@ namespace Beloyal.API.Migrations
                     b.Property<decimal>("BonusMultiplier")
                         .HasColumnType("numeric")
                         .HasColumnName("bonus_multiplier");
+
+                    b.Property<TimeSpan?>("BonusScheduling")
+                        .HasColumnType("interval")
+                        .HasColumnName("bonus_scheduling");
 
                     b.Property<decimal>("CashbackPercent")
                         .HasColumnType("numeric")

@@ -1,5 +1,5 @@
+using System.Xml;
 using Beloyal.API.Companies;
-using Beloyal.API.Types;
 
 namespace Beloyal.API.Web.Company.SetBonusOptions;
 
@@ -23,7 +23,8 @@ public class SetBonusOptionsEndpoint(CompanyContext companyContext)
       new(req.CashbackThreshold),
       new(req.BonusMultiplier),
       TimeSpan.FromDays(req.BonusLifetimeInDays),
-      bonusFrequency
+      bonusFrequency,
+      req.BonusScheduling is { } bs ? XmlConvert.ToTimeSpan(bs) : null
     );
 
     return new SetBonusOptionsResponse.Ok(CompanyBonusOptionsDTO.From(company));
