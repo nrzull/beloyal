@@ -4,4 +4,6 @@ export type Bonus = {
   type: "AddBonus" | "SubtractBonus" | "RevertBonus" | "BurnBonus";
   amount: number;
   cashIncome: number;
+  scheduledAt?: string;
+  status: "Done" | "Scheduled" | "Cancelled";
 };

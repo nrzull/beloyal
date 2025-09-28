@@ -10,6 +10,11 @@ public class BonusContext(ApplicationDbContext dbContext)
 {
   public static Channel<Guid> NewBonusChannel { get; } = Channel.CreateUnbounded<Guid>();
 
+  public async Task<Bonus?> GetBonus(CompanyId companyId, BonusId bonusId) =>
+    await dbContext
+      .Bonuses.Include(v => v.Customer)
+      .SingleOrDefaultAsync(v => v.Id == bonusId.Value && v.Customer.CompanyId == companyId.Value);
+
   public async Task<List<Bonus>> GetBonuses(CompanyId companyId) =>
     await dbContext
       .Bonuses.Include(v => v.Customer)
@@ -38,6 +43,33 @@ public class BonusContext(ApplicationDbContext dbContext)
       .ToList();
 
     return bonuses;
+  }
+
+  public async Task CancelBonus(Bonus bonus)
+  {
+    if (bonus.Status == BonusStatus.Cancelled)
+    {
+      throw new Exception("bonus already cancelled");
+    }
+
+    await dbContext.Entry(bonus).Reference(v => v.Customer).LoadAsync();
+    var customer = bonus.Customer;
+
+    dbContext.Update(customer);
+    dbContext.Update(bonus);
+
+    bonus.Status = BonusStatus.Cancelled;
+
+    if (bonus.Type == BonusType.AddBonus)
+    {
+      customer.BonusAmount -= bonus.Amount;
+    }
+    else if (bonus.Type == BonusType.SubtractBonus || bonus.Type == BonusType.BurnBonus)
+    {
+      customer.BonusAmount += bonus.Amount;
+    }
+
+    await dbContext.SaveChangesAsync();
   }
 
   public async Task<Bonus> BurnBonus(Customer customer)
