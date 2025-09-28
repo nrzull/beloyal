@@ -67,6 +67,38 @@
           />
         </Space>
 
+        <Card with-border>
+          <NThing>
+            <template #header>
+              <Heading>Лимит операций (антифрод)</Heading>
+            </template>
+
+            <Space vertical :size="[0, 16]">
+              <Space vertical>
+                <div>Период (в днях)</div>
+                <NInputNumber
+                  size="large"
+                  :min="1"
+                  :precision="0"
+                  placeholder="Укажите число, в течение скольких дней можно совершить N операций"
+                  v-model:value="companyCashback.bonusFrequencyInDays"
+                />
+              </Space>
+
+              <Space vertical>
+                <div>Кол-во операций, доступных за период</div>
+                <NInputNumber
+                  size="large"
+                  :min="1"
+                  :precision="0"
+                  placeholder="Укажите число"
+                  v-model:value="companyCashback.bonusFrequencyCount"
+                />
+              </Space>
+            </Space>
+          </NThing>
+        </Card>
+
         <Button
           type="primary"
           block
@@ -83,20 +115,23 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, wait, type CompanyCashback } from "@beloyal/shared";
+import { Heading, wait, type CompanyBonusOptions } from "@beloyal/shared";
 import { Card, Button, Space, Icon } from "@beloyal/shared";
 import { computed, ref } from "vue";
-import { apiCompanyGetCashback, apiCompanySetCashback } from "~/api/company";
-import { NInputNumber } from "naive-ui";
+import {
+  apiCompanyGetBonusOptions,
+  apiCompanySetBonusOptions,
+} from "~/api/company";
+import { NInputNumber, NThing } from "naive-ui";
 
-const companyCashback = ref<CompanyCashback>();
+const companyCashback = ref<CompanyBonusOptions>();
 
 const isLoading = computed(() => wait.some([setCashback]));
 
 const setCashback = async () => {
   try {
     wait.start(setCashback);
-    await apiCompanySetCashback(companyCashback.value!);
+    await apiCompanySetBonusOptions(companyCashback.value!);
   } catch (e) {
     console.error(e);
   } finally {
@@ -104,5 +139,5 @@ const setCashback = async () => {
   }
 };
 
-apiCompanyGetCashback().then((v) => (companyCashback.value = v.data));
+apiCompanyGetBonusOptions().then((v) => (companyCashback.value = v.data));
 </script>

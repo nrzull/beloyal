@@ -1,14 +1,14 @@
-import type { CompanyCashback, CompanyLink } from "@beloyal/shared";
+import type { CompanyBonusOptions, CompanyLink } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
 
-export const apiCompanyGetCashback = () =>
+export const apiCompanyGetBonusOptions = () =>
   apiClient
-    .get<{ data: CompanyCashback }>("/api/company/cashback")
+    .get<{ data: CompanyBonusOptions }>("/api/company/cashback")
     .then((v) => v.data);
 
-export const apiCompanySetCashback = (params: CompanyCashback) =>
+export const apiCompanySetBonusOptions = (params: CompanyBonusOptions) =>
   apiClient
-    .patch<{ data: CompanyCashback }>("/api/company/cashback", params)
+    .patch<{ data: CompanyBonusOptions }>("/api/company/cashback", params)
     .then((v) => v.data);
 
 export const apiCompanyGetLinks = () =>

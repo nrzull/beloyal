@@ -1,4 +1,5 @@
 using System.Threading.Channels;
+using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
 using Microsoft.EntityFrameworkCore;
@@ -81,6 +82,7 @@ public class BonusContext(ApplicationDbContext dbContext)
 
     await dbContext.Entry(agent).Reference(v => v.Shop).LoadAsync();
     await dbContext.Entry(agent.Shop).Reference(v => v.Company).LoadAsync();
+    await ThrowIfBonusFrequencyExceeded(customer, agent.Shop.Company);
     await dbContext.Entry(agent).Reference(v => v.CompanyAccess).LoadAsync();
 
     var cashbackPercent = agent.Shop.Company.CashbackPercent;
@@ -138,6 +140,7 @@ public class BonusContext(ApplicationDbContext dbContext)
 
     await dbContext.Entry(agent).Reference(v => v.Shop).LoadAsync();
     await dbContext.Entry(agent.Shop).Reference(v => v.Company).LoadAsync();
+    await ThrowIfBonusFrequencyExceeded(customer, agent.Shop.Company);
     await dbContext.Entry(agent).Reference(v => v.CompanyAccess).LoadAsync();
 
     var cashbackPercent = agent.Shop.Company.CashbackPercent;
@@ -168,5 +171,24 @@ public class BonusContext(ApplicationDbContext dbContext)
     await NewBonusChannel.Writer.WriteAsync(bonus.Id);
 
     return bonus;
+  }
+
+  async Task ThrowIfBonusFrequencyExceeded(Customer customer, Company company)
+  {
+    var freq = company.BonusFrequency ?? null;
+
+    if (freq is { })
+    {
+      var from = DateTimeOffset.UtcNow.Subtract(freq.Frequency);
+
+      var lastBonuses = await dbContext
+        .Bonuses.Where(v => v.CustomerId == customer.Id && v.CreatedAt >= from)
+        .CountAsync();
+
+      if (lastBonuses >= freq.Count)
+      {
+        throw new Exception("maximum bonus frequency exceeded");
+      }
+    }
   }
 }

@@ -822,6 +822,34 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Companies.Company", b =>
+                {
+                    b.OwnsOne("Beloyal.API.Companies.CompanyBonusFrequency", "BonusFrequency", b1 =>
+                        {
+                            b1.Property<Guid>("CompanyId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<int>("Count")
+                                .HasColumnType("integer")
+                                .HasColumnName("bonus_frequency_count");
+
+                            b1.Property<TimeSpan>("Frequency")
+                                .HasColumnType("interval")
+                                .HasColumnName("bonus_frequency_frequency");
+
+                            b1.HasKey("CompanyId");
+
+                            b1.ToTable("companies");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CompanyId")
+                                .HasConstraintName("fk_companies_companies_id");
+                        });
+
+                    b.Navigation("BonusFrequency");
+                });
+
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")

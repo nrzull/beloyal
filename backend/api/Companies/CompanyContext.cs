@@ -178,12 +178,13 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     return access;
   }
 
-  public async Task UpdateCompanyCashback(
+  public async Task UpdateCompanyBonusOptions(
     Company company,
     Percent cashbackPercent,
     Percent cashbackThreshold,
     Percent bonusMultiplier,
-    TimeSpan bonusLifetime
+    TimeSpan bonusLifetime,
+    CompanyBonusFrequency? bonusFrequency
   )
   {
     dbContext.Update(company);
@@ -191,6 +192,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     company.CashbackThreshold = cashbackThreshold.Value;
     company.BonusMultiplier = bonusMultiplier.Value;
     company.BonusLifetime = bonusLifetime;
+    company.BonusFrequency = bonusFrequency;
 
     await dbContext.SaveChangesAsync();
   }
