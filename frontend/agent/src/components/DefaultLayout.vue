@@ -5,6 +5,7 @@
         :class="footerClass"
         :items="[
           { to: '/', title: 'Главная', iconVariant: 'home' },
+          { to: '/operations', title: 'Операции', iconVariant: 'paymentCard' },
           { to: '/profile', title: 'Профиль', iconVariant: 'user' },
         ]"
       />

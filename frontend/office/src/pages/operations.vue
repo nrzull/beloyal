@@ -71,14 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import { Button, Heading, wait } from "@beloyal/shared";
+import { Button, Heading, wait, type Operation } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { apiOperationsCancel, apiOperationsGetAll } from "~/api/operations";
-import type { Operation } from "~/api/operations/types";
 import { computed, ref } from "vue";
-import Table from "~/components/Table/Table.vue";
-import { formatDate } from "~/utils/date";
-import { maskPhone, buildFullName } from "@beloyal/shared";
+import { formatDate } from "@beloyal/shared";
+import { Table, maskPhone, buildFullName } from "@beloyal/shared";
 import { translateBonusType, translateBonusStatus } from "@beloyal/shared";
 import { NTag } from "naive-ui";
 

@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import type { ChatMessage } from "@beloyal/shared";
-import { formatDate } from "~/utils/date";
+import { formatDate } from "@beloyal/shared";
 
 defineProps<{ message: ChatMessage; isOwner: boolean }>();
 </script>

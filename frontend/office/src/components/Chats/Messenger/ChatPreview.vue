@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import type { Chat, ChatMessage } from "@beloyal/shared";
 import { computed } from "vue";
-import { formatMessageTimestamp } from "~/utils/date";
+import { formatMessageTimestamp } from "@beloyal/shared";
 import { self } from "~/composables/self";
 
 const { messages, chat } = defineProps<{

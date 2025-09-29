@@ -33,9 +33,8 @@ import Page from "~/components/Page.vue";
 import { apiWhiteCompaniesGetAll } from "~/api/whiteCompanies";
 import { ref } from "vue";
 import type { WhiteCompany } from "@beloyal/shared";
-import { Button, Heading } from "@beloyal/shared";
-import Table from "~/components/Table/Table.vue";
-import { formatDistanceStrictDate, formatDate } from "~/utils/date";
+import { Table, Button, Heading } from "@beloyal/shared";
+import { formatDistanceStrictDate, formatDate } from "@beloyal/shared";
 
 const whiteCompanies = ref<WhiteCompany[]>([]);
 

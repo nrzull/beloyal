@@ -20,6 +20,10 @@ export const router = createRouter({
           component: () => import("~/pages/profile.vue"),
         },
         {
+          path: "operations",
+          component: () => import("~/pages/operations.vue"),
+        },
+        {
           path: "customers/:publicToken",
           beforeEnter: [ensureShop("/profile")],
           component: () => import("~/pages/customers/_publicToken.vue"),

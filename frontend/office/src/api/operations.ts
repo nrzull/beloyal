@@ -1,5 +1,5 @@
+import type { Operation } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
-import type { Operation } from "~/api/operations/types";
 
 export const apiOperationsGetAll = () =>
   apiClient

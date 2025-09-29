@@ -32,10 +32,8 @@
 import Page from "~/components/Page.vue";
 import { ref } from "vue";
 import type { Mailing } from "@beloyal/shared";
-import { Button, Heading } from "@beloyal/shared";
+import { formatDate, Table, Button, Heading } from "@beloyal/shared";
 import { apiMailingsGetAll } from "~/api/mailings";
-import Table from "~/components/Table/Table.vue";
-import { formatDate } from "~/utils/date";
 
 const mailings = ref<Mailing[]>([]);
 

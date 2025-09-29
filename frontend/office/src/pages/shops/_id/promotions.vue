@@ -17,8 +17,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Table from "~/components/Table/Table.vue";
-import { Button } from "@beloyal/shared";
+import { Table, Button } from "@beloyal/shared";
 
 const promotions = ref<any[]>([]);
 </script>

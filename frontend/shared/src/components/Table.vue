@@ -1,7 +1,7 @@
 <template>
   <Card :with-padding="false" v-bind="card">
     <div :style="{ gridTemplateColumns: rowColumns }" :class="[$style.table]">
-      <div :class="[$style.row]">
+      <div v-if="withHeader" :class="[$style.row]">
         <div
           v-for="column in columns"
           :style="{ alignItems: column.align, justifyContent: column.justify }"
@@ -51,7 +51,7 @@
 <script setup lang="ts" generic="T extends Record<PropertyKey, unknown>">
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import { Card } from "@beloyal/shared";
+import Card from "./Card.vue";
 
 export type TableColumn = {
   key: string;
@@ -67,6 +67,7 @@ const {
   data = [],
   selectedFn = () => false,
   routeFn = () => undefined,
+  withHeader = true,
 } = defineProps<{
   columns: Array<TableColumn>;
   data?: Array<T>;
@@ -75,6 +76,7 @@ const {
   clickable?: boolean;
   loading?: boolean;
   card?: InstanceType<typeof Card>["$props"];
+  withHeader?: boolean;
 }>();
 
 defineEmits<{ row: [_v: T] }>();

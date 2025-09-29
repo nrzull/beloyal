@@ -30,10 +30,8 @@
 import { ref } from "vue";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
-import { Button, Heading } from "@beloyal/shared";
+import { formatDate, Table, Button, Heading } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
-import Table from "~/components/Table/Table.vue";
-import { formatDate } from "~/utils/date";
 
 const companyRoles = ref<CompanyRole[]>([]);
 
