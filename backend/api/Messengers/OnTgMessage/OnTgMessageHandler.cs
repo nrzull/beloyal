@@ -1,6 +1,5 @@
 using Beloyal.API.Chats;
 using Beloyal.API.Messengers.EnsureTgUser;
-using Microsoft.AspNetCore.SignalR;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -10,8 +9,7 @@ namespace Beloyal.API.Messengers.OnTgMessage;
 public class OnTgMessageHandler(
   ChatContext chatContext,
   EnsureTgUserHandler ensureTgUserHandler,
-  TgContext tgContext,
-  IHubContext<ApplicationHub> appHub
+  TgContext tgContext
 )
 {
   public async Task Handle(TelegramBotClient client, CompanyId companyId, Message msg, UpdateType _)
@@ -41,9 +39,7 @@ public class OnTgMessageHandler(
     {
       await chatContext.EnsureConversation(ok.Customer);
       var newMessage = await chatContext.CreateMessage(ok.Customer, text);
-      await appHub
-        .Clients.Clients(ApplicationHub.GetCompanyConnections(companyId) ?? [])!
-        .SendAsync("ChatMessage", ChatMessageDTO.From(newMessage));
+      await chatContext.SendMessage(newMessage, toCustomer: false);
     }
   }
 

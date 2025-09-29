@@ -24,8 +24,6 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
       var bonusContext = scope.ServiceProvider.GetRequiredService<BonusContext>();
       var chatContext = scope.ServiceProvider.GetRequiredService<ChatContext>();
-      var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
-      var appHub = scope.ServiceProvider.GetRequiredService<IHubContext<ApplicationHub>>();
 
       var bonuses = await bonusContext.GetLatestBonuses();
       var now = DateTimeOffset.UtcNow;
@@ -54,27 +52,13 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
 
         if (notification is null)
         {
-          await dbContext.Entry(customer).Reference(v => v.TgBot).LoadAsync();
-          await dbContext.Entry(customer).Reference(v => v.MaxBot).LoadAsync();
-          await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
+          var msg = await chatContext.CreateMessage(
+            chat.Company,
+            customer,
+            "Важное уведомление: завтра сгорят все бонусы."
+          );
 
-          var client = customer.TgBot is { }
-            ? await tgContext.EnsureClient(CompanyId.From(customer.CompanyId), customer.TgBot)
-            : null;
-
-          if (client is { } c)
-          {
-            var content = "Важное уведомление: завтра сгорят все бонусы.";
-
-            await c.SendMessage(customer.User.TgUserId!, content);
-            var msg = await chatContext.CreateMessage(chat.Company, customer, content);
-
-            await appHub
-              .Clients.Clients(
-                ApplicationHub.GetCompanyConnections(CompanyId.From(customer)) ?? []
-              )!
-              .SendAsync("ChatMessage", ChatMessageDTO.From(msg));
-          }
+          await chatContext.SendMessage(msg);
         }
 
         if (deadline < now)

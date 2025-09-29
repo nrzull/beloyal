@@ -1,11 +1,18 @@
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Mailings;
+using Beloyal.API.Messengers;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Telegram.Bot;
 
 namespace Beloyal.API.Chats;
 
-public class ChatContext(ApplicationDbContext dbContext)
+public class ChatContext(
+  ApplicationDbContext dbContext,
+  IHubContext<ApplicationHub> appHub,
+  TgContext tgContext
+)
 {
   public async Task<Chat?> GetChat(CustomerId customerId) =>
     await dbContext.Chats.FirstOrDefaultAsync(v => v.CustomerId == customerId.Value);
@@ -79,6 +86,35 @@ public class ChatContext(ApplicationDbContext dbContext)
     }
 
     return chat;
+  }
+
+  public async Task SendMessage(ChatMessage msg, bool toCustomer = true)
+  {
+    await dbContext.Entry(msg).Reference(v => v.Chat).LoadAsync();
+    await dbContext.Entry(msg.Chat).Reference(v => v.Customer).LoadAsync();
+    var customer = msg.Chat.Customer;
+
+    if (toCustomer)
+    {
+      await dbContext.Entry(customer).Reference(v => v.TgBot).LoadAsync();
+      await dbContext.Entry(customer).Reference(v => v.MaxBot).LoadAsync();
+
+      var client = customer.TgBot is { }
+        ? await tgContext.EnsureClient(CompanyId.From(customer), customer.TgBot)
+        : null;
+
+      if (client is null)
+      {
+        throw new Exception("no client");
+      }
+
+      await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
+      await client.SendMessage(customer.User.TgUserId!, msg.Content!);
+    }
+
+    await appHub
+      .Clients.Clients(ApplicationHub.GetCompanyConnections(CompanyId.From(customer)) ?? [])!
+      .SendAsync("ChatMessage", ChatMessageDTO.From(msg));
   }
 
   public async Task<ChatMessage> CreateMessage(Customer customer, string content)

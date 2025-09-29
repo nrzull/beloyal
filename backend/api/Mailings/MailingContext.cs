@@ -1,20 +1,15 @@
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
-using Beloyal.API.Messengers;
 using Beloyal.API.Shops;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Telegram.Bot;
 
 namespace Beloyal.API.Mailings;
 
 public class MailingContext(
   ApplicationDbContext dbContext,
   CustomerContext customerContext,
-  TgContext tgContext,
-  ChatContext chatContext,
-  IHubContext<ApplicationHub> appHub
+  ChatContext chatContext
 )
 {
   public async Task<List<Mailing>> GetMailings(CompanyId companyId) =>
@@ -75,38 +70,15 @@ public class MailingContext(
       throw new Exception("invalid customer");
     }
 
-    await dbContext.Entry(customer).Reference(v => v.TgBot).LoadAsync();
-    await dbContext.Entry(customer).Reference(v => v.MaxBot).LoadAsync();
-
-    var client = customer.TgBot is { }
-      ? await tgContext.EnsureClient(CompanyId.From(customer.CompanyId), customer.TgBot)
-      : null;
-
-    if (client is null)
-    {
-      throw new Exception("client not found");
-    }
-
-    await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
-    if (customer.User.TgUserId is null)
-    {
-      throw new Exception("tg user id not found");
-    }
-
     await dbContext.Entry(unit).Reference(v => v.Mailing).LoadAsync();
-
-    await client.SendMessage(customer.User.TgUserId, unit.Mailing.Content);
 
     dbContext.Update(unit);
     unit.Status = MailingUnitStatus.Done;
 
     var msg = await chatContext.CreateMessage(unit, customer, unit.Mailing.Content);
+    await chatContext.SendMessage(msg);
 
     await dbContext.SaveChangesAsync();
     await tc.CommitAsync();
-
-    await appHub
-      .Clients.Clients(ApplicationHub.GetCompanyConnections(CompanyId.From(customer)) ?? [])!
-      .SendAsync("ChatMessage", ChatMessageDTO.From(msg));
   }
 }
