@@ -5,7 +5,7 @@
         <Icon variant="coins" />
       </template>
 
-      У вас <b>{{ self.bonusAmount * self.bonusMultiplier }}</b> Бонусов
+      У вас <b>{{ bonusAmount }}</b> Бонусов
     </NAlert>
 
     <div :class="$style.qrWrapper" v-html="qrImage"></div>
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { NAlert } from "naive-ui";
-import { self } from "~/composables/self";
+import { self, bonusAmount } from "~/composables/self";
 import QrcodeGenerator from "qrcode-generator";
 import { publicToken } from "~/composables/publicToken";
 import { computed } from "vue";
