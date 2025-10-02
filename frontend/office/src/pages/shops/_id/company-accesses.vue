@@ -73,10 +73,9 @@ import {
   apiShopsRemoveAccess,
 } from "~/api/shops";
 import type { Shop } from "@beloyal/shared";
-import Table from "~/components/Table/Table.vue";
 import { wait, Button } from "@beloyal/shared";
-import { formatDate } from "~/utils/date";
-import { maskPhone, buildFullName } from "@beloyal/shared";
+import { formatDate } from "@beloyal/shared";
+import { Table, maskPhone, buildFullName } from "@beloyal/shared";
 
 const { shop } = defineProps<{ shop: Shop }>();
 

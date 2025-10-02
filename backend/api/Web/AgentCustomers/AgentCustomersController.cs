@@ -13,6 +13,7 @@ namespace Beloyal.API.Web.AgentCustomers;
 [Route("/api/agent/customers")]
 [WithAuth]
 [WithCompanyAccess]
+[WithShopAccess]
 public class AgentCustomersController : ControllerBase
 {
   [HttpGet("public-tokens/{publicToken}")]
@@ -31,7 +32,6 @@ public class AgentCustomersController : ControllerBase
     };
 
   [HttpPost("public-tokens/{publicToken}/add-bonus")]
-  [WithShopAccess]
   [ProducesResponseType(typeof(AddBonusResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<AddBonusResponse.Ok>, BadRequest>> AddBonus(
     [FromServices] AddBonusEndpoint endpoint,
@@ -47,7 +47,6 @@ public class AgentCustomersController : ControllerBase
     };
 
   [HttpPost("public-tokens/{publicToken}/subtract-bonus")]
-  [WithShopAccess]
   [ProducesResponseType(typeof(SubtractBonusResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<SubtractBonusResponse.Ok>, BadRequest>> SubtractBonus(
     [FromServices] SubtractBonusEndpoint endpoint,

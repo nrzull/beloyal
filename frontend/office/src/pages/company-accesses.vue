@@ -69,13 +69,13 @@ import {
 } from "~/api/companyAccesses";
 import type { CompanyAccess } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
-import Table from "~/components/Table/Table.vue";
 import {
   maskPhone,
   Button,
   Heading,
   buildFullName,
   wait,
+  Table,
 } from "@beloyal/shared";
 import { self } from "~/composables/self";
 

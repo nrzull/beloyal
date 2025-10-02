@@ -58,15 +58,19 @@ public class BonusContext(ApplicationDbContext dbContext)
     dbContext.Update(customer);
     dbContext.Update(bonus);
 
+    var lastBonus = bonus.Status;
     bonus.Status = BonusStatus.Cancelled;
 
-    if (bonus.Type == BonusType.AddBonus)
+    if (lastBonus == BonusStatus.Done)
     {
-      customer.BonusAmount -= bonus.Amount;
-    }
-    else if (bonus.Type == BonusType.SubtractBonus || bonus.Type == BonusType.BurnBonus)
-    {
-      customer.BonusAmount += bonus.Amount;
+      if (bonus.Type == BonusType.AddBonus)
+      {
+        customer.BonusAmount -= bonus.Amount;
+      }
+      else if (bonus.Type == BonusType.SubtractBonus || bonus.Type == BonusType.BurnBonus)
+      {
+        customer.BonusAmount += bonus.Amount;
+      }
     }
 
     await dbContext.SaveChangesAsync();

@@ -53,8 +53,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, wait, Button } from "@beloyal/shared";
-import Table from "~/components/Table/Table.vue";
+import { Table, Heading, wait, Button } from "@beloyal/shared";
 import { self } from "~/composables/self";
 import { apiSelfSetCompanyAccess } from "~/api/self";
 

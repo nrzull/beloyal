@@ -25,10 +25,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Page from "~/components/Page.vue";
-import Table from "~/components/Table/Table.vue";
-import { formatDate } from "~/utils/date";
+import { formatDate } from "@beloyal/shared";
 import type { Shop } from "@beloyal/shared";
-import { Button, Heading } from "@beloyal/shared";
+import { Table, Button, Heading } from "@beloyal/shared";
 import { apiShopsGetAll } from "~/api/shops";
 
 const shops = ref<Shop[]>([]);

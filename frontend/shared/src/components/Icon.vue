@@ -19,6 +19,8 @@ import menu from "./Icon/assets/menu.svg?raw";
 import chevronRight from "./Icon/assets/chevronRight.svg?raw";
 import percent from "./Icon/assets/percent.svg?raw";
 import telegram from "./Icon/assets/telegram.svg?raw";
+import paymentCard from "./Icon/assets/paymentCard.svg?raw";
+import cancel from "./Icon/assets/cancel.svg?raw";
 
 const icons = {
   user,
@@ -34,6 +36,8 @@ const icons = {
   chevronRight,
   percent,
   telegram,
+  paymentCard,
+  cancel,
 } as const;
 
 export type IconVariant = keyof typeof icons;
