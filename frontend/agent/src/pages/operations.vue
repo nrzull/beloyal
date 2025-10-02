@@ -39,7 +39,18 @@
           :disabled="isLoading"
         >
           <template #icon>
-            <Icon variant="cancel" />
+            <Icon
+              variant="cancel"
+              @click="
+                dialog.error({
+                  title: 'Отмена заказа',
+                  positiveText: 'отменить',
+                  negativeText: 'назад',
+                  content: 'Вы действительно хотите отменить заказ?',
+                  onPositiveClick: () => cancel(item),
+                })
+              "
+            />
           </template>
         </Button>
       </template>
@@ -57,12 +68,14 @@ import {
   Icon,
   type Operation,
 } from "@beloyal/shared";
-import { apiOperationsGetAll } from "~/api/operations";
+import { apiOperationsCancel, apiOperationsGetAll } from "~/api/operations";
 import { computed, ref } from "vue";
 import { maskPhone, buildFullName } from "@beloyal/shared";
 import { NThing } from "naive-ui";
+import { useDialog } from "naive-ui";
 
 const operations = ref<Operation[]>([]);
+const dialog = useDialog();
 
 const isLoading = computed(() => wait.some([fetchOperations]));
 
@@ -75,6 +88,19 @@ const fetchOperations = async () => {
     console.error(e);
   } finally {
     wait.end(fetchOperations);
+  }
+};
+
+const cancel = async (v: Operation) => {
+  try {
+    wait.start(cancel);
+
+    await apiOperationsCancel({ bonusId: v.bonus.id });
+    await fetchOperations();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    wait.end(cancel);
   }
 };
 
