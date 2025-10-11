@@ -620,6 +620,40 @@ namespace Beloyal.API.Migrations
                     b.ToTable("tg_bots", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Promotions.Promotion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.Property<string>("Variant")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("variant");
+
+                    b.HasKey("Id")
+                        .HasName("pk_promotions");
+
+                    b.HasIndex("CompanyId")
+                        .HasDatabaseName("ix_promotions_company_id");
+
+                    b.ToTable("promotions", (string)null);
+                });
+
             modelBuilder.Entity("Beloyal.API.Shops.Shop", b =>
                 {
                     b.Property<Guid>("Id")
@@ -679,6 +713,37 @@ namespace Beloyal.API.Migrations
                         .HasDatabaseName("ix_shop_accesses_company_access_id_shop_id");
 
                     b.ToTable("shop_accesses", (string)null);
+                });
+
+            modelBuilder.Entity("Beloyal.API.Shops.ShopPromotion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("PromotionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("promotion_id");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shop_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_shop_promotions");
+
+                    b.HasIndex("PromotionId")
+                        .HasDatabaseName("ix_shop_promotions_promotion_id");
+
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_shop_promotions_shop_id");
+
+                    b.ToTable("shop_promotions", (string)null);
                 });
 
             modelBuilder.Entity("Beloyal.API.Users.User", b =>
@@ -782,9 +847,36 @@ namespace Beloyal.API.Migrations
                         .HasForeignKey("ShopId")
                         .HasConstraintName("fk_bonuses_shops_shop_id");
 
+                    b.OwnsOne("Beloyal.API.Bonuses.BonusPromotion", "Promotion", b1 =>
+                        {
+                            b1.Property<Guid>("BonusId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("promotion_title");
+
+                            b1.Property<string>("Variant")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("promotion_variant");
+
+                            b1.HasKey("BonusId");
+
+                            b1.ToTable("bonuses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BonusId")
+                                .HasConstraintName("fk_bonuses_bonuses_id");
+                        });
+
                     b.Navigation("Agent");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("Promotion");
 
                     b.Navigation("Shop");
                 });
@@ -1022,6 +1114,18 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Promotions.Promotion", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.Company", "Company")
+                        .WithMany("Promotions")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_promotions_companies_company_id");
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Beloyal.API.Shops.Shop", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
@@ -1055,6 +1159,27 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Shops.ShopPromotion", b =>
+                {
+                    b.HasOne("Beloyal.API.Promotions.Promotion", "Promotion")
+                        .WithMany()
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_shop_promotions_promotions_promotion_id");
+
+                    b.HasOne("Beloyal.API.Shops.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_shop_promotions_shops_shop_id");
+
+                    b.Navigation("Promotion");
+
+                    b.Navigation("Shop");
+                });
+
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
                 {
                     b.Navigation("Messages");
@@ -1071,6 +1196,8 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Mailings");
 
                     b.Navigation("MaxBot");
+
+                    b.Navigation("Promotions");
 
                     b.Navigation("Roles");
 

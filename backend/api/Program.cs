@@ -6,6 +6,7 @@ using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
+using Beloyal.API.Promotions;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses;
@@ -55,6 +56,7 @@ public class Program
     builder.Services.AddScoped<BonusContext>();
     builder.Services.AddScoped<ChatContext>();
     builder.Services.AddScoped<MailingContext>();
+    builder.Services.AddScoped<PromotionContext>();
     builder.Services.AddHostedService<BonusLifetimeBackgroundService>();
     builder.Services.AddHostedService<BonusSchedulingBackgroundService>();
     builder.Services.AddSignalR();

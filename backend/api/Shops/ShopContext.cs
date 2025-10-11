@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Promotions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Shops;
@@ -90,4 +91,27 @@ public class ShopContext(ApplicationDbContext dbContext)
       .Where(v => v.ShopId == shopId.Value && v.CompanyAccess.CompanyId == companyId.Value)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
+
+  public async Task<List<ShopPromotion>> GetPromotions(CompanyId companyId, ShopId shopId) =>
+    await dbContext
+      .ShopPromotions.Include(v => v.Promotion)
+      .Where(v => v.ShopId == shopId.Value && v.Promotion.CompanyId == companyId.Value)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
+
+  public async Task<ShopPromotion> AddPromotion(Shop shop, Promotion promotion)
+  {
+    var shopPromotion = new ShopPromotion { Promotion = promotion, Shop = shop };
+
+    dbContext.Add(shopPromotion);
+    await dbContext.SaveChangesAsync();
+
+    return shopPromotion;
+  }
+
+  public async Task RemovePromotion(ShopPromotion shopPromotion)
+  {
+    dbContext.Remove(shopPromotion);
+    await dbContext.SaveChangesAsync();
+  }
 }

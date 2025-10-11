@@ -11,7 +11,6 @@
       :columns="[
         { key: 'createdAt', width: 'max-content' },
         { key: 'amount', class: [$style.amount] },
-        { key: 'agent' },
       ]"
     >
       <template #amount="{ item }">
@@ -39,12 +38,6 @@
         />
       </template>
 
-      <template #agent="{ item }">
-        {{
-          buildFullName(item.agent?.user) || maskPhone(item.agent?.user?.phone)
-        }}
-      </template>
-
       <template #createdAt="{ item }">
         {{ formatDate(item.bonus.createdAt) }}
       </template>
@@ -63,7 +56,6 @@ import {
 } from "@beloyal/shared";
 import { apiOperationsGetAll } from "~/api/operations";
 import { computed, ref } from "vue";
-import { maskPhone, buildFullName } from "@beloyal/shared";
 import { NThing } from "naive-ui";
 
 const operations = ref<Operation[]>([]);

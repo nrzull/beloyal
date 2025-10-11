@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Promotions;
 using Beloyal.API.Types;
 
 namespace Beloyal.API.Shops;
@@ -14,4 +15,5 @@ public class Shop : IEnsurable
   public required Company Company { get; set; }
 
   public List<ShopAccess> Accesses { get; set; } = [];
+  public List<Promotion> Promotions { get; set; } = [];
 }
