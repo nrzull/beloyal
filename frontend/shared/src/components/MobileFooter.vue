@@ -1,7 +1,11 @@
 <template>
   <div :class="$style.footer">
-    <NTabs :value="$route.path" @update:value="$router.push($event)">
-      <NTab v-for="item in items" :key="item.title" :name="item.to">
+    <NTabs :value="$route.path" @update:value="$router.push(getByPath($event))">
+      <NTab
+        v-for="item in items"
+        :key="item.title"
+        :name="typeof item.to === 'string' ? item.to : item.to.path!"
+      >
         <Space align="center" :size="[4, 0]">
           <Icon :variant="item.iconVariant" />
           {{ item.title }}
@@ -15,14 +19,20 @@
 import { NTabs, NTab } from "naive-ui";
 import Icon, { type IconVariant } from "./Icon.vue";
 import Space from "./Space";
+import type { RouteLocationRaw } from "vue-router";
 
-defineProps<{
+const { items } = defineProps<{
   items: Array<{
-    to: string;
+    to: RouteLocationRaw;
     title: string;
     iconVariant: IconVariant;
   }>;
 }>();
+
+const getByPath = (v: string) =>
+  items.find((vv) =>
+    typeof vv.to === "string" ? vv.to === v : vv.to.path === v
+  )!.to;
 </script>
 
 <style module>

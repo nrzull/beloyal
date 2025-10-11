@@ -5,12 +5,15 @@
         :class="footerClass"
         :items="[
           {
-            to: `/${$route.params.messenger}`,
+            to: { path: `/${$route.params.messenger}`, query: $route.query },
             title: 'Главная',
             iconVariant: 'home',
           },
           {
-            to: `/${$route.params.messenger}/history`,
+            to: {
+              path: `/${$route.params.messenger}/operations`,
+              query: $route.query,
+            },
             title: 'История',
             iconVariant: 'history',
           },

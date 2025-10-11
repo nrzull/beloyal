@@ -26,7 +26,8 @@
   overflow: hidden;
   word-break: break-all;
   overflow-y: auto;
-  padding: 12px;
+  padding: 12px 12px 0;
+  margin-bottom: 12px;
 }
 
 .footer {

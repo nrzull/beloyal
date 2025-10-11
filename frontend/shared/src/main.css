@@ -6,6 +6,9 @@
   --color-red-400: #ff3333;
   --color-red: var(--color-red-400);
 
+  --color-green-400: #00e248;
+  --color-green: var(--color-green-400);
+
   --color-grey-400: #dddddd;
   --color-grey-500: #aaa;
   --color-grey: var(--color-grey-400);
@@ -15,6 +18,7 @@
   --color-primary-light: #e9f3ff;
 
   --color-error: var(--color-red);
+  --color-success: var(--color-green);
 
   --background-color: #fafafa;
 

@@ -29,6 +29,20 @@ public class BonusContext(ApplicationDbContext dbContext)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
+  public async Task<List<Bonus>> GetBonuses(CompanyId companyId, CustomerId customerId) =>
+    await dbContext
+      .Bonuses.Include(v => v.Customer)
+      .Include(v => v.Agent)
+      .ThenInclude(v => v!.Company)
+      .Include(v => v.Agent)
+      .ThenInclude(v => v!.User)
+      .Include(v => v.Agent)
+      .ThenInclude(v => v!.Role)
+      .Include(v => v.Shop)
+      .Where(v => v.Customer.CompanyId == companyId.Value && v.Customer.Id == customerId.Value)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
+
   public async Task<List<Bonus>> GetLatestBonuses()
   {
     var bonuses = (

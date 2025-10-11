@@ -17,6 +17,11 @@ import back from "./Icon/assets/back.svg?raw";
 import history from "./Icon/assets/history.svg?raw";
 import menu from "./Icon/assets/menu.svg?raw";
 import chevronRight from "./Icon/assets/chevronRight.svg?raw";
+import chevronUp from "./Icon/assets/chevronUp.svg?raw";
+import chevronDown from "./Icon/assets/chevronDown.svg?raw";
+import chevronLeft from "./Icon/assets/chevronLeft.svg?raw";
+import fire from "./Icon/assets/fire.svg?raw";
+
 import percent from "./Icon/assets/percent.svg?raw";
 import telegram from "./Icon/assets/telegram.svg?raw";
 import paymentCard from "./Icon/assets/paymentCard.svg?raw";
@@ -38,6 +43,10 @@ const icons = {
   telegram,
   paymentCard,
   cancel,
+  chevronUp,
+  chevronDown,
+  chevronLeft,
+  fire,
 } as const;
 
 export type IconVariant = keyof typeof icons;

@@ -1,1 +1,0 @@
-<template>История</template>

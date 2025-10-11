@@ -8,8 +8,8 @@ export const router = createRouter({
       component: () => import("~/components/DefaultLayout.vue"),
       children: [
         {
-          path: "history",
-          component: () => import("~/pages/history.vue"),
+          path: "operations",
+          component: () => import("~/pages/operations.vue"),
         },
         {
           path: "",
