@@ -12,3 +12,4 @@ export * from "./users/types";
 export * from "./whiteCompanies/types";
 export * from "./bonuses/types";
 export * from "./operations/types";
+export * from "./promotions/types";

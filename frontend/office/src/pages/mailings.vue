@@ -15,7 +15,7 @@
     <Table
       :data="mailings"
       :columns="[
-        { key: 'createdAt', title: 'Создано' },
+        { key: 'createdAt', title: 'Дата создания' },
         { key: 'done', title: 'Получено' },
         { key: 'cancelled', title: 'Отменено' },
         { key: 'total', title: 'Всего' },

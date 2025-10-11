@@ -15,7 +15,7 @@
       :data="companyRoles"
       :columns="[
         { key: 'name', title: 'Название' },
-        { key: 'createdAt', title: 'Создано' },
+        { key: 'createdAt', title: 'Дата создания' },
       ]"
       :route-fn="(v) => `/company-roles/${v.id}`"
     >

@@ -9,7 +9,7 @@
       :loading="isLoading"
       :columns="[
         { key: 'status', title: 'Статус', width: 'max-content' },
-        { key: 'createdAt', title: 'Дата' },
+        { key: 'createdAt', title: 'Дата создания' },
         { key: 'type', title: 'Операция' },
         { key: 'cashIncome', title: 'Прибыль' },
         { key: 'shop', title: 'Торговая точка' },

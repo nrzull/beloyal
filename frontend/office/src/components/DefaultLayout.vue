@@ -38,10 +38,24 @@ const adminMenu = computed(() => {
 const companyMenu = computed(() => {
   const base: MenuItem[] = [
     {
-      type: "route",
-      route: "/bonus-settings",
-      label: "Бонусы",
+      type: "group",
+      label: "Бонусы и акции",
       available: true,
+      children: [
+        {
+          type: "route",
+          route: "/bonus-settings",
+          label: "Бонусы",
+          available: true,
+        },
+
+        {
+          type: "route",
+          route: "/promotions",
+          label: "Акции",
+          available: true,
+        },
+      ],
     },
 
     {
