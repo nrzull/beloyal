@@ -22,6 +22,6 @@
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  align-items: flex-start;
+  align-items: center;
 }
 </style>

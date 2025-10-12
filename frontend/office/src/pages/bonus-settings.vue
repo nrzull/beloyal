@@ -8,21 +8,7 @@
       <Space vertical :size="[0, 16]">
         <Space vertical>
           <div>Процент кэшбэка</div>
-          <NInputNumber
-            size="large"
-            placeholder="Укажите процент"
-            :min="1"
-            :max="100"
-            :precision="0"
-            v-model:value="bonusOptions.cashbackPercent"
-          >
-            <template #prefix>
-              <Icon
-                :style="{ color: 'var(--color-grey-500)' }"
-                variant="percent"
-              />
-            </template>
-          </NInputNumber>
+          <CashbackPercentInput v-model="bonusOptions.cashbackPercent" />
         </Space>
 
         <Space vertical>
@@ -202,6 +188,7 @@ import {
 } from "~/api/company";
 import { NInputNumber, NThing } from "naive-ui";
 import { parse, serialize, type Duration } from "tinyduration";
+import CashbackPercentInput from "~/components/CashbackPercentInput.vue";
 
 const bonusOptions = ref<CompanyBonusOptions>();
 

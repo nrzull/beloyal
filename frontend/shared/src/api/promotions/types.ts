@@ -6,34 +6,34 @@ export type Promotion = {
 };
 
 export type PromotionVariant =
-  | CountVariant
+  | ExactCountVariant
   | DatePeriodVariant
   | DateTimePeriodVariant
   | TimePeriodVariant;
 
-export type CountVariant = {
-  $type: "CountVariant";
+export type ExactCountVariant = {
+  $type: "ExactCountVariant";
   count: number;
   cashbackPercent: number;
 };
 
 export type DatePeriodVariant = {
   $type: "DatePeriodVariant";
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
   cashbackPercent: number;
 };
 
 export type DateTimePeriodVariant = {
   $type: "DateTimePeriodVariant";
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
   cashbackPercent: number;
 };
 
 export type TimePeriodVariant = {
   $type: "TimePeriodVariant";
-  from: string;
-  to: string;
+  from: string | null;
+  to: string | null;
   cashbackPercent: number;
 };

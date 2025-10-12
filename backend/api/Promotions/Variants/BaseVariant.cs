@@ -6,7 +6,7 @@ namespace Beloyal.API.Promotions.Variants;
 [JsonDerivedType(typeof(DatePeriodVariant), nameof(DatePeriodVariant))]
 [JsonDerivedType(typeof(TimePeriodVariant), nameof(TimePeriodVariant))]
 [JsonDerivedType(typeof(DateTimePeriodVariant), nameof(DateTimePeriodVariant))]
-[JsonDerivedType(typeof(CountVariant), nameof(CountVariant))]
+[JsonDerivedType(typeof(ExactCountVariant), nameof(ExactCountVariant))]
 public class BaseVariant;
 
 [JsonSourceGenerationOptions(
@@ -21,6 +21,6 @@ public class BaseVariant;
 [JsonSerializable(typeof(List<DatePeriodVariant>))]
 [JsonSerializable(typeof(List<TimePeriodVariant>))]
 [JsonSerializable(typeof(List<DateTimePeriodVariant>))]
-[JsonSerializable(typeof(List<CountVariant>))]
+[JsonSerializable(typeof(List<ExactCountVariant>))]
 [JsonSerializable(typeof(List<BaseVariant>))]
 public partial class BaseVariantJsonSerializerContext : JsonSerializerContext;

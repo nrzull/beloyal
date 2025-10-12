@@ -6,9 +6,9 @@ namespace Beloyal.API.Test.Promotions;
 public class BaseVariantJsonSerializerContextTest
 {
   [Fact]
-  public void CountVariant()
+  public void ExactCountVariant()
   {
-    var countVariant = new CountVariant { Count = 2, CashbackPercent = 5 };
+    var countVariant = new ExactCountVariant { Count = 2, CashbackPercent = 5 };
 
     var ser = JsonSerializer.Serialize(
       countVariant,
@@ -19,6 +19,6 @@ public class BaseVariantJsonSerializerContextTest
       BaseVariantJsonSerializerContext.Default.BaseVariant
     );
 
-    Assert.True(deser is CountVariant { Count: 2, CashbackPercent: 5 });
+    Assert.True(deser is ExactCountVariant { Count: 2, CashbackPercent: 5 });
   }
 }
