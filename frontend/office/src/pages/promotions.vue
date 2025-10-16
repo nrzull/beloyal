@@ -18,6 +18,7 @@
         { key: 'variant', title: 'Тип' },
         { key: 'createdAt', title: 'Дата создания' },
       ]"
+      :route-fn="(v) => `/promotions/${v.id}`"
     >
       <template #variant="{ item }">
         {{ translatePromotionVariantType[item.variant.$type] }}

@@ -97,6 +97,11 @@ export const router = createRouter({
             },
 
             {
+              path: ":id",
+              component: () => import("~/pages/promotions/_id.vue"),
+            },
+
+            {
               path: "",
               component: () => import("~/pages/promotions.vue"),
             },
