@@ -16,12 +16,17 @@
       :columns="[
         { key: 'title', title: 'Название' },
         { key: 'variant', title: 'Тип' },
+        { key: 'cashbackPercent', title: 'Кэшбэк' },
         { key: 'createdAt', title: 'Дата создания' },
       ]"
       :route-fn="(v) => `/promotions/${v.id}`"
     >
       <template #variant="{ item }">
         {{ translatePromotionVariantType[item.variant.$type] }}
+      </template>
+
+      <template #cashbackPercent="{ item }">
+        {{ item.variant.cashbackPercent }}%
       </template>
 
       <template #createdAt="{ item }">

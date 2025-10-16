@@ -14,7 +14,7 @@
         <template #tabs>
           <NTabs :value="$route.path" @update:value="$router.push($event)">
             <NTab :name="`/shops/${shopId}`">Персонал</NTab>
-            <!-- <NTab :name="`/shops/${shopId}/promotions`">Акции</NTab> -->
+            <NTab :name="`/shops/${shopId}/promotions`">Акции</NTab>
           </NTabs>
         </template>
       </component>

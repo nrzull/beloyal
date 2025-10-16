@@ -7,7 +7,10 @@ namespace Beloyal.API.Promotions;
 public class PromotionContext(ApplicationDbContext dbContext)
 {
   public async Task<List<Promotion>> GetPromotions(CompanyId companyId) =>
-    await dbContext.Promotions.Where(v => v.CompanyId == companyId.Value).ToListAsync();
+    await dbContext
+      .Promotions.Where(v => v.CompanyId == companyId.Value)
+      .OrderByDescending(v => v.CreatedAt)
+      .ToListAsync();
 
   public async Task<Promotion?> GetPromotion(CompanyId companyId, PromotionId promotionId) =>
     await dbContext.Promotions.FirstOrDefaultAsync(v =>
