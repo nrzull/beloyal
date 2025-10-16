@@ -19,15 +19,29 @@
         { key: 'createdAt', title: 'Дата создания' },
       ]"
     >
+      <template #variant="{ item }">
+        {{ translatePromotionVariantType[item.variant.$type] }}
+      </template>
+
+      <template #createdAt="{ item }">
+        {{ formatDate(item.createdAt) }}
+      </template>
     </Table>
   </Page>
 </template>
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, Button, Table, type Promotion } from "@beloyal/shared";
+import {
+  Heading,
+  Button,
+  Table,
+  type Promotion,
+  formatDate,
+} from "@beloyal/shared";
 import { ref } from "vue";
 import { apiPromotionsGetAll } from "~/api/promotions";
+import { translatePromotionVariantType } from "~/components/Promotions/utils";
 
 const promotions = ref<Promotion[]>([]);
 

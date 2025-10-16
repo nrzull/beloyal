@@ -49,6 +49,7 @@ import {
   wait,
   Input,
   type PromotionVariant,
+  type Promotion,
 } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { NSelect } from "naive-ui";
@@ -62,10 +63,13 @@ import {
 import { cloneDeep } from "es-toolkit";
 import VariantForm from "~/components/Promotions/VariantForm.vue";
 import { translatePromotionVariantType } from "~/components/Promotions/utils";
+import { apiPromotionsCreate } from "~/api/promotions";
+import { useRouter } from "vue-router";
 
 const isLoading = computed(() => wait.some([createPromotion]));
 
 const promotion = ref<PartialPromotion>({ title: "", variant: null });
+const router = useRouter();
 
 const options = [
   newExactCountVariant(),
@@ -77,6 +81,8 @@ const options = [
 const createPromotion = async () => {
   try {
     wait.start(createPromotion);
+    await apiPromotionsCreate(promotion.value as Promotion);
+    router.push("/promotions");
   } catch (e) {
     console.error(e);
   } finally {

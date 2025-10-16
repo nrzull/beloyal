@@ -33,7 +33,7 @@ export type DateTimePeriodVariant = {
 
 export type TimePeriodVariant = {
   $type: "TimePeriodVariant";
-  from: string | null;
-  to: string | null;
+  from: number | null;
+  to: number | null;
   cashbackPercent: number;
 };
