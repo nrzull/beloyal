@@ -54,13 +54,15 @@ watch(() => route.path, syncWithRoutes, { flush: "post", immediate: true });
 
 <style module>
 .menu {
-  padding: 12px 0;
+  padding: 12px 24px;
+  padding-left: 36px;
   height: auto;
   line-height: 1;
 }
 
 .child {
-  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .arrow {
