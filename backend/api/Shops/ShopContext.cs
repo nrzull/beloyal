@@ -99,6 +99,16 @@ public class ShopContext(ApplicationDbContext dbContext)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 
+  public async Task<ShopPromotion?> GetPromotion(
+    CompanyId companyId,
+    ShopPromotionId shopPromotionId
+  ) =>
+    await dbContext
+      .ShopPromotions.Include(v => v.Promotion)
+      .FirstOrDefaultAsync(v =>
+        v.Id == shopPromotionId.Value && v.Promotion.CompanyId == companyId.Value
+      );
+
   public async Task<ShopPromotion> AddPromotion(Shop shop, Promotion promotion)
   {
     var shopPromotion = new ShopPromotion { Promotion = promotion, Shop = shop };

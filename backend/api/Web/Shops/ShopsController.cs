@@ -1,11 +1,15 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Promotions;
 using Beloyal.API.Shops;
 using Beloyal.API.Web.Filters;
+using Beloyal.API.Web.Shops.AddPromotion;
 using Beloyal.API.Web.Shops.CreateShop;
 using Beloyal.API.Web.Shops.CreateShopAccess;
+using Beloyal.API.Web.Shops.GetPromotions;
 using Beloyal.API.Web.Shops.GetShop;
 using Beloyal.API.Web.Shops.GetShopAccesses;
 using Beloyal.API.Web.Shops.GetShops;
+using Beloyal.API.Web.Shops.RemovePromotion;
 using Beloyal.API.Web.Shops.RemoveShopAccess;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +96,47 @@ public class ShopsController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure(), ShopAccessId.From(shopAccessId)) switch
     {
       RemoveShopAccessResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpGet("{id}/shop-promotions")]
+  public async Task<Results<Ok<GetPromotionsResponse.Ok>, BadRequest>> GetShopPromotions(
+    [FromServices] GetPromotionsEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid shopId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), ShopId.From(shopId)) switch
+    {
+      GetPromotionsResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPost("{id}/shop-promotions")]
+  public async Task<Results<Ok<AddPromotionResponse.Ok>, BadRequest>> AddPromotion(
+    [FromServices] AddPromotionEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid shopId,
+    [FromBody] AddPromotionRequest req
+  ) =>
+    await endpoint.Handle(
+      companyAccess.Ensure(),
+      ShopId.From(shopId),
+      PromotionId.From(req.PromotionId)
+    ) switch
+    {
+      AddPromotionResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpDelete("{id}/shop-promotions/{shopPromotionId}")]
+  public async Task<Results<Ok<RemovePromotionResponse.Ok>, BadRequest>> RemovePromotion(
+    [FromServices] RemovePromotionEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "shopPromotionId")] Guid shopPromotionId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), ShopPromotionId.From(shopPromotionId)) switch
+    {
+      RemovePromotionResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 }
