@@ -13,7 +13,7 @@ public class RemoveShopAccessEndpointTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var shopContext = scope.Get<ShopContext>();
-        var shop = await shopContext.CreateShop(company, "qwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
         var shopAccess = await shopContext.CreateAccess(shop, access);
 
         var result = await scope

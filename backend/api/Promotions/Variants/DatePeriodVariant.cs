@@ -4,5 +4,5 @@ public class DatePeriodVariant : BaseVariant
 {
   public required DateOnly From { get; set; }
   public required DateOnly To { get; set; }
-  public required decimal CashbackPercent { get; set; }
+  public override required decimal CashbackPercent { get; set; }
 }

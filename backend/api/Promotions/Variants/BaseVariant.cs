@@ -7,7 +7,10 @@ namespace Beloyal.API.Promotions.Variants;
 [JsonDerivedType(typeof(TimePeriodVariant), nameof(TimePeriodVariant))]
 [JsonDerivedType(typeof(DateTimePeriodVariant), nameof(DateTimePeriodVariant))]
 [JsonDerivedType(typeof(ExactCountVariant), nameof(ExactCountVariant))]
-public class BaseVariant;
+public class BaseVariant
+{
+  public virtual required decimal CashbackPercent { get; set; }
+};
 
 [JsonSourceGenerationOptions(
   WriteIndented = false,

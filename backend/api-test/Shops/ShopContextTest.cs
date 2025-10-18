@@ -13,7 +13,7 @@ public class ShopContextTest : TestLifetime
         var (company, _, _) = await CompanyFixture.Company(scope);
         var shopContext = scope.Get<ShopContext>();
 
-        var shop = await shopContext.CreateShop(company, "qwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
         Assert.Equal(shop.CompanyId, company.Id);
       }
     );
@@ -26,8 +26,8 @@ public class ShopContextTest : TestLifetime
         var (company, _, _) = await CompanyFixture.Company(scope);
         var shopContext = scope.Get<ShopContext>();
 
-        var shop = await shopContext.CreateShop(company, "qwe");
-        await shopContext.UpdateShop(shop, "qweqwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
+        await shopContext.UpdateShop(shop, "qweqwe", TimeZoneInfo.Local);
         Assert.Equal("qweqwe", shop.Name);
       }
     );
@@ -39,7 +39,7 @@ public class ShopContextTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var shopContext = scope.Get<ShopContext>();
-        var shop = await shopContext.CreateShop(company, "qwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
 
         var shopAccess = await shopContext.CreateAccess(shop, access);
         Assert.Equal(access.Id, shopAccess.CompanyAccessId);
@@ -54,7 +54,7 @@ public class ShopContextTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var shopContext = scope.Get<ShopContext>();
-        var shop = await shopContext.CreateShop(company, "qwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
         var shopAccess = await shopContext.CreateAccess(shop, access);
         await shopContext.RemoveAccess(shopAccess);
 
@@ -72,7 +72,7 @@ public class ShopContextTest : TestLifetime
       {
         var (company, access, _) = await CompanyFixture.Company(scope);
         var shopContext = scope.Get<ShopContext>();
-        var shop = await shopContext.CreateShop(company, "qwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
         var shopAccess = await shopContext.CreateAccess(shop, access);
 
         Assert.Contains(

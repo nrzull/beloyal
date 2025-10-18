@@ -32,19 +32,25 @@ public class ShopContext(ApplicationDbContext dbContext)
         .FirstOrDefaultAsync(v => v.Id == shopAccessId.Value)
     )?.Shop;
 
-  public async Task<Shop> CreateShop(Company company, string name)
+  public async Task<Shop> CreateShop(Company company, string name, TimeZoneInfo? tz)
   {
-    var shop = new Shop { Company = company, Name = name };
+    var shop = new Shop
+    {
+      Company = company,
+      Name = name,
+      TimeZone = tz,
+    };
     dbContext.Add(shop);
     await dbContext.SaveChangesAsync();
 
     return shop;
   }
 
-  public async Task UpdateShop(Shop shop, string name)
+  public async Task UpdateShop(Shop shop, string name, TimeZoneInfo? tz)
   {
     dbContext.Update(shop);
     shop.Name = name;
+    shop.TimeZone = tz;
     await dbContext.SaveChangesAsync();
   }
 

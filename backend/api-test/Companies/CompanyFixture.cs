@@ -29,7 +29,8 @@ public static class CompanyFixture
       new(cashbackPercent),
       new(cashbackThreshold),
       new(bonusMultiplier),
-      TimeSpan.FromDays(1)
+      TimeSpan.FromDays(1),
+      TimeZoneInfo.Local
     );
 
     return (company, access, user);

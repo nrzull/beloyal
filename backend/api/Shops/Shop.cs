@@ -10,6 +10,7 @@ public class Shop : IEnsurable
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public required string Name { get; set; }
+  public TimeZoneInfo? TimeZone { get; set; }
 
   public Guid CompanyId { get; set; }
   public required Company Company { get; set; }

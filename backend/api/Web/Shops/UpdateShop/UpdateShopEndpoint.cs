@@ -13,7 +13,11 @@ public class UpdateShopEndpoint(ShopContext shopContext)
       throw new Exception("invalid shop");
     }
 
-    await shopContext.UpdateShop(shop, req.Name);
+    await shopContext.UpdateShop(
+      shop,
+      req.Name,
+      req.TimeZone is { } ? TimeZoneInfo.FindSystemTimeZoneById(req.TimeZone) : null
+    );
 
     return new UpdateShopResponse.Ok(ShopDTO.From(shop));
   }

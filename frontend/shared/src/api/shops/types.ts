@@ -3,4 +3,5 @@ export type Shop = {
   name: string;
   createdAt: string;
   companyId: string;
+  timeZone?: string;
 };

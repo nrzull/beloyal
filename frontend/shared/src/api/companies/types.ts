@@ -3,6 +3,7 @@ export type Company = {
   createdAt: string;
   title: string;
   tin: string;
+  timeZone: string;
 };
 
 export type CompanyBonusOptions = {

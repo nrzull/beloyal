@@ -14,7 +14,7 @@ public static class ShopFixture
   {
     var shopContext = scope.Get<ShopContext>();
 
-    var shop = await shopContext.CreateShop(company, "qwe");
+    var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
     var sAccess = await shopContext.CreateAccess(shop, cAccess);
 
     return (shop, sAccess);

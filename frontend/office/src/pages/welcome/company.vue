@@ -49,6 +49,7 @@ const createCompany = async () => {
       bonusLifetimeInDays: 180,
       tin: tin.value,
       title: title.value,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 
     router.push("/");

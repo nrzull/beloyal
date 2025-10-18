@@ -304,6 +304,11 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("TimeZone")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("time_zone");
+
                     b.Property<string>("Tin")
                         .IsRequired()
                         .HasMaxLength(12)
@@ -673,6 +678,10 @@ namespace Beloyal.API.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
+
+                    b.Property<string>("TimeZone")
+                        .HasColumnType("text")
+                        .HasColumnName("time_zone");
 
                     b.HasKey("Id")
                         .HasName("pk_shops");

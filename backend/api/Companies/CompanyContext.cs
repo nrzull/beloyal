@@ -87,7 +87,8 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     Percent cashbackPercent,
     Percent cashbackThreshold,
     Percent bonusMultiplier,
-    TimeSpan bonusLifetime
+    TimeSpan bonusLifetime,
+    TimeZoneInfo tz
   )
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
@@ -102,6 +103,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     {
       Tin = tin.Value,
       Title = title,
+      TimeZone = tz,
       CashbackPercent = cashbackPercent.Value,
       CashbackThreshold = cashbackThreshold.Value,
       BonusMultiplier = bonusMultiplier.Value,

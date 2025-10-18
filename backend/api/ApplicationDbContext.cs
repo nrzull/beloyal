@@ -99,6 +99,9 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
       company.Property(v => v.Tin).HasMaxLength(12);
       company.HasIndex(v => v.Tin).IsUnique();
       company.OwnsOne(v => v.BonusFrequency);
+      company
+        .Property(v => v.TimeZone)
+        .HasConversion(v => v.Id, v => TimeZoneInfo.FindSystemTimeZoneById(v));
     });
 
     builder.Entity<CompanyAccess>(companyAccess =>
@@ -139,6 +142,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany(v => v.Shops)
         .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
+
+      shop.Property(v => v.TimeZone)
+        .HasConversion(
+          v => v == null ? null : v.Id,
+          v => v == null ? null : TimeZoneInfo.FindSystemTimeZoneById(v)
+        );
     });
 
     builder.Entity<ShopAccess>(shopAccess =>

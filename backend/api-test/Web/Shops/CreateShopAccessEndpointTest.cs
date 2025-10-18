@@ -14,7 +14,7 @@ public class CreateShopAccessEndpointTest : TestLifetime
         var (company, access, user) = await CompanyFixture.Company(scope);
         var endpoint = scope.Get<CreateShopAccessEndpoint>();
         var shopContext = scope.Get<ShopContext>();
-        var shop = await shopContext.CreateShop(company, "qwe");
+        var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
 
         var result = await endpoint.Handle(access, new(shop.Id, access.Id));
         Assert.IsType<CreateShopAccessResponse.Ok>(result);

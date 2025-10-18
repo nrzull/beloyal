@@ -15,7 +15,8 @@ public class CreateCompanyEndpoint(CompanyContext companyContext)
       new Percent(req.CashbackPercent),
       new Percent(req.CashbackThreshold, false),
       new Percent(req.BonusMultiplier, false),
-      TimeSpan.FromDays(req.BonusLifetimeInDays)
+      TimeSpan.FromDays(req.BonusLifetimeInDays),
+      TimeZoneInfo.FindSystemTimeZoneById(req.TimeZone)
     );
 
     return new CreateCompanyResponse.Ok();
