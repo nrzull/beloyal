@@ -38,8 +38,29 @@ const adminMenu = computed(() => {
 const companyMenu = computed(() => {
   const base: MenuItem[] = [
     {
+      type: "route",
+      route: "/shops",
+      label: "Торговые точки",
+      available: true,
+    },
+
+    {
       type: "group",
-      label: "Бонусы и акции",
+      label: "Аналитика",
+      available: true,
+      children: [
+        {
+          type: "route",
+          route: "/operations",
+          label: "Операции",
+          available: true,
+        },
+      ],
+    },
+
+    {
+      type: "group",
+      label: "Маркетинг",
       available: true,
       children: [
         {
@@ -55,28 +76,7 @@ const companyMenu = computed(() => {
           label: "Акции",
           available: true,
         },
-      ],
-    },
 
-    {
-      type: "route",
-      route: "/operations",
-      label: "Операции",
-      available: true,
-    },
-
-    {
-      type: "route",
-      route: "/shops",
-      label: "Торговые точки",
-      available: true,
-    },
-
-    {
-      type: "group",
-      label: "Маркетинг",
-      available: true,
-      children: [
         {
           type: "route",
           route: "/mailings",
@@ -123,9 +123,15 @@ const companyMenu = computed(() => {
 
     {
       type: "group",
-      label: "Интеграции",
+      label: "Настройки",
       available: true,
       children: [
+        {
+          type: "route",
+          route: "/company",
+          label: "Компания",
+          available: true,
+        },
         {
           type: "route",
           route: "/telegram",

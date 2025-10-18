@@ -1,12 +1,7 @@
 <template>
   <div :class="$style.company">
     <Card :class="$style.form">
-      <Input :disabled="isLoading" placeholder="ИНН" v-model:value="tin" />
-      <Input
-        :disabled="isLoading"
-        placeholder="Название"
-        v-model:value="title"
-      />
+      <CompanyForm :loading="isLoading" v-model="model" />
       <Button type="primary" :disabled="isLoading" @click="createCompany">
         Создать компанию
       </Button>
@@ -23,19 +18,20 @@
 </template>
 
 <script setup lang="ts">
-import { Input, Button, Card } from "@beloyal/shared";
+import { Button, Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
 import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";
+import CompanyForm from "~/components/Company/CompanyForm.vue";
 
-const tin = ref();
-const title = ref();
+const model = ref({ tin: "", title: "" });
+
 const router = useRouter();
 const isLoading = computed(() => wait.some([createCompany]));
 
 const createCompany = async () => {
-  if (!tin.value || !title.value) {
+  if (!model.value.tin || !model.value.title) {
     return;
   }
 
@@ -43,12 +39,11 @@ const createCompany = async () => {
     wait.start(createCompany);
 
     await apiSelfCreateCompany({
+      ...model.value,
       cashbackPercent: 10,
       cashbackThreshold: 25,
       bonusMultiplier: 10,
       bonusLifetimeInDays: 180,
-      tin: tin.value,
-      title: title.value,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 

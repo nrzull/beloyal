@@ -24,7 +24,12 @@
 
         <template #description>
           <Space vertical>
-            <a :class="$style.username" :href="`https://t.me/${bot.username}`">
+            <a
+              :class="$style.username"
+              target="_blank"
+              rel="nofollow"
+              :href="`https://t.me/${bot.username}`"
+            >
               @{{ bot.username }}
             </a>
             <div>{{ bot.shortDescription }}</div>

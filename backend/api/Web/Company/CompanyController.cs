@@ -2,6 +2,7 @@ using Beloyal.API.Companies;
 using Beloyal.API.Web.Company.GetBonusOptions;
 using Beloyal.API.Web.Company.GetPublicLinks;
 using Beloyal.API.Web.Company.SetBonusOptions;
+using Beloyal.API.Web.Company.UpdateCompany;
 using Beloyal.API.Web.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,18 @@ namespace Beloyal.API.Web.Company;
 [WithCompanyAccess]
 public class CompanyController : ControllerBase
 {
+  [HttpPatch]
+  public async Task<Results<Ok<UpdateCompanyResponse.Ok>, BadRequest>> UpdateCompany(
+    [FromServices] UpdateCompanyEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromBody] UpdateCompanyRequest req
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), req) switch
+    {
+      UpdateCompanyResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
   [HttpGet("cashback")]
   public async Task<Results<Ok<GetBonusOptionsResponse.Ok>, BadRequest>> GetBonusOptions(
     [FromServices] GetBonusOptionsEndpoint endpoint,

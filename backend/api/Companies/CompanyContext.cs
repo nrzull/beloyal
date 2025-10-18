@@ -265,4 +265,13 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
       .Include(v => v.User)
       .Include(v => v.Role)
       .FirstOrDefaultAsync(v => v.Id == id.Value && v.CompanyId == companyId.Value);
+
+  public async Task UpdateCompany(Company company, Tin tin, string title, TimeZoneInfo timeZone)
+  {
+    dbContext.Update(company);
+    company.Tin = tin.Value;
+    company.Title = title;
+    company.TimeZone = timeZone;
+    await dbContext.SaveChangesAsync();
+  }
 }

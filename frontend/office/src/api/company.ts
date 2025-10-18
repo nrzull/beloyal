@@ -1,5 +1,16 @@
-import type { CompanyBonusOptions, CompanyLink } from "@beloyal/shared";
+import type {
+  Company,
+  CompanyBonusOptions,
+  CompanyLink,
+} from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
+
+export const apiCompanyUpdate = (
+  params: Pick<Company, "tin" | "timeZone" | "title">
+) =>
+  apiClient
+    .patch<{ data: Company }>("/api/company", params)
+    .then((v) => v.data);
 
 export const apiCompanyGetBonusOptions = () =>
   apiClient
