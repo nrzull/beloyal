@@ -87,7 +87,7 @@ public class PromotionContext(ApplicationDbContext dbContext)
     var count = await dbContext
       .Bonuses.Where(v =>
         v.CustomerId == customerId.Value
-        && v.Status == Bonuses.BonusStatus.Done
+        && v.Status != Bonuses.BonusStatus.Cancelled
         && (v.Type == Bonuses.BonusType.AddBonus || v.Type == Bonuses.BonusType.SubtractBonus)
       )
       .CountAsync();
