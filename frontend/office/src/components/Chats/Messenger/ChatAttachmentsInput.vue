@@ -26,7 +26,10 @@ const model = defineModel<File[]>({ required: true });
 const inputRef = useTemplateRef("input");
 
 const handleFiles = (e: any) => {
-  model.value = Array.from(e.target.files || []);
+  if (e.target.files?.length) {
+    model.value = Array.from(e.target.files);
+    e.target.value = "";
+  }
 };
 </script>
 
