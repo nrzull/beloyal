@@ -26,10 +26,10 @@
           />
 
           <Button
-            :type="model.text ? 'primary' : 'tertiary'"
+            :type="canSend ? 'primary' : 'tertiary'"
             size="medium"
-            :bordered="!!model.text"
-            :disabled="!model.text || loading"
+            :bordered="canSend"
+            :disabled="!canSend || loading"
             @click="$emit('send')"
           >
             Отправить
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { Space, Button, Input } from "@beloyal/shared";
-import { onMounted, useTemplateRef } from "vue";
+import { computed, onMounted, useTemplateRef } from "vue";
 import type { ChatInput as TChatInput } from "~/components/Chats/Messenger/types";
 import ChatAttachmentsInput from "~/components/Chats/Messenger/ChatAttachmentsInput.vue";
 import ChatModalInput from "~/components/Chats/Messenger/ChatModalInput.vue";
@@ -56,6 +56,10 @@ defineEmits<{ send: [] }>();
 
 const inputRef = useTemplateRef("input");
 const model = defineModel<TChatInput>({ required: true });
+
+const canSend = computed(() =>
+  Boolean(model.value.attachments.length || model.value.text.length)
+);
 
 onMounted(() => inputRef.value!.focus());
 </script>
