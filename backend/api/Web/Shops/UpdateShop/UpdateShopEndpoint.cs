@@ -5,9 +5,13 @@ namespace Beloyal.API.Web.Shops.UpdateShop;
 
 public class UpdateShopEndpoint(ShopContext shopContext)
 {
-  public async Task<UpdateShopResponse> Handle(CompanyAccess access, UpdateShopRequest req)
+  public async Task<UpdateShopResponse> Handle(
+    CompanyAccess access,
+    ShopId shopId,
+    UpdateShopRequest req
+  )
   {
-    var shop = await shopContext.GetShop(CompanyId.From(access), ShopId.From(req.Id));
+    var shop = await shopContext.GetShop(CompanyId.From(access), shopId);
     if (shop is null)
     {
       throw new Exception("invalid shop");

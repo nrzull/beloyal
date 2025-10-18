@@ -17,7 +17,11 @@ public class UpdateShopEndpointTest : TestLifetime
 
         var shop = await shopContext.CreateShop(company, "qwe", TimeZoneInfo.Local);
 
-        var result = await endpoint.Handle(access, new(shop.Id, "qweqwe", TimeZoneInfo.Local.Id));
+        var result = await endpoint.Handle(
+          access,
+          ShopId.From(shop.Id),
+          new("qweqwe", TimeZoneInfo.Local.Id)
+        );
 
         Assert.IsType<UpdateShopResponse.Ok>(result);
 

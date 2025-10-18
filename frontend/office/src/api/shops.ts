@@ -9,12 +9,14 @@ export const apiShopsGet = (params: { shopId: string }) =>
     .get<{ data: Shop }>(`/api/company/shops/${params.shopId}`)
     .then((v) => v.data);
 
-export const apiShopsCreate = (params: {
-  name: string;
-  timeZone: string | null;
-}) =>
+export const apiShopsCreate = (params: { name: string; timeZone?: string }) =>
   apiClient
     .post<{ data: Shop }>("/api/company/shops", params)
+    .then((v) => v.data);
+
+export const apiShopsUpdate = (params: Shop) =>
+  apiClient
+    .patch<{ data: Shop }>(`/api/company/shops/${params.id}`, params)
     .then((v) => v.data);
 
 export const apiShopsGetAccesses = (params: { shopId: string }) =>

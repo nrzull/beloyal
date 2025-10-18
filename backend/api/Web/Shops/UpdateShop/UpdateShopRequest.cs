@@ -1,3 +1,3 @@
 namespace Beloyal.API.Web.Shops.UpdateShop;
 
-public record UpdateShopRequest(Guid Id, string Name, string? TimeZone);
+public record UpdateShopRequest(string Name, string? TimeZone);

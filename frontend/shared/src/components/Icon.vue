@@ -21,11 +21,11 @@ import chevronUp from "./Icon/assets/chevronUp.svg?raw";
 import chevronDown from "./Icon/assets/chevronDown.svg?raw";
 import chevronLeft from "./Icon/assets/chevronLeft.svg?raw";
 import fire from "./Icon/assets/fire.svg?raw";
-
 import percent from "./Icon/assets/percent.svg?raw";
 import telegram from "./Icon/assets/telegram.svg?raw";
 import paymentCard from "./Icon/assets/paymentCard.svg?raw";
 import cancel from "./Icon/assets/cancel.svg?raw";
+import edit from "./Icon/assets/edit.svg?raw";
 
 const icons = {
   user,
@@ -47,6 +47,7 @@ const icons = {
   chevronDown,
   chevronLeft,
   fire,
+  edit,
 } as const;
 
 export type IconVariant = keyof typeof icons;

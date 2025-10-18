@@ -11,6 +11,7 @@ using Beloyal.API.Web.Shops.GetShopAccesses;
 using Beloyal.API.Web.Shops.GetShops;
 using Beloyal.API.Web.Shops.RemovePromotion;
 using Beloyal.API.Web.Shops.RemoveShopAccess;
+using Beloyal.API.Web.Shops.UpdateShop;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,6 +59,19 @@ public class ShopsController : ControllerBase
     {
       GetShopResponse.NotFound => TypedResults.NotFound(),
       GetShopResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpPatch("{id}")]
+  public async Task<Results<Ok<UpdateShopResponse.Ok>, BadRequest>> UpdateShop(
+    [FromServices] UpdateShopEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid shopId,
+    [FromBody] UpdateShopRequest req
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), ShopId.From(shopId), req) switch
+    {
+      UpdateShopResponse.Ok ok => TypedResults.Ok(ok),
       _ => TypedResults.BadRequest(),
     };
 
