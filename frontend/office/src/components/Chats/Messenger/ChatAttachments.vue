@@ -29,14 +29,16 @@ const processFile = async (file: File): Promise<string> =>
 watch(
   () => model.value,
   async (v) => {
-    console.log(v);
-
-    processedFiles.value = await Promise.all(
+    const result = await Promise.allSettled(
       v.map(async (vv) => ({
         file: vv,
         preview: await processFile(vv),
       }))
     );
+
+    processedFiles.value = result
+      .filter((v) => v.status === "fulfilled")
+      .map((v) => v.value);
   },
   { deep: true, immediate: true }
 );
