@@ -18,7 +18,7 @@
       :loading="isLoading"
       :chat="activeChat"
       :messages="chats.get(activeChat) || []"
-      :input="inputHistory.get(activeChat)"
+      :input="getOrInitChatInput(activeChat)"
       @update:input="inputHistory.set($event.chat, $event.input)"
       @send="sendMessage"
     />
@@ -37,11 +37,23 @@ import { wait } from "@beloyal/shared";
 import ChatPreview from "~/components/Chats/Messenger/ChatPreview.vue";
 import ChatConversation from "~/components/Chats/Messenger/ChatConversation.vue";
 import { wsClient } from "~/api/clients";
+import type { ChatInput } from "~/components/Chats/Messenger/types";
 
 const isLoading = computed(() => wait.some([fetchChats]));
 const chats = ref<Map<Chat, ChatMessage[]>>(new Map());
 const activeChat = ref<Chat>();
-const inputHistory = ref<Map<Chat, string>>(new Map());
+
+const inputHistory = ref<Map<Chat, ChatInput>>(new Map());
+
+const getOrInitChatInput = (v: Chat): ChatInput => {
+  const input = inputHistory.value.get(v);
+  if (input) {
+    return input;
+  }
+
+  inputHistory.value.set(v, { text: "", attachments: [] });
+  return inputHistory.value.get(v)!;
+};
 
 const fetchChats = async () => {
   try {
@@ -63,6 +75,7 @@ const fetchChats = async () => {
 
 const sendMessage = async (chat: Chat) => {
   const input = inputHistory.value.get(chat);
+
   if (!input) {
     return;
   }
@@ -70,8 +83,8 @@ const sendMessage = async (chat: Chat) => {
   try {
     wait.start(sendMessage);
 
-    inputHistory.value.set(chat, "");
-    await apiChatsCreateMessage({ chatId: chat.id, content: input });
+    inputHistory.value.set(chat, { text: "", attachments: [] });
+    await apiChatsCreateMessage({ chatId: chat.id, content: input.text });
   } catch (e) {
     console.error(e);
 

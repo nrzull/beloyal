@@ -8,41 +8,22 @@
         :is-owner="message.agentId === self?.companyAccess?.id"
       />
     </div>
-    <div :class="$style.inputWrapper">
-      <Input
-        ref="input"
-        size="large"
-        type="textarea"
-        autosize
-        placeholder="Введите сообщение"
-        :loading="loading"
-        :bordered="false"
-        v-model:value="proxyInput"
-      >
-        <template #suffix>
-          <Button
-            :type="input ? 'primary' : 'tertiary'"
-            size="large"
-            :bordered="!!input"
-            :disabled="!input || loading"
-            @click="$emit('send', chat)"
-          >
-            Отправить
-          </Button>
-        </template>
-      </Input>
-    </div>
+
+    <ChatInput
+      :loading="loading"
+      v-model="proxyInput"
+      @send="$emit('send', chat)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Button, Input } from "@beloyal/shared";
 import type { Chat, ChatMessage as TChatMessage } from "@beloyal/shared";
-import { computed, onMounted, useTemplateRef, watch } from "vue";
+import { computed, useTemplateRef, watch } from "vue";
 import ChatMessage from "~/components/Chats/Messenger/ChatMessage.vue";
 import { self } from "~/composables/self";
-
-self.value?.companyAccess?.id;
+import ChatInput from "~/components/Chats/Messenger/ChatInput.vue";
+import type { ChatInput as TChatInput } from "~/components/Chats/Messenger/types";
 
 const messagesRef = useTemplateRef("messagesRef");
 
@@ -50,11 +31,11 @@ const { input, chat, messages } = defineProps<{
   chat: Chat;
   messages: TChatMessage[];
   loading: boolean;
-  input?: any;
+  input: TChatInput;
 }>();
 
 const emit = defineEmits<{
-  "update:input": [{ chat: Chat; input: any }];
+  "update:input": [{ chat: Chat; input: TChatInput }];
   send: [chat: Chat];
 }>();
 
@@ -64,10 +45,6 @@ const proxyInput = computed({
     emit("update:input", { chat, input: v });
   },
 });
-
-const inputRef = useTemplateRef("input");
-
-onMounted(() => inputRef.value!.focus());
 
 watch(
   () => messages,
@@ -81,12 +58,6 @@ watch(
   display: grid;
   grid-template-rows: calc(100vh - 200px) max-content;
   gap: 24px;
-}
-
-.inputWrapper {
-  background-color: #fff;
-  padding: 12px;
-  border-radius: 8px;
 }
 
 .messages {
