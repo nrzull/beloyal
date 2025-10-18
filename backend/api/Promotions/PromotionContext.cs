@@ -92,7 +92,7 @@ public class PromotionContext(ApplicationDbContext dbContext)
       )
       .CountAsync();
 
-    return variant.Count == count;
+    return (variant.Count - 1) == count;
   }
 
   bool Check(TimeZoneInfo tz, DatePeriodVariant variant)
