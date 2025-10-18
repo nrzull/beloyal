@@ -17,6 +17,7 @@ public class Bonus
   public decimal CashIncome { get; set; }
   public decimal CashbackPercent { get; set; }
   public decimal CashbackThreshold { get; set; }
+  public BonusPromotion? Promotion { get; set; }
 
   public Guid CustomerId { get; set; }
   public required Customer Customer { get; set; }

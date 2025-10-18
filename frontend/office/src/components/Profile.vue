@@ -34,10 +34,7 @@ import { maskPhone, Space, Icon } from "@beloyal/shared";
 <style module>
 .profile {
   margin-top: 12px;
-  padding-top: 12px;
-  padding-left: 36px;
-  padding-right: 24px;
-  padding-bottom: 12px;
+  padding: 12px 24px;
 
   display: flex;
   align-items: center;

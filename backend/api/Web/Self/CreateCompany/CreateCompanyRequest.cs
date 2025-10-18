@@ -6,5 +6,6 @@ public record CreateCompanyRequest(
   decimal CashbackPercent,
   decimal CashbackThreshold,
   decimal BonusMultiplier,
-  ushort BonusLifetimeInDays
+  ushort BonusLifetimeInDays,
+  string TimeZone
 );

@@ -1,4 +1,4 @@
-import type { Shop, ShopAccess } from "@beloyal/shared";
+import type { Shop, ShopAccess, ShopPromotion } from "@beloyal/shared";
 import { apiClient } from "~/api/clients";
 
 export const apiShopsGetAll = () =>
@@ -9,7 +9,10 @@ export const apiShopsGet = (params: { shopId: string }) =>
     .get<{ data: Shop }>(`/api/company/shops/${params.shopId}`)
     .then((v) => v.data);
 
-export const apiShopsCreate = (params: { name: string }) =>
+export const apiShopsCreate = (params: {
+  name: string;
+  timeZone: string | null;
+}) =>
   apiClient
     .post<{ data: Shop }>("/api/company/shops", params)
     .then((v) => v.data);
@@ -39,5 +42,33 @@ export const apiShopsRemoveAccess = (params: {
   apiClient
     .delete<{ data: ShopAccess }>(
       `/api/company/shops/${params.shopId}/shop-accesses/${params.shopAccessId}`
+    )
+    .then((v) => v.data);
+
+export const apiShopsGetPromotions = (params: { shopId: string }) =>
+  apiClient
+    .get<{ data: ShopPromotion[] }>(
+      `/api/company/shops/${params.shopId}/shop-promotions`
+    )
+    .then((v) => v.data);
+
+export const apiShopsAddPromotion = (params: {
+  shopId: string;
+  promotionId: string;
+}) =>
+  apiClient
+    .post<{ data: ShopPromotion }>(
+      `/api/company/shops/${params.shopId}/shop-promotions`,
+      params
+    )
+    .then((v) => v.data);
+
+export const apiShopsRemovePromotion = (params: {
+  shopId: string;
+  shopPromotionId: string;
+}) =>
+  apiClient
+    .delete<{ data: ShopPromotion }>(
+      `/api/company/shops/${params.shopId}/shop-promotions/${params.shopPromotionId}`
     )
     .then((v) => v.data);

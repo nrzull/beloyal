@@ -12,7 +12,7 @@
       :columns="[
         { key: 'phone', title: 'Номер телефона' },
         { key: 'name', title: 'Имя' },
-        { key: 'createdAt', title: 'Создано' },
+        { key: 'createdAt', title: 'Дата создания' },
       ]"
     >
       <template #phone="{ item }">

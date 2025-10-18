@@ -1,12 +1,17 @@
 using System.Threading.Channels;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Promotions;
 using Beloyal.API.Shops;
 using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Bonuses;
 
-public class BonusContext(ApplicationDbContext dbContext)
+public class BonusContext(
+  ApplicationDbContext dbContext,
+  ShopContext shopContext,
+  PromotionContext promotionContext
+)
 {
   public static Channel<Guid> NewBonusChannel { get; } = Channel.CreateUnbounded<Guid>();
 
@@ -142,7 +147,20 @@ public class BonusContext(ApplicationDbContext dbContext)
     await ThrowIfBonusFrequencyExceeded(customer, agent.Shop.Company);
     await dbContext.Entry(agent).Reference(v => v.CompanyAccess).LoadAsync();
 
-    var cashbackPercent = agent.Shop.Company.CashbackPercent;
+    var shopPromotions = await shopContext.GetPromotions(
+      CompanyId.From(customer),
+      ShopId.From(agent)
+    );
+
+    var promotion = await promotionContext.GetAppliablePromotion(
+      customer,
+      agent.Shop.Company,
+      agent.Shop,
+      shopPromotions.Select(v => v.Promotion).ToList()
+    );
+
+    var cashbackPercent = promotion?.Variant.CashbackPercent ?? agent.Shop.Company.CashbackPercent;
+
     var cashbackThreshold = agent.Shop.Company.CashbackThreshold;
     var appliedBonus = income / 100 * cashbackPercent;
 
@@ -162,6 +180,7 @@ public class BonusContext(ApplicationDbContext dbContext)
       CashbackThreshold = cashbackThreshold,
       Status = scheduledAt is { } ? BonusStatus.Scheduled : BonusStatus.Done,
       ScheduledAt = scheduledAt,
+      Promotion = promotion is { } p ? BonusPromotion.From(p) : null,
     };
     dbContext.Add(bonus);
 

@@ -2,6 +2,7 @@ using Beloyal.API.Chats;
 using Beloyal.API.Customers;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
+using Beloyal.API.Promotions;
 using Beloyal.API.Shops;
 
 namespace Beloyal.API.Companies;
@@ -13,6 +14,7 @@ public class Company
 
   public required string Tin { get; set; }
   public required string Title { get; set; }
+  public required TimeZoneInfo TimeZone { get; set; }
 
   public required decimal CashbackPercent { get; set; }
   public required decimal CashbackThreshold { get; set; }
@@ -29,4 +31,5 @@ public class Company
   public List<Customer> Customers { get; set; } = [];
   public List<Mailing> Mailings { get; set; } = [];
   public List<Chat> Chats { get; set; } = [];
+  public List<Promotion> Promotions { get; set; } = [];
 }

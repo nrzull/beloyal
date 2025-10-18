@@ -90,7 +90,22 @@ export const router = createRouter({
         },
         {
           path: "promotions",
-          component: () => import("~/pages/promotions.vue"),
+          children: [
+            {
+              path: "new",
+              component: () => import("~/pages/promotions/new.vue"),
+            },
+
+            {
+              path: ":id",
+              component: () => import("~/pages/promotions/_id.vue"),
+            },
+
+            {
+              path: "",
+              component: () => import("~/pages/promotions.vue"),
+            },
+          ],
         },
         {
           path: "company-accesses",

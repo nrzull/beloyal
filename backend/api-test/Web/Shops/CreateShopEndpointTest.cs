@@ -13,7 +13,7 @@ public class CreateShopEndpointTest : TestLifetime
         var (_, access, _) = await CompanyFixture.Company(scope);
         var endpoint = scope.Get<CreateShopEndpoint>();
 
-        var result = await endpoint.Handle(access, new("qwe"));
+        var result = await endpoint.Handle(access, new("qwe", TimeZoneInfo.Local.Id));
         Assert.IsType<CreateShopResponse.Ok>(result);
 
         if (result is CreateShopResponse.Ok ok)

@@ -1,8 +1,11 @@
+using Beloyal.API.Web.Shops.AddPromotion;
 using Beloyal.API.Web.Shops.CreateShop;
 using Beloyal.API.Web.Shops.CreateShopAccess;
+using Beloyal.API.Web.Shops.GetPromotions;
 using Beloyal.API.Web.Shops.GetShop;
 using Beloyal.API.Web.Shops.GetShopAccesses;
 using Beloyal.API.Web.Shops.GetShops;
+using Beloyal.API.Web.Shops.RemovePromotion;
 using Beloyal.API.Web.Shops.RemoveShopAccess;
 using Beloyal.API.Web.Shops.UpdateShop;
 
@@ -19,5 +22,8 @@ public static class ShopsExtensions
     builder.Services.AddScoped<GetShopsEndpoint>();
     builder.Services.AddScoped<GetShopEndpoint>();
     builder.Services.AddScoped<GetShopAccessesEndpoint>();
+    builder.Services.AddScoped<GetPromotionsEndpoint>();
+    builder.Services.AddScoped<AddPromotionEndpoint>();
+    builder.Services.AddScoped<RemovePromotionEndpoint>();
   }
 }

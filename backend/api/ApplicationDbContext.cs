@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Bonuses;
@@ -7,6 +8,8 @@ using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
+using Beloyal.API.Promotions;
+using Beloyal.API.Promotions.Variants;
 using Beloyal.API.Seeds;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
@@ -34,6 +37,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<ChatMessage> ChatMessages { get; set; }
   public DbSet<Mailing> Mailings { get; set; }
   public DbSet<MailingUnit> MailingUnits { get; set; }
+  public DbSet<Promotion> Promotions { get; set; }
+  public DbSet<ShopPromotion> ShopPromotions { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -94,6 +99,9 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
       company.Property(v => v.Tin).HasMaxLength(12);
       company.HasIndex(v => v.Tin).IsUnique();
       company.OwnsOne(v => v.BonusFrequency);
+      company
+        .Property(v => v.TimeZone)
+        .HasConversion(v => v.Id, v => TimeZoneInfo.FindSystemTimeZoneById(v));
     });
 
     builder.Entity<CompanyAccess>(companyAccess =>
@@ -134,6 +142,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany(v => v.Shops)
         .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
+
+      shop.Property(v => v.TimeZone)
+        .HasConversion(
+          v => v == null ? null : v.Id,
+          v => v == null ? null : TimeZoneInfo.FindSystemTimeZoneById(v)
+        );
     });
 
     builder.Entity<ShopAccess>(shopAccess =>
@@ -204,6 +218,21 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
     {
       bonus.Property(v => v.Type).HasConversion<string>();
       bonus.Property(v => v.Status).HasConversion<string>();
+
+      bonus.OwnsOne(
+        v => v.Promotion,
+        (promotion) =>
+        {
+          promotion
+            .Property(v => v.Variant)
+            .HasConversion(
+              v =>
+                JsonSerializer.Serialize(v, BaseVariantJsonSerializerContext.Default.BaseVariant),
+              (v) =>
+                JsonSerializer.Deserialize(v, BaseVariantJsonSerializerContext.Default.BaseVariant)!
+            );
+        }
+      );
 
       bonus
         .HasOne(v => v.Customer)
@@ -290,6 +319,25 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey(v => v.Id);
 
       mailingUnit.Property(v => v.Status).HasConversion<string>();
+    });
+
+    builder.Entity<Promotion>(promotion =>
+    {
+      promotion
+        .HasOne(v => v.Company)
+        .WithMany(v => v.Promotions)
+        .HasForeignKey(v => v.CompanyId)
+        .HasPrincipalKey(v => v.Id);
+
+      promotion.HasMany(v => v.Shops).WithMany(v => v.Promotions).UsingEntity<ShopPromotion>();
+
+      promotion
+        .Property(v => v.Variant)
+        .HasConversion(
+          v => JsonSerializer.Serialize(v, BaseVariantJsonSerializerContext.Default.BaseVariant),
+          (v) =>
+            JsonSerializer.Deserialize(v, BaseVariantJsonSerializerContext.Default.BaseVariant)!
+        );
     });
   }
 

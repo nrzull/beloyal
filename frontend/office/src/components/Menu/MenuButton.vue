@@ -10,7 +10,7 @@ defineProps<{ label: string; active: boolean }>();
 
 <style module>
 .asideMenuItem {
-  padding: 12px 36px;
+  padding: 12px 0;
   cursor: pointer;
   font-size: 15px;
   color: #111;
