@@ -43,7 +43,7 @@ public class ChatsController : ControllerBase
     [FromServices] CreateMessageEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
     [FromRoute(Name = "id")] Guid chatId,
-    [FromBody] CreateMessageRequest req
+    [FromForm] CreateMessageRequest req
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), ChatId.From(chatId), req) switch
     {

@@ -20,9 +20,12 @@
       :route-fn="(v) => `/white-companies/${v.id}`"
     >
       <template #expiredAt="{ item }">
-        {{ formatDistanceStrictDate(new Date(), item.expiredAt) }} ({{
-          formatDate(item.expiredAt)
-        }})
+        {{
+          compareAsc(item.expiredAt, new Date()) === -1
+            ? "Исчерпан"
+            : formatDistanceStrictDate(new Date(), item.expiredAt)
+        }}
+        ({{ formatDate(item.expiredAt) }})
       </template>
     </Table>
   </Page>
@@ -35,6 +38,7 @@ import { ref } from "vue";
 import type { WhiteCompany } from "@beloyal/shared";
 import { Table, Button, Heading } from "@beloyal/shared";
 import { formatDistanceStrictDate, formatDate } from "@beloyal/shared";
+import { compareAsc } from "date-fns";
 
 const whiteCompanies = ref<WhiteCompany[]>([]);
 

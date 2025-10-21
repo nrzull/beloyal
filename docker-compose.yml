@@ -11,6 +11,14 @@ services:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  s3:
+    image: rustfs/rustfs:1.0.0-alpha.64
+    volumes:
+      - s3:/data
+    networks:
+      - common
+    ports:
+      - ${S3_PORT}:9000
 
 networks:
   common:
@@ -18,3 +26,4 @@ networks:
 
 volumes:
   postgres:
+  s3:

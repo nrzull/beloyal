@@ -43,6 +43,7 @@ public class Program
     builder.SetupHttp();
     builder.SetupCors();
     builder.SetupOpenApi();
+    builder.SetupS3();
     builder.Services.AddControllers();
 
     builder.Services.AddTransient<HubAuthMiddleware>();

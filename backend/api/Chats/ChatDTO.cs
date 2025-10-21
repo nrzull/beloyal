@@ -9,7 +9,7 @@ public record ChatDTO(Guid Id, string Name, ChatMessageDTO? PreviewMessage)
       PreviewMessage: new Func<ChatMessageDTO?>(() =>
       {
         var lastMessage = v.Messages?.FirstOrDefault();
-        return lastMessage is { } l ? ChatMessageDTO.From(l) : null;
+        return lastMessage is { } l ? ChatMessageDTO.From(l, null) : null;
       })()
     );
 };

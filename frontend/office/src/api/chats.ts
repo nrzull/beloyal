@@ -14,7 +14,16 @@ export const apiChatsGetAllMessages = (params: { chatId: string }) =>
 export const apiChatsCreateMessage = (params: {
   chatId: string;
   content: string;
-}) =>
-  apiClient
-    .post(`/api/company/chats/${params.chatId}/messages`, params)
+  attachments: File[];
+}) => {
+  const data = new FormData();
+  data.set("content", params.content);
+
+  for (const attachment of params.attachments) {
+    data.append("attachments", attachment);
+  }
+
+  return apiClient
+    .post(`/api/company/chats/${params.chatId}/messages`, data)
     .then((v) => v.data);
+};

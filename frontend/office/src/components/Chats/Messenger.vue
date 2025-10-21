@@ -84,7 +84,11 @@ const sendMessage = async (chat: Chat) => {
     wait.start(sendMessage);
 
     inputHistory.value.set(chat, { text: "", attachments: [] });
-    await apiChatsCreateMessage({ chatId: chat.id, content: input.text });
+    await apiChatsCreateMessage({
+      chatId: chat.id,
+      content: input.text,
+      attachments: input.attachments,
+    });
   } catch (e) {
     console.error(e);
 

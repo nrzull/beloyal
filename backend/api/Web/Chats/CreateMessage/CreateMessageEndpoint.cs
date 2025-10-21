@@ -19,8 +19,13 @@ public class CreateMessageEndpoint(ChatContext chatContext, ApplicationDbContext
       throw new Exception("invalid chat");
     }
 
-    var msg = await chatContext.CreateMessage(companyAccess, chat.Customer, req.Content);
-    await chatContext.SendMessage(msg);
+    var msg = await chatContext.CreateMessage(
+      companyAccess,
+      chat.Customer,
+      req.Content,
+      req.Attachments
+    );
+    await chatContext.SendMessage(msg, req.Attachments);
 
     await tc.CommitAsync();
 

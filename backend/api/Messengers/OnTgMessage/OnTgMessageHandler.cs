@@ -39,7 +39,7 @@ public class OnTgMessageHandler(
     {
       await chatContext.EnsureConversation(ok.Customer);
       var newMessage = await chatContext.CreateMessage(ok.Customer, text);
-      await chatContext.SendMessage(newMessage, toCustomer: false);
+      await chatContext.SendMessage(newMessage, [], toCustomer: false);
     }
   }
 
