@@ -1,6 +1,12 @@
 <template>
   <div :class="[$style.chatMessage, { [$style.owner]: isOwner }]">
     <div v-if="!isOwner" :class="$style.sender">{{ message.name }}</div>
+
+    <ChatAttachmentPreviews
+      v-if="message.attachments"
+      :links="message.attachments"
+    />
+
     <div :class="$style.content">{{ message.content }}</div>
     <div :class="$style.bottom">
       <div></div>
@@ -14,6 +20,7 @@
 <script setup lang="ts">
 import type { ChatMessage } from "@beloyal/shared";
 import { formatDate } from "@beloyal/shared";
+import ChatAttachmentPreviews from "~/components/Chats/Messenger/ChatAttachmentPreviews.vue";
 
 defineProps<{ message: ChatMessage; isOwner: boolean }>();
 </script>

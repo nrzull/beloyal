@@ -1,16 +1,10 @@
 <template>
-  <div :class="$style.previews">
-    <img
-      v-for="img in processedFiles"
-      :key="img.preview"
-      :src="img.preview"
-      :class="$style.preview"
-    />
-  </div>
+  <ChatAttachmentPreviews :links="processedFiles.map((v) => v.preview)" />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import ChatAttachmentPreviews from "~/components/Chats/Messenger/ChatAttachmentPreviews.vue";
 
 defineProps<{ loading: boolean }>();
 
@@ -43,23 +37,3 @@ watch(
   { deep: true, immediate: true }
 );
 </script>
-
-<style module>
-.previews {
-  overflow-x: auto;
-  display: flex;
-  gap: 4px;
-  padding-bottom: 4px;
-}
-
-.preview {
-  max-height: 128px;
-  max-width: 128px;
-  object-fit: contain;
-  border: 1px solid transparent;
-  background-color: #fafafa;
-  padding: 4px;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-</style>
