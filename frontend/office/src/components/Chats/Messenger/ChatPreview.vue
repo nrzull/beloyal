@@ -9,7 +9,9 @@
 
     <div v-if="lastMessage" :class="$style.content">
       <span v-if="isYourLastMessage">Вы:</span>
-      {{ lastMessage.content }}
+      <span :class="{ [$style.attachment]: isAttachment }">{{
+        isAttachment ? "Файл" : lastMessage.content || " "
+      }}</span>
     </div>
   </div>
 </template>
@@ -30,6 +32,10 @@ const { messages, chat } = defineProps<{
 const lastMessage = computed(() => messages[0] || chat.previewMessage);
 const isYourLastMessage = computed(
   () => self.value?.companyAccess?.id === lastMessage?.value?.agentId
+);
+
+const isAttachment = computed(
+  () => !lastMessage.value.content && lastMessage.value.attachments?.length
 );
 </script>
 
@@ -77,5 +83,9 @@ const isYourLastMessage = computed(
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.attachment {
+  font-style: italic;
 }
 </style>

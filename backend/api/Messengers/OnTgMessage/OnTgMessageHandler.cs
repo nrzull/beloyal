@@ -27,18 +27,36 @@ public class OnTgMessageHandler(
     {
       return;
     }
-    else if (msg.Text is not string { } text)
-    {
-      return;
-    }
-    else if (text.Contains("/start"))
+    else if (msg.Text == "/start")
     {
       await OnCustomerStart(ok);
     }
     else
     {
+      var fileId =
+        msg.Photo?.OrderByDescending(v => v.FileSize).FirstOrDefault()?.FileId
+        ?? msg.Document?.FileId;
+
+      var mimetype = msg.Photo?.OrderByDescending(v => v.FileSize).FirstOrDefault() is { }
+        ? "image/jpeg"
+        : msg.Document?.MimeType ?? "application/octet-stream";
+
+      var msgText = msg.Text ?? msg.Caption ?? "";
+
+      FileStream? fileStream = null;
+      if (fileId is string { Length: > 0 } fid)
+      {
+        fileStream = new FileStream(path: Path.GetTempFileName(), mode: FileMode.OpenOrCreate);
+
+        var file = await client.GetInfoAndDownloadFile(fileId, fileStream);
+      }
+
       await chatContext.EnsureConversation(ok.Customer);
-      var newMessage = await chatContext.CreateMessage(ok.Customer, text);
+      var newMessage = await chatContext.CreateMessage(
+        ok.Customer,
+        msgText,
+        fileStream is { } ? [new ChatFileStream(mimetype, fileStream)] : null
+      );
       await chatContext.SendMessage(newMessage, [], toCustomer: false);
     }
   }

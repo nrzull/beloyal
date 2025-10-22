@@ -169,7 +169,11 @@ public class ChatContext(
       .SendAsync("ChatMessage", ChatMessageDTO.From(msg, s3Client));
   }
 
-  public async Task<ChatMessage> CreateMessage(Customer customer, string content)
+  public async Task<ChatMessage> CreateMessage(
+    Customer customer,
+    string content,
+    List<ChatFileStream>? attachments
+  )
   {
     var chat = await EnsureConversation(customer);
 
@@ -181,6 +185,7 @@ public class ChatContext(
     };
     dbContext.Add(message);
     await dbContext.SaveChangesAsync();
+    await UploadAttachments(message, attachments);
 
     return message;
   }
@@ -217,7 +222,7 @@ public class ChatContext(
     return message;
   }
 
-  public async Task UploadAttachments(ChatMessage message, List<IFormFile>? attachments = null)
+  public async Task UploadAttachments(ChatMessage message, List<ChatFileStream>? attachments = null)
   {
     if (attachments is { Count: > 0 })
     {
@@ -235,8 +240,8 @@ public class ChatContext(
         {
           Key = Guid.NewGuid().ToString(),
           BucketName = bucketName,
-          ContentType = attachment.ContentType,
-          InputStream = attachment.OpenReadStream(),
+          ContentType = attachment.MimeType,
+          InputStream = attachment.Stream,
         };
 
         await s3Client.PutObjectAsync(req);
@@ -265,7 +270,10 @@ public class ChatContext(
 
     dbContext.Add(message);
     await dbContext.SaveChangesAsync();
-    await UploadAttachments(message, attachments);
+    await UploadAttachments(
+      message,
+      attachments?.Select(v => new ChatFileStream(v.ContentType, v.OpenReadStream())).ToList()
+    );
 
     return message;
   }

@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.previews">
-    <img v-for="img in links" :key="img" :src="img" :class="$style.preview" />
+    <a v-for="img in links" :key="img" target="_blank" :href="img">
+      <img :src="img" :class="$style.preview" />
+    </a>
   </div>
 </template>
 
