@@ -39,7 +39,12 @@ const expanded = ref<Map<MenuGroupItem, boolean>>(new Map());
 const hasActiveChild = (v: MenuGroupItem) =>
   v.children.some((child) => {
     const resolved = router.resolve(child.route);
-    return resolved && route.path.startsWith(resolved.path);
+    const currentResolved = router.resolve(route);
+
+    return resolved.matched.some((v) => {
+      const r = router.resolve(v);
+      return r.path == currentResolved.path;
+    });
   });
 
 const syncWithRoutes = () =>
