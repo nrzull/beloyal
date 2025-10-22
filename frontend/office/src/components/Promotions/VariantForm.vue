@@ -7,6 +7,7 @@ import ExactCountVariantForm from "~/components/Promotions/ExactCountVariantForm
 import DatePeriodVariantForm from "~/components/Promotions/DatePeriodVariantForm.vue";
 import TimePeriodVariantForm from "~/components/Promotions/TimePeriodVariantForm.vue";
 import DateTimePeriodVariantForm from "~/components/Promotions/DateTimePeriodVariantForm.vue";
+import OperationsInactivityVariantForm from "~/components/Promotions/OperationsInactivityVariantForm.vue";
 import { switchGuard, type PromotionVariant } from "@beloyal/shared";
 import { computed } from "vue";
 
@@ -25,6 +26,9 @@ const computedComponent = computed(() => {
 
     case "TimePeriodVariant":
       return TimePeriodVariantForm;
+
+    case "OperationsInactivityVariant":
+      return OperationsInactivityVariantForm;
 
     default:
       throw switchGuard(model.value);

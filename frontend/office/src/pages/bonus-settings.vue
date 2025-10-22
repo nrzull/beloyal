@@ -61,11 +61,17 @@
 
             <template #header-extra>
               <Button
-                v-if="!scheduling"
+                v-if="!bonusOptions.bonusScheduling"
                 type="primary"
                 ghost
                 size="small"
-                @click="scheduling = newScheduling()"
+                @click="
+                  bonusOptions.bonusScheduling = serialize({
+                    days: 0,
+                    hours: 1,
+                    minutes: 0,
+                  })
+                "
               >
                 Добавить
               </Button>
@@ -74,53 +80,16 @@
                 type="error"
                 ghost
                 size="small"
-                @click="scheduling = null"
+                @click="bonusOptions.bonusScheduling = null"
               >
                 Удалить
               </Button>
             </template>
 
-            <Space v-if="scheduling" vertical :size="[0, 16]">
-              <Space vertical>
-                <div>Дней</div>
-                <NInputNumber
-                  size="large"
-                  :min="0"
-                  :precision="0"
-                  placeholder="Укажите число"
-                  :value="scheduling.days"
-                  @update:value="scheduling = { ...scheduling, days: $event! }"
-                />
-              </Space>
-
-              <Space vertical>
-                <div>Часов</div>
-                <NInputNumber
-                  size="large"
-                  :min="0"
-                  :max="23"
-                  :precision="0"
-                  placeholder="Укажите число"
-                  :value="scheduling.hours"
-                  @update:value="scheduling = { ...scheduling, hours: $event! }"
-                />
-              </Space>
-
-              <Space vertical>
-                <div>Минут</div>
-                <NInputNumber
-                  size="large"
-                  :min="0"
-                  :max="59"
-                  :precision="0"
-                  placeholder="Укажите число"
-                  :value="scheduling.minutes"
-                  @update:value="
-                    scheduling = { ...scheduling, minutes: $event! }
-                  "
-                />
-              </Space>
-            </Space>
+            <DurationForm
+              v-if="bonusOptions.bonusScheduling"
+              v-model="bonusOptions.bonusScheduling"
+            />
           </NThing>
         </Card>
 
@@ -130,7 +99,7 @@
               <Space vertical :size="[0, 2]">
                 <Heading>Лимит операций (антифрод)</Heading>
                 <Subheading type="notice"
-                  >Клиент сможет совершить
+                  >Пример: клиент сможет совершить
                   {{ bonusOptions.bonusFrequencyCount }} операций в течение
                   {{ bonusOptions.bonusFrequencyInDays }} дней</Subheading
                 >
@@ -187,23 +156,11 @@ import {
   apiCompanySetBonusOptions,
 } from "~/api/company";
 import { NInputNumber, NThing } from "naive-ui";
-import { parse, serialize, type Duration } from "tinyduration";
 import CashbackPercentInput from "~/components/CashbackPercentInput.vue";
+import DurationForm from "~/components/DurationForm.vue";
+import { serialize } from "tinyduration";
 
 const bonusOptions = ref<CompanyBonusOptions>();
-
-const scheduling = computed({
-  get: () =>
-    bonusOptions.value?.bonusScheduling
-      ? parse(bonusOptions.value.bonusScheduling)
-      : null,
-
-  set: (v) => {
-    bonusOptions.value!.bonusScheduling = v ? serialize(v) : null;
-  },
-});
-
-const newScheduling = (): Duration => ({ days: 0, hours: 1, minutes: 0 });
 
 const isLoading = computed(() => wait.some([setBonusOptions]));
 

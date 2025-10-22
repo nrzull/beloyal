@@ -1,3 +1,4 @@
+using System.Xml;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Promotions.Variants;
@@ -69,6 +70,7 @@ public class PromotionContext(ApplicationDbContext dbContext)
         DatePeriodVariant v when Check(tz, v) => true,
         TimePeriodVariant v when Check(tz, v) => true,
         DateTimePeriodVariant v when Check(tz, v) => true,
+        OperationsInactivityVariant v when await Check(CustomerId.From(customer), v) => true,
         _ => false,
       };
 
@@ -158,5 +160,25 @@ public class PromotionContext(ApplicationDbContext dbContext)
     );
 
     return from <= now && to >= now;
+  }
+
+  async Task<bool> Check(CustomerId customerId, OperationsInactivityVariant variant)
+  {
+    var latest = await dbContext
+      .Bonuses.Where(v =>
+        v.CustomerId == customerId.Value
+        && v.Status != Bonuses.BonusStatus.Cancelled
+        && (v.Type == Bonuses.BonusType.AddBonus || v.Type == Bonuses.BonusType.SubtractBonus)
+      )
+      .OrderByDescending(v => v.CreatedAt)
+      .FirstOrDefaultAsync();
+
+    if (latest is null)
+    {
+      return true;
+    }
+
+    var diff = DateTimeOffset.UtcNow - latest.CreatedAt;
+    return diff > XmlConvert.ToTimeSpan(variant.Period);
   }
 }

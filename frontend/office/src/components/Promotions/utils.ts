@@ -4,7 +4,9 @@ import type {
   TimePeriodVariant,
   DateTimePeriodVariant,
   PromotionVariant,
+  OperationsInactivityVariant,
 } from "@beloyal/shared";
+import { serialize } from "tinyduration";
 
 export const newExactCountVariant = (): ExactCountVariant => ({
   $type: "ExactCountVariant",
@@ -33,6 +35,13 @@ export const newDateTimePeriodVariant = (): DateTimePeriodVariant => ({
   to: null,
 });
 
+export const newOperationsInactivityVariant =
+  (): OperationsInactivityVariant => ({
+    $type: "OperationsInactivityVariant",
+    cashbackPercent: 1,
+    period: serialize({ days: 1, hours: 0, minutes: 0 }),
+  });
+
 export const translatePromotionVariantType: Record<
   PromotionVariant["$type"],
   string
@@ -41,4 +50,5 @@ export const translatePromotionVariantType: Record<
   DateTimePeriodVariant: "Время и дата акции",
   ExactCountVariant: "Операция по счету",
   TimePeriodVariant: "Время акции",
+  OperationsInactivityVariant: "Период неактивности",
 };

@@ -34,6 +34,7 @@ import {
   newDatePeriodVariant,
   newDateTimePeriodVariant,
   newExactCountVariant,
+  newOperationsInactivityVariant,
   newTimePeriodVariant,
   translatePromotionVariantType,
 } from "~/components/Promotions/utils";
@@ -47,6 +48,7 @@ const options = [
   newDatePeriodVariant(),
   newDateTimePeriodVariant(),
   newTimePeriodVariant(),
+  newOperationsInactivityVariant(),
 ];
 
 const promotion = defineModel<PartialPromotion>({ required: true });

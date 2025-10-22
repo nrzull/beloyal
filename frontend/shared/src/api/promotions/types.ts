@@ -9,7 +9,14 @@ export type PromotionVariant =
   | ExactCountVariant
   | DatePeriodVariant
   | DateTimePeriodVariant
-  | TimePeriodVariant;
+  | TimePeriodVariant
+  | OperationsInactivityVariant;
+
+export type OperationsInactivityVariant = {
+  $type: "OperationsInactivityVariant";
+  period: string;
+  cashbackPercent: number;
+};
 
 export type ExactCountVariant = {
   $type: "ExactCountVariant";
