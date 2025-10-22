@@ -31,16 +31,24 @@ public record ChatMessageDTO(
         : v.CompanyId is { } ? "Компания"
         : "Неизвестно",
       MailingUnitId: v.MailingUnitId,
-      Attachments: s3Client is { } && v.AttachmentKeys is { Count: > 0 }
+      Attachments: s3Client is { }
         ? new Func<List<string>>(() =>
         {
           List<string> result = [];
 
-          foreach (var key in v.AttachmentKeys)
+          var bucketName = v.MailingUnitId is { }
+            ? v.MailingUnit!.MailingId.ToString()
+            : v.Id.ToString();
+
+          var keys = v.MailingUnitId is { }
+            ? v.MailingUnit!.Mailing.AttachmentKeys
+            : v.AttachmentKeys;
+
+          foreach (var key in keys ?? [])
           {
             var request = new GetPreSignedUrlRequest
             {
-              BucketName = v.Id.ToString(),
+              BucketName = bucketName,
               Key = key,
               Verb = HttpVerb.GET,
               Expires = DateTime.UtcNow.AddMonths(1),

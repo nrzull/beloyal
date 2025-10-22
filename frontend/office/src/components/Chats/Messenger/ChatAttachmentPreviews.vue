@@ -82,7 +82,6 @@ const tryOpen = (v: string) => {
 .wrapper {
   display: flex;
   flex-flow: column;
-  flex-grow: 1;
   gap: 8px;
   min-height: 128px;
 }

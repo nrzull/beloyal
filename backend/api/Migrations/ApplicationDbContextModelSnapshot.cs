@@ -507,6 +507,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.PrimitiveCollection<List<string>>("AttachmentKeys")
+                        .HasColumnType("text[]")
+                        .HasColumnName("attachment_keys");
+
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid")
                         .HasColumnName("company_id");

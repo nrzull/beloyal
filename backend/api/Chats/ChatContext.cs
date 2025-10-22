@@ -70,6 +70,9 @@ public class ChatContext(
       .Include(v => v.Messages)
       .ThenInclude(v => v.Agent)
       .ThenInclude(v => v!.User)
+      .Include(v => v.Messages)
+      .ThenInclude(v => v.MailingUnit)
+      .ThenInclude(v => v!.Mailing)
       .Include(v => v.Customer)
       .ThenInclude(v => v.User)
       .AsSplitQuery()
@@ -94,8 +97,9 @@ public class ChatContext(
 
   public async Task SendMessage(
     ChatMessage msg,
-    List<IFormFile>? attachments,
-    bool toCustomer = true
+    List<ChatFileStream>? attachments,
+    bool toCustomer = true,
+    bool closeFileStream = true
   )
   {
     await dbContext.Entry(msg).Reference(v => v.Chat).LoadAsync();
@@ -118,21 +122,17 @@ public class ChatContext(
 
       await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
 
-      List<Stream> streams = [];
       try
       {
         if (attachments is { Count: > 0 })
         {
-          var imagesOnly = attachments.All(v => v.ContentType.StartsWith("image/"));
+          var imagesOnly = attachments.All(v => v.MimeType.StartsWith("image/"));
 
           List<IAlbumInputMedia> media = new();
 
           foreach (var (idx, file) in attachments.Index())
           {
-            var stream = file.OpenReadStream();
-            streams.Add(stream);
-
-            var inputFile = new InputFileStream(stream, file.FileName);
+            var inputFile = new InputFileStream(file.Stream, file.Title);
 
             media.Add(
               imagesOnly ? new InputMediaPhoto(inputFile) : new InputMediaDocument(inputFile)
@@ -157,9 +157,12 @@ public class ChatContext(
       }
       finally
       {
-        foreach (var item in streams)
+        if (closeFileStream)
         {
-          await item.DisposeAsync();
+          foreach (var attachment in attachments ?? [])
+          {
+            await attachment.Stream.DisposeAsync();
+          }
         }
       }
     }
@@ -272,7 +275,9 @@ public class ChatContext(
     await dbContext.SaveChangesAsync();
     await UploadAttachments(
       message,
-      attachments?.Select(v => new ChatFileStream(v.ContentType, v.OpenReadStream())).ToList()
+      attachments
+        ?.Select(v => new ChatFileStream(v.ContentType, v.FileName, v.OpenReadStream()))
+        .ToList()
     );
 
     return message;
@@ -286,6 +291,8 @@ public class ChatContext(
       .ThenInclude(v => v!.User)
       .Include(v => v.Customer)
       .ThenInclude(v => v!.User)
+      .Include(v => v.MailingUnit)
+      .ThenInclude(v => v!.Mailing)
       .OrderByDescending(v => v.CreatedAt)
       .ToListAsync();
 }

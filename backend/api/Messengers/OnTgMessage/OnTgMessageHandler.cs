@@ -55,7 +55,7 @@ public class OnTgMessageHandler(
       var newMessage = await chatContext.CreateMessage(
         ok.Customer,
         msgText,
-        fileStream is { } ? [new ChatFileStream(mimetype, fileStream)] : null
+        fileStream is { } ? [new ChatFileStream(mimetype, fileId!, fileStream)] : null
       );
       await chatContext.SendMessage(newMessage, [], toCustomer: false);
     }

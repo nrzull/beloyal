@@ -28,7 +28,7 @@ public class MailingsController : ControllerBase
   public async Task<Results<Ok<CreateMailingResponse.Ok>, BadRequest>> CreateMailing(
     [FromServices] CreateMailingEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
-    [FromBody] CreateMailingRequest req
+    [FromForm] CreateMailingRequest req
   ) =>
     await endpoint.Handle(companyAccess.Ensure(), req) switch
     {

@@ -30,10 +30,10 @@
         value-field="id"
         :options="shops"
       />
-      <Input type="textarea" placeholder="Текст" v-model:value="text" />
-      <Button :disabled="isLoading" type="primary" @click="createMailing">
-        Создать рассылку
-      </Button>
+
+      <Card with-border :with-shadow="false" :with-padding="false">
+        <ChatInput :loading="isLoading" v-model="model" @send="createMailing" />
+      </Card>
     </Card>
   </Page>
 </template>
@@ -41,9 +41,11 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { NBreadcrumb, NBreadcrumbItem, NSelect, NSwitch } from "naive-ui";
-import { Input, Card, Button } from "@beloyal/shared";
+import { Card } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
+import ChatInput from "~/components/Chats/Messenger/ChatInput.vue";
+import type { ChatInput as TChatInput } from "~/components/Chats/Messenger/types";
 
 import { apiShopsGetAll } from "~/api/shops";
 import type { Shop } from "@beloyal/shared";
@@ -55,7 +57,7 @@ const router = useRouter();
 const withShops = ref(true);
 const shops = ref<Shop[]>([]);
 const selectedShopIds = ref<string[]>([]);
-const text = ref<string>();
+const model = ref<TChatInput>({ text: "", attachments: [] });
 
 const isLoading = computed(() => wait.some([createMailing]));
 
@@ -66,7 +68,7 @@ const createMailing = async () => {
     return;
   }
 
-  if (!text.value) {
+  if (!model.value.text && !model.value.attachments?.length) {
     return;
   }
 
@@ -74,7 +76,8 @@ const createMailing = async () => {
     wait.start(createMailing);
 
     await apiMailingsCreate({
-      text: text.value,
+      content: model.value.text,
+      attachments: model.value.attachments,
       shopIds: selectedShopIds.value,
       withShops: withShops.value,
     });

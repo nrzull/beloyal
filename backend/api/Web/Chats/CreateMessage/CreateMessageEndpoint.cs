@@ -25,7 +25,15 @@ public class CreateMessageEndpoint(ChatContext chatContext, ApplicationDbContext
       req.Content,
       req.Attachments
     );
-    await chatContext.SendMessage(msg, req.Attachments);
+    await chatContext.SendMessage(
+      msg,
+      req.Attachments?.Select(v => new ChatFileStream(
+          v.ContentType,
+          v.FileName,
+          v.OpenReadStream()
+        ))
+        .ToList()
+    );
 
     await tc.CommitAsync();
 

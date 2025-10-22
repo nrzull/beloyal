@@ -8,6 +8,7 @@ public class Mailing
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public required string Content { get; set; }
+  public List<string>? AttachmentKeys { get; set; }
 
   public Guid CompanyId { get; set; }
   public required Company Company { get; set; }
