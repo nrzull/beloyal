@@ -1,75 +1,77 @@
 <template>
-  <div class="v-space-24">
-    <div :class="$style.top">
-      <slot name="tabs"></slot>
-      <Button type="primary" @click="addShopPromotionModal = true">
-        Настроить акции
-      </Button>
+  <div>
+    <div class="v-space-24">
+      <div :class="$style.top">
+        <slot name="tabs"></slot>
+        <Button type="primary" @click="addShopPromotionModal = true">
+          Настроить акции
+        </Button>
+      </div>
+
+      <Table
+        :data="shopPromotions"
+        :loading="isLoading"
+        :columns="[
+          { key: 'title', title: 'Название' },
+          { key: 'variant', title: 'Тип' },
+          { key: 'cashbackPercent', title: 'Кэшбэк' },
+          { key: 'createdAt', title: 'Дата создания' },
+        ]"
+        :route-fn="(v) => `/promotions/${v.promotion.id}`"
+      >
+        <template #title="{ item }">
+          {{ item.promotion.title }}
+        </template>
+
+        <template #variant="{ item }">
+          {{ translatePromotionVariantType[item.promotion.variant.$type] }}
+        </template>
+
+        <template #cashbackPercent="{ item }">
+          {{ item.promotion.variant.cashbackPercent }}%
+        </template>
+
+        <template #createdAt="{ item }">
+          {{ formatDate(item.createdAt) }}
+        </template>
+      </Table>
     </div>
 
-    <Table
-      :data="shopPromotions"
-      :loading="isLoading"
-      :columns="[
-        { key: 'title', title: 'Название' },
-        { key: 'variant', title: 'Тип' },
-        { key: 'cashbackPercent', title: 'Кэшбэк' },
-        { key: 'createdAt', title: 'Дата создания' },
-      ]"
-      :route-fn="(v) => `/promotions/${v.promotion.id}`"
+    <NModal
+      :class="$style.modal"
+      v-model:show="addShopPromotionModal"
+      preset="card"
     >
-      <template #title="{ item }">
-        {{ item.promotion.title }}
-      </template>
+      <template #header>Настроить акции</template>
 
-      <template #variant="{ item }">
-        {{ translatePromotionVariantType[item.promotion.variant.$type] }}
-      </template>
+      <Table
+        clickable
+        :card="{ withPadding: false, withShadow: false }"
+        :data="availablePromotions"
+        :selected-fn="
+          (v) => shopPromotions.some((vv) => vv.promotion.id === v.id)
+        "
+        @row="toggleShopPromotion"
+        :columns="[
+          { key: 'title', title: 'Название' },
+          { key: 'variant', title: 'Тип' },
+          { key: 'cashbackPercent', title: 'Кэшбэк' },
+        ]"
+      >
+        <template #title="{ item }">
+          {{ item.title }}
+        </template>
 
-      <template #cashbackPercent="{ item }">
-        {{ item.promotion.variant.cashbackPercent }}%
-      </template>
+        <template #variant="{ item }">
+          {{ translatePromotionVariantType[item.variant.$type] }}
+        </template>
 
-      <template #createdAt="{ item }">
-        {{ formatDate(item.createdAt) }}
-      </template>
-    </Table>
+        <template #cashbackPercent="{ item }">
+          {{ item.variant.cashbackPercent }}%
+        </template>
+      </Table>
+    </NModal>
   </div>
-
-  <NModal
-    :class="$style.modal"
-    v-model:show="addShopPromotionModal"
-    preset="card"
-  >
-    <template #header>Настроить акции</template>
-
-    <Table
-      clickable
-      :card="{ withPadding: false, withShadow: false }"
-      :data="availablePromotions"
-      :selected-fn="
-        (v) => shopPromotions.some((vv) => vv.promotion.id === v.id)
-      "
-      @row="toggleShopPromotion"
-      :columns="[
-        { key: 'title', title: 'Название' },
-        { key: 'variant', title: 'Тип' },
-        { key: 'cashbackPercent', title: 'Кэшбэк' },
-      ]"
-    >
-      <template #title="{ item }">
-        {{ item.title }}
-      </template>
-
-      <template #variant="{ item }">
-        {{ translatePromotionVariantType[item.variant.$type] }}
-      </template>
-
-      <template #cashbackPercent="{ item }">
-        {{ item.variant.cashbackPercent }}%
-      </template>
-    </Table>
-  </NModal>
 </template>
 
 <script setup lang="ts">

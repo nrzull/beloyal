@@ -38,12 +38,12 @@ const expanded = ref<Map<MenuGroupItem, boolean>>(new Map());
 
 const hasActiveChild = (v: MenuGroupItem) =>
   v.children.some((child) => {
-    const resolved = router.resolve(child.route);
-    const currentResolved = router.resolve(route);
+    const childRoute = router.resolve(child.route);
+    const activeRoute = router.resolve(route);
 
-    return resolved.matched.some((v) => {
+    return activeRoute.matched.some((v) => {
       const r = router.resolve(v);
-      return r.path == currentResolved.path;
+      return r.path == childRoute.path;
     });
   });
 

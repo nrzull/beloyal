@@ -1,64 +1,70 @@
 <template>
-  <div class="v-space-24">
-    <div :class="$style.top">
-      <slot name="tabs"></slot>
-      <Button type="primary" @click="addShopAccessModal = true">
-        Назначить сотрудника
-      </Button>
+  <div>
+    <div class="v-space-24">
+      <div :class="$style.top">
+        <slot name="tabs"></slot>
+        <Button type="primary" @click="addShopAccessModal = true">
+          Назначить сотрудника
+        </Button>
+      </div>
+
+      <Table
+        :data="shopAccesses"
+        :columns="[
+          { key: 'phone', title: 'Номер телефона' },
+          { key: 'name', title: 'Имя' },
+          { key: 'createdAt', title: 'Дата создания' },
+        ]"
+      >
+        <template #phone="{ item }">
+          {{ maskPhone(item.phone) }}
+        </template>
+
+        <template #name="{ item }">
+          {{ buildFullName(item) }}
+        </template>
+
+        <template #createdAt="{ item }">
+          {{ formatDate(item.createdAt) }}
+        </template>
+      </Table>
     </div>
 
-    <Table
-      :data="shopAccesses"
-      :columns="[
-        { key: 'phone', title: 'Номер телефона' },
-        { key: 'name', title: 'Имя' },
-        { key: 'createdAt', title: 'Дата создания' },
-      ]"
+    <NModal
+      :class="$style.modal"
+      v-model:show="addShopAccessModal"
+      preset="card"
     >
-      <template #phone="{ item }">
-        {{ maskPhone(item.phone) }}
-      </template>
+      <template #header>Назначить сотрудника</template>
 
-      <template #name="{ item }">
-        {{ buildFullName(item) }}
-      </template>
+      <Table
+        clickable
+        :card="{ withPadding: false, withShadow: false }"
+        :data="availableCompanyAccesses"
+        :selected-fn="
+          (v) => shopAccesses.some((vv) => vv.companyAccessId === v.id)
+        "
+        @row="toggleShopAccess"
+        :columns="[
+          { key: 'phone', title: 'Номер телефона' },
+          { key: 'name', title: 'Имя' },
+          { key: 'role', title: 'Роль' },
+        ]"
+      >
+        <template #phone="{ item }">
+          {{ maskPhone(item.user?.phone) }}
+        </template>
 
-      <template #createdAt="{ item }">
-        {{ formatDate(item.createdAt) }}
-      </template>
-    </Table>
+        <template #name="{ item }">
+          {{ buildFullName(item) }}
+        </template>
+
+        <template #role="{ item }">
+          {{ item.role?.name }}
+        </template>
+      </Table>
+    </NModal>
   </div>
-
-  <NModal :class="$style.modal" v-model:show="addShopAccessModal" preset="card">
-    <template #header>Назначить сотрудника</template>
-
-    <Table
-      clickable
-      :card="{ withPadding: false, withShadow: false }"
-      :data="availableCompanyAccesses"
-      :selected-fn="
-        (v) => shopAccesses.some((vv) => vv.companyAccessId === v.id)
-      "
-      @row="toggleShopAccess"
-      :columns="[
-        { key: 'phone', title: 'Номер телефона' },
-        { key: 'name', title: 'Имя' },
-        { key: 'role', title: 'Роль' },
-      ]"
-    >
-      <template #phone="{ item }">
-        {{ maskPhone(item.user?.phone) }}
-      </template>
-
-      <template #name="{ item }">
-        {{ buildFullName(item) }}
-      </template>
-
-      <template #role="{ item }">
-        {{ item.role?.name }}
-      </template>
-    </Table>
-  </NModal>
 </template>
 
 <script setup lang="ts">

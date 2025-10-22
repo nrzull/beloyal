@@ -47,6 +47,7 @@ import {
   permissionTitles,
   permissionGroupTitles,
 } from "~/components/RoleForm/utils";
+import { Heading } from "@beloyal/shared";
 
 const { availablePermissions } = defineProps<{
   availablePermissions: string[];
