@@ -4,7 +4,7 @@
 
     <ChatAttachmentPreviews
       v-if="message.attachments"
-      :links="message.attachments"
+      :links="message.attachments.map((v) => ({ link: v, title: 'Файл' }))"
     />
 
     <div :class="$style.content">{{ message.content }}</div>

@@ -1,5 +1,9 @@
 <template>
-  <ChatAttachmentPreviews :links="processedFiles.map((v) => v.preview)" />
+  <ChatAttachmentPreviews
+    :links="
+      processedFiles.map((v) => ({ link: v.preview, title: v.file.name }))
+    "
+  />
 </template>
 
 <script setup lang="ts">

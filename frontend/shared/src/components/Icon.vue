@@ -27,6 +27,7 @@ import paymentCard from "./Icon/assets/paymentCard.svg?raw";
 import cancel from "./Icon/assets/cancel.svg?raw";
 import edit from "./Icon/assets/edit.svg?raw";
 import attach from "./Icon/assets/attach.svg?raw";
+import file from "./Icon/assets/file.svg?raw";
 
 const icons = {
   user,
@@ -50,6 +51,7 @@ const icons = {
   fire,
   edit,
   attach,
+  file,
 } as const;
 
 export type IconVariant = keyof typeof icons;

@@ -43,7 +43,7 @@ public record ChatMessageDTO(
               BucketName = v.Id.ToString(),
               Key = key,
               Verb = HttpVerb.GET,
-              Expires = DateTime.UtcNow.AddMinutes(5),
+              Expires = DateTime.UtcNow.AddMonths(1),
             };
 
             result.Add(s3Client.GetPreSignedURL(request));
