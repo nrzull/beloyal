@@ -76,7 +76,7 @@ public class MailingContext(
     unit.Status = MailingUnitStatus.Done;
 
     var msg = await chatContext.CreateMessage(unit, customer, unit.Mailing.Content);
-    await chatContext.SendMessage(msg);
+    await chatContext.SendMessage(msg, []);
 
     await dbContext.SaveChangesAsync();
     await tc.CommitAsync();

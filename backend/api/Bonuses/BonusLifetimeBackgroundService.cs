@@ -58,7 +58,7 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
             "Важное уведомление: завтра сгорят все бонусы."
           );
 
-          await chatContext.SendMessage(msg);
+          await chatContext.SendMessage(msg, []);
         }
 
         if (deadline < now)

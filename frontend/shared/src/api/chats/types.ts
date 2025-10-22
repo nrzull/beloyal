@@ -10,4 +10,5 @@ export type ChatMessage = {
   createdAt: string;
   chatId: string;
   mailingUnitId?: string;
+  attachments?: string[];
 };

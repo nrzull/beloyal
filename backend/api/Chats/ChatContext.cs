@@ -1,3 +1,5 @@
+using Amazon.S3;
+using Amazon.S3.Model;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Mailings;
@@ -5,13 +7,15 @@ using Beloyal.API.Messengers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 
 namespace Beloyal.API.Chats;
 
 public class ChatContext(
   ApplicationDbContext dbContext,
   IHubContext<ApplicationHub> appHub,
-  TgContext tgContext
+  TgContext tgContext,
+  AmazonS3Client s3Client
 )
 {
   public async Task<Chat?> GetChat(CustomerId customerId) =>
@@ -88,7 +92,11 @@ public class ChatContext(
     return chat;
   }
 
-  public async Task SendMessage(ChatMessage msg, bool toCustomer = true)
+  public async Task SendMessage(
+    ChatMessage msg,
+    List<IFormFile>? attachments,
+    bool toCustomer = true
+  )
   {
     await dbContext.Entry(msg).Reference(v => v.Chat).LoadAsync();
     await dbContext.Entry(msg.Chat).Reference(v => v.Customer).LoadAsync();
@@ -109,15 +117,63 @@ public class ChatContext(
       }
 
       await dbContext.Entry(customer).Reference(v => v.User).LoadAsync();
-      await client.SendMessage(customer.User.TgUserId!, msg.Content!);
+
+      List<Stream> streams = [];
+      try
+      {
+        if (attachments is { Count: > 0 })
+        {
+          var imagesOnly = attachments.All(v => v.ContentType.StartsWith("image/"));
+
+          List<IAlbumInputMedia> media = new();
+
+          foreach (var (idx, file) in attachments.Index())
+          {
+            var stream = file.OpenReadStream();
+            streams.Add(stream);
+
+            var inputFile = new InputFileStream(stream, file.FileName);
+
+            media.Add(
+              imagesOnly ? new InputMediaPhoto(inputFile) : new InputMediaDocument(inputFile)
+            );
+          }
+
+          if (media.FirstOrDefault() is InputMediaPhoto l)
+          {
+            l.Caption = msg.Content!;
+          }
+          else if (media.LastOrDefault() is InputMediaDocument ll)
+          {
+            ll.Caption = msg.Content!;
+          }
+
+          await client.SendMediaGroup(customer.User.TgUserId!, media: media);
+        }
+        else
+        {
+          await client.SendMessage(customer.User.TgUserId!, msg.Content!);
+        }
+      }
+      finally
+      {
+        foreach (var item in streams)
+        {
+          await item.DisposeAsync();
+        }
+      }
     }
 
     await appHub
       .Clients.Clients(ApplicationHub.GetCompanyConnections(CompanyId.From(customer)) ?? [])!
-      .SendAsync("ChatMessage", ChatMessageDTO.From(msg));
+      .SendAsync("ChatMessage", ChatMessageDTO.From(msg, s3Client));
   }
 
-  public async Task<ChatMessage> CreateMessage(Customer customer, string content)
+  public async Task<ChatMessage> CreateMessage(
+    Customer customer,
+    string content,
+    List<ChatFileStream>? attachments
+  )
   {
     var chat = await EnsureConversation(customer);
 
@@ -129,6 +185,7 @@ public class ChatContext(
     };
     dbContext.Add(message);
     await dbContext.SaveChangesAsync();
+    await UploadAttachments(message, attachments);
 
     return message;
   }
@@ -165,10 +222,41 @@ public class ChatContext(
     return message;
   }
 
+  public async Task UploadAttachments(ChatMessage message, List<ChatFileStream>? attachments = null)
+  {
+    if (attachments is { Count: > 0 })
+    {
+      var bucketName = message.Id.ToString();
+
+      await s3Client.PutBucketAsync(
+        new PutBucketRequest() { BucketName = bucketName, UseClientRegion = false }
+      );
+
+      dbContext.Update(message);
+      message.AttachmentKeys = [];
+      foreach (var attachment in attachments)
+      {
+        var req = new PutObjectRequest()
+        {
+          Key = Guid.NewGuid().ToString(),
+          BucketName = bucketName,
+          ContentType = attachment.MimeType,
+          InputStream = attachment.Stream,
+        };
+
+        await s3Client.PutObjectAsync(req);
+        message.AttachmentKeys.Add(req.Key);
+      }
+
+      await dbContext.SaveChangesAsync();
+    }
+  }
+
   public async Task<ChatMessage> CreateMessage(
     CompanyAccess agent,
     Customer customer,
-    string content
+    string content,
+    List<IFormFile>? attachments
   )
   {
     var chat = await EnsureConversation(customer);
@@ -179,8 +267,13 @@ public class ChatContext(
       Agent = agent,
       Content = content,
     };
+
     dbContext.Add(message);
     await dbContext.SaveChangesAsync();
+    await UploadAttachments(
+      message,
+      attachments?.Select(v => new ChatFileStream(v.ContentType, v.OpenReadStream())).ToList()
+    );
 
     return message;
   }

@@ -44,12 +44,13 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "just links npm run dev"
 
 @dev:
+  S3_PUBLIC_URL=https://s3.beloyal.ru \
   CUSTOMER_WEB_PUBLIC_URL=https://dev.beloyal.ru/customer \
   AGENT_WEB_PUBLIC_URL=https://dev.beloyal.ru/agent \
   API_WEB_PUBLIC_URL=https://dev.beloyal.ru \
   OFFICE_WEB_PUBLIC_URL=https://dev.beloyal.ru/office \
   LINKS_WEB_PUBLIC_URL=https://dev.beloyal.ru/links \
-  npx concurrently -n api,office,customer,agent,links,apibore,officebore,customerbore,agentbore,linksbore \
+  npx concurrently -n api,office,customer,agent,links,apibore,officebore,customerbore,agentbore,linksbore,s3bore \
   "just api dotnet run" \
   "just office npm run dev" \
   "just customer npm run dev" \
@@ -59,7 +60,8 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "bore local 3000 --to dev.beloyal.ru --port 3000" \
   "bore local 3001 --to dev.beloyal.ru --port 3001" \
   "bore local 3002 --to dev.beloyal.ru --port 3002" \
-  "bore local 3003 --to dev.beloyal.ru --port 3003"
+  "bore local 3003 --to dev.beloyal.ru --port 3003" \
+  "bore local 9000 --to s3.beloyal.ru --port 9000"
 
 @build:
   just api dotnet build

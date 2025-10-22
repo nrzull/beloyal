@@ -11,6 +11,7 @@ public class ChatMessage
   public DateTimeOffset? ReadAt { get; set; }
 
   public string? Content { get; set; }
+  public List<string>? AttachmentKeys { get; set; }
 
   public Guid? CompanyId { get; set; }
   public Company? Company { get; set; }

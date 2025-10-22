@@ -223,6 +223,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("agent_id");
 
+                    b.PrimitiveCollection<List<string>>("AttachmentKeys")
+                        .HasColumnType("text[]")
+                        .HasColumnName("attachment_keys");
+
                     b.Property<Guid>("ChatId")
                         .HasColumnType("uuid")
                         .HasColumnName("chat_id");
