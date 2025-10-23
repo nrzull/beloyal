@@ -36,6 +36,7 @@ import {
   newExactCountVariant,
   newOperationsInactivityVariant,
   newTimePeriodVariant,
+  newMoneySpentVariant,
   translatePromotionVariantType,
 } from "~/components/Promotions/utils";
 import { cloneDeep } from "es-toolkit";
@@ -49,6 +50,7 @@ const options = [
   newDateTimePeriodVariant(),
   newTimePeriodVariant(),
   newOperationsInactivityVariant(),
+  newMoneySpentVariant(),
 ];
 
 const promotion = defineModel<PartialPromotion>({ required: true });

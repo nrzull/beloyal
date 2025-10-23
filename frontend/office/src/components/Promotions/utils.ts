@@ -5,8 +5,15 @@ import type {
   DateTimePeriodVariant,
   PromotionVariant,
   OperationsInactivityVariant,
+  MoneySpentVariant,
 } from "@beloyal/shared";
 import { serialize } from "tinyduration";
+
+export const newMoneySpentVariant = (): MoneySpentVariant => ({
+  $type: "MoneySpentVariant",
+  amount: 0,
+  cashbackPercent: 1,
+});
 
 export const newExactCountVariant = (): ExactCountVariant => ({
   $type: "ExactCountVariant",
@@ -51,4 +58,5 @@ export const translatePromotionVariantType: Record<
   ExactCountVariant: "Операция по счету",
   TimePeriodVariant: "Время акции",
   OperationsInactivityVariant: "Период неактивности",
+  MoneySpentVariant: "Потрачено за период",
 };

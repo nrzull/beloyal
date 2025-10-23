@@ -10,7 +10,15 @@ export type PromotionVariant =
   | DatePeriodVariant
   | DateTimePeriodVariant
   | TimePeriodVariant
+  | MoneySpentVariant
   | OperationsInactivityVariant;
+
+export type MoneySpentVariant = {
+  $type: "MoneySpentVariant";
+  amount: number;
+  period?: string;
+  cashbackPercent: number;
+};
 
 export type OperationsInactivityVariant = {
   $type: "OperationsInactivityVariant";

@@ -66,11 +66,12 @@ public class PromotionContext(ApplicationDbContext dbContext)
     {
       bool success = promotion.Variant switch
       {
-        ExactCountVariant v when await Check(CustomerId.From(customer), v) => true,
-        DatePeriodVariant v when Check(tz, v) => true,
-        TimePeriodVariant v when Check(tz, v) => true,
-        DateTimePeriodVariant v when Check(tz, v) => true,
-        OperationsInactivityVariant v when await Check(CustomerId.From(customer), v) => true,
+        ExactCountVariant v when await Check(v, CustomerId.From(customer)) => true,
+        DatePeriodVariant v when Check(v, tz) => true,
+        TimePeriodVariant v when Check(v, tz) => true,
+        DateTimePeriodVariant v when Check(v, tz) => true,
+        OperationsInactivityVariant v when await Check(v, CustomerId.From(customer)) => true,
+        MoneySpentVariant v when await Check(v, CustomerId.From(customer)) => true,
         _ => false,
       };
 
@@ -84,7 +85,7 @@ public class PromotionContext(ApplicationDbContext dbContext)
     return selected;
   }
 
-  async Task<bool> Check(CustomerId customerId, ExactCountVariant variant)
+  async Task<bool> Check(ExactCountVariant variant, CustomerId customerId)
   {
     var count = await dbContext
       .Bonuses.Where(v =>
@@ -97,14 +98,14 @@ public class PromotionContext(ApplicationDbContext dbContext)
     return (variant.Count - 1) == count;
   }
 
-  bool Check(TimeZoneInfo tz, DatePeriodVariant variant)
+  bool Check(DatePeriodVariant variant, TimeZoneInfo tz)
   {
     var now = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz);
     var nowDateOnly = new DateOnly(now.Year, now.Month, now.Day);
     return variant.From <= nowDateOnly && variant.To >= nowDateOnly;
   }
 
-  bool Check(TimeZoneInfo tz, TimePeriodVariant variant)
+  bool Check(TimePeriodVariant variant, TimeZoneInfo tz)
   {
     var now = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz);
 
@@ -133,7 +134,7 @@ public class PromotionContext(ApplicationDbContext dbContext)
     return from <= now && to >= now;
   }
 
-  bool Check(TimeZoneInfo tz, DateTimePeriodVariant variant)
+  bool Check(DateTimePeriodVariant variant, TimeZoneInfo tz)
   {
     var now = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz);
 
@@ -162,7 +163,7 @@ public class PromotionContext(ApplicationDbContext dbContext)
     return from <= now && to >= now;
   }
 
-  async Task<bool> Check(CustomerId customerId, OperationsInactivityVariant variant)
+  async Task<bool> Check(OperationsInactivityVariant variant, CustomerId customerId)
   {
     var latest = await dbContext
       .Bonuses.Where(v =>
@@ -175,10 +176,34 @@ public class PromotionContext(ApplicationDbContext dbContext)
 
     if (latest is null)
     {
-      return true;
+      return false;
     }
 
     var diff = DateTimeOffset.UtcNow - latest.CreatedAt;
     return diff > XmlConvert.ToTimeSpan(variant.Period);
+  }
+
+  async Task<bool> Check(MoneySpentVariant variant, CustomerId customerId)
+  {
+    DateTimeOffset? since = variant.Period is { }
+      ? DateTimeOffset.UtcNow - XmlConvert.ToTimeSpan(variant.Period)
+      : null;
+
+    var sum = dbContext
+      .Bonuses.OrderByDescending(v => v.CreatedAt)
+      .Where(v =>
+        v.CustomerId == customerId.Value
+        && v.Status != Bonuses.BonusStatus.Cancelled
+        && (v.Type == Bonuses.BonusType.AddBonus || v.Type == Bonuses.BonusType.SubtractBonus)
+      );
+
+    if (since is { })
+    {
+      sum = sum.Where(v => v.CreatedAt > since);
+    }
+
+    var result = await sum.SumAsync(v => v.CashIncome);
+
+    return variant.Amount <= result;
   }
 }
