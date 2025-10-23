@@ -14,6 +14,7 @@ export type CompanyBonusOptions = {
   bonusFrequencyCount?: number;
   bonusFrequencyInDays?: number;
   bonusScheduling: string | null;
+  welcomeBonus?: number;
 };
 
 export type CompanyLink = {

@@ -22,6 +22,7 @@ public class Company
   public required TimeSpan BonusLifetime { get; set; }
   public CompanyBonusFrequency? BonusFrequency { get; set; }
   public TimeSpan? BonusScheduling { get; set; }
+  public decimal? WelcomeBonus { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

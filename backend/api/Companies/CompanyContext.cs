@@ -187,7 +187,8 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     Percent bonusMultiplier,
     TimeSpan bonusLifetime,
     CompanyBonusFrequency? bonusFrequency,
-    TimeSpan? bonusScheduling
+    TimeSpan? bonusScheduling,
+    decimal? welcomeBonus
   )
   {
     dbContext.Update(company);
@@ -197,6 +198,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     company.BonusLifetime = bonusLifetime;
     company.BonusFrequency = bonusFrequency;
     company.BonusScheduling = bonusScheduling;
+    company.WelcomeBonus = welcomeBonus;
 
     await dbContext.SaveChangesAsync();
   }

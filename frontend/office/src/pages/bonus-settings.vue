@@ -31,6 +31,17 @@
         </Space>
 
         <Space vertical>
+          <div>Приветственные бонусы</div>
+          <NInputNumber
+            size="large"
+            :min="0"
+            :precision="0"
+            placeholder="Укажите кол-во бонусов"
+            v-model:value="bonusOptions.welcomeBonus"
+          />
+        </Space>
+
+        <Space vertical>
           <div>Визуальный мультипликатор бонусов</div>
           <NInputNumber
             size="large"

@@ -324,6 +324,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("text")
                         .HasColumnName("title");
 
+                    b.Property<decimal?>("WelcomeBonus")
+                        .HasColumnType("numeric")
+                        .HasColumnName("welcome_bonus");
+
                     b.HasKey("Id")
                         .HasName("pk_companies");
 

@@ -104,12 +104,15 @@ public class CustomerContext(
   async Task<Customer> CreateCustomer(User user, MaxBot? maxBot = null, TgBot? tgBot = null)
   {
     var companyId = maxBot?.CompanyId ?? tgBot!.CompanyId;
+    var company = await companyContext.GetCompany(CompanyId.From(companyId));
+
     var customer = new Customer
     {
       User = user,
-      Company = await companyContext.GetCompany(CompanyId.From(companyId)),
+      Company = company,
       MaxBot = maxBot,
       TgBot = tgBot,
+      BonusAmount = company.WelcomeBonus ?? default,
     };
 
     dbContext.Add(customer);

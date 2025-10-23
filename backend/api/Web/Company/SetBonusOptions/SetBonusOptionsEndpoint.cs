@@ -24,7 +24,8 @@ public class SetBonusOptionsEndpoint(CompanyContext companyContext)
       new(req.BonusMultiplier),
       TimeSpan.FromDays(req.BonusLifetimeInDays),
       bonusFrequency,
-      req.BonusScheduling is { } bs ? XmlConvert.ToTimeSpan(bs) : null
+      req.BonusScheduling is { } bs ? XmlConvert.ToTimeSpan(bs) : null,
+      req.WelcomeBonus
     );
 
     return new SetBonusOptionsResponse.Ok(CompanyBonusOptionsDTO.From(company));
