@@ -3,6 +3,7 @@ using System.Text.Json;
 using Beloyal.API.Admin;
 using Beloyal.API.Auth;
 using Beloyal.API.Bonuses;
+using Beloyal.API.Boosters;
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
@@ -39,6 +40,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<MailingUnit> MailingUnits { get; set; }
   public DbSet<Promotion> Promotions { get; set; }
   public DbSet<ShopPromotion> ShopPromotions { get; set; }
+  public DbSet<Booster> Boosters { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -247,6 +249,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey(v => v.Id);
 
       bonus.HasOne(v => v.Shop).WithMany().HasForeignKey(v => v.ShopId).HasPrincipalKey(v => v.Id);
+
+      bonus
+        .HasOne(v => v.Booster)
+        .WithOne(v => v.Bonus)
+        .HasForeignKey<Bonus>(v => v.BoosterId)
+        .HasPrincipalKey<Booster>(v => v.Id);
     });
 
     builder.Entity<Chat>(chat =>
@@ -338,6 +346,15 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
           (v) =>
             JsonSerializer.Deserialize(v, BaseVariantJsonSerializerContext.Default.BaseVariant)!
         );
+    });
+
+    builder.Entity<Booster>(booster =>
+    {
+      booster
+        .HasOne(v => v.Customer)
+        .WithMany(v => v.Boosters)
+        .HasForeignKey(v => v.CustomerId)
+        .HasPrincipalKey(v => v.Id);
     });
   }
 

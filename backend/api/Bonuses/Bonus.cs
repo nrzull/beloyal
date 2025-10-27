@@ -1,3 +1,4 @@
+using Beloyal.API.Boosters;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
@@ -27,4 +28,7 @@ public class Bonus
 
   public Guid? ShopId { get; set; }
   public Shop? Shop { get; set; }
+
+  public Guid? BoosterId { get; set; }
+  public Booster? Booster { get; set; }
 }

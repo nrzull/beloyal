@@ -126,6 +126,33 @@ export const router = createRouter({
         },
 
         {
+          path: "customers",
+          children: [
+            {
+              path: ":id",
+              component: () => import("~/pages/customers/_id.vue"),
+              redirect: (to) => `/customers/${to.params.id}/operations`,
+              children: [
+                {
+                  path: "operations",
+                  component: () =>
+                    import("~/pages/customers/_id/operations.vue"),
+                },
+
+                {
+                  path: "boosters",
+                  component: () => import("~/pages/customers/_id/boosters.vue"),
+                },
+              ],
+            },
+            {
+              path: "",
+              component: () => import("~/pages/customers.vue"),
+            },
+          ],
+        },
+
+        {
           path: "company-roles",
           children: [
             {

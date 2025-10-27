@@ -7,6 +7,8 @@ public record BonusDTO(
   decimal Amount,
   decimal CashIncome,
   string Status,
+  decimal CashbackPercent,
+  string? PromotionType,
   DateTimeOffset? ScheduledAt
 )
 {
@@ -18,6 +20,8 @@ public record BonusDTO(
       Amount: v.Amount,
       CashIncome: v.CashIncome,
       Status: v.Status.ToString(),
+      CashbackPercent: v.CashbackPercent,
+      PromotionType: v.Promotion is { } ? v.Promotion?.Variant.GetType().Name : null,
       ScheduledAt: v.ScheduledAt
     );
 };

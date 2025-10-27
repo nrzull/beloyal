@@ -128,6 +128,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("amount");
 
+                    b.Property<Guid?>("BoosterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("booster_id");
+
                     b.Property<decimal>("CashIncome")
                         .HasColumnType("numeric")
                         .HasColumnName("cash_income");
@@ -172,6 +176,10 @@ namespace Beloyal.API.Migrations
                     b.HasIndex("AgentId")
                         .HasDatabaseName("ix_bonuses_agent_id");
 
+                    b.HasIndex("BoosterId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_bonuses_booster_id");
+
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_bonuses_customer_id");
 
@@ -179,6 +187,38 @@ namespace Beloyal.API.Migrations
                         .HasDatabaseName("ix_bonuses_shop_id");
 
                     b.ToTable("bonuses", (string)null);
+                });
+
+            modelBuilder.Entity("Beloyal.API.Boosters.Booster", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("CashbackPercent")
+                        .HasColumnType("numeric")
+                        .HasColumnName("cashback_percent");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<DateTimeOffset>("ExpiredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expired_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_boosters");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_boosters_customer_id");
+
+                    b.ToTable("boosters", (string)null);
                 });
 
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
@@ -856,6 +896,11 @@ namespace Beloyal.API.Migrations
                         .HasForeignKey("AgentId")
                         .HasConstraintName("fk_bonuses_company_accesses_agent_id");
 
+                    b.HasOne("Beloyal.API.Boosters.Booster", "Booster")
+                        .WithOne("Bonus")
+                        .HasForeignKey("Beloyal.API.Bonuses.Bonus", "BoosterId")
+                        .HasConstraintName("fk_bonuses_boosters_booster_id");
+
                     b.HasOne("Beloyal.API.Customers.Customer", "Customer")
                         .WithMany("Bonuses")
                         .HasForeignKey("CustomerId")
@@ -895,11 +940,25 @@ namespace Beloyal.API.Migrations
 
                     b.Navigation("Agent");
 
+                    b.Navigation("Booster");
+
                     b.Navigation("Customer");
 
                     b.Navigation("Promotion");
 
                     b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("Beloyal.API.Boosters.Booster", b =>
+                {
+                    b.HasOne("Beloyal.API.Customers.Customer", "Customer")
+                        .WithMany("Boosters")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_boosters_customers_customer_id");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
@@ -1201,6 +1260,11 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Boosters.Booster", b =>
+                {
+                    b.Navigation("Bonus");
+                });
+
             modelBuilder.Entity("Beloyal.API.Chats.Chat", b =>
                 {
                     b.Navigation("Messages");
@@ -1235,6 +1299,8 @@ namespace Beloyal.API.Migrations
             modelBuilder.Entity("Beloyal.API.Customers.Customer", b =>
                 {
                     b.Navigation("Bonuses");
+
+                    b.Navigation("Boosters");
                 });
 
             modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>

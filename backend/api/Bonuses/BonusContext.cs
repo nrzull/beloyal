@@ -1,4 +1,5 @@
 using System.Threading.Channels;
+using Beloyal.API.Boosters;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Promotions;
@@ -10,7 +11,8 @@ namespace Beloyal.API.Bonuses;
 public class BonusContext(
   ApplicationDbContext dbContext,
   ShopContext shopContext,
-  PromotionContext promotionContext
+  PromotionContext promotionContext,
+  BoosterContext boosterContext
 )
 {
   public static Channel<Guid> NewBonusChannel { get; } = Channel.CreateUnbounded<Guid>();
@@ -159,7 +161,19 @@ public class BonusContext(
       shopPromotions.Select(v => v.Promotion).ToList()
     );
 
-    var cashbackPercent = promotion?.Variant.CashbackPercent ?? agent.Shop.Company.CashbackPercent;
+    var booster = await boosterContext.GetAvailableBooster(CustomerId.From(customer));
+
+    var cashbacks = new List<decimal?>()
+    {
+      booster?.CashbackPercent,
+      promotion?.Variant.CashbackPercent,
+      agent.Shop.Company.CashbackPercent,
+    }
+      .Where(v => v is decimal)
+      .OrderByDescending(v => v)
+      .ToList();
+
+    var cashbackPercent = cashbacks.FirstOrDefault() ?? agent.Shop.Company.CashbackPercent;
 
     var cashbackThreshold = agent.Shop.Company.CashbackThreshold;
     var appliedBonus = income / 100 * cashbackPercent;
@@ -181,6 +195,7 @@ public class BonusContext(
       Status = scheduledAt is { } ? BonusStatus.Scheduled : BonusStatus.Done,
       ScheduledAt = scheduledAt,
       Promotion = promotion is { } p ? BonusPromotion.From(p) : null,
+      Booster = booster,
     };
     dbContext.Add(bonus);
 

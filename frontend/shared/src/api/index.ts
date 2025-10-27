@@ -14,3 +14,5 @@ export * from "./bonuses/types";
 export * from "./operations/types";
 export * from "./promotions/types";
 export * from "./shopPromotions/types";
+export * from "./customers/types";
+export * from "./boosters/types";

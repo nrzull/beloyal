@@ -95,6 +95,13 @@ const companyMenu = computed(() => {
 
     {
       type: "route",
+      route: "/customers",
+      label: "Клиенты",
+      available: true,
+    },
+
+    {
+      type: "route",
       route: "/chats",
       label: "Чаты",
       available: true,

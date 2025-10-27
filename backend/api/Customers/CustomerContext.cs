@@ -15,7 +15,10 @@ public class CustomerContext(
 )
 {
   public async Task<List<Customer>> GetCustomers(CompanyId companyId) =>
-    await dbContext.Customers.Where(v => v.CompanyId == companyId.Value).ToListAsync();
+    await dbContext
+      .Customers.Include(v => v.User)
+      .Where(v => v.CompanyId == companyId.Value)
+      .ToListAsync();
 
   public async Task<List<Customer>> GetCustomers(CompanyId companyId, List<CustomerId> ids) =>
     (await dbContext.Customers.Where(v => v.CompanyId == companyId.Value).ToListAsync())
@@ -26,6 +29,11 @@ public class CustomerContext(
     await dbContext
       .Customers.Include(v => v.User)
       .FirstOrDefaultAsync(v => v.Id == customerId.Value);
+
+  public async Task<Customer?> GetCustomer(CompanyId companyId, CustomerId customerId) =>
+    await dbContext
+      .Customers.Include(v => v.User)
+      .FirstOrDefaultAsync(v => v.Id == customerId.Value && v.CompanyId == companyId.Value);
 
   public async Task<Customer?> GetCustomerByPublicToken(CompanyId companyId, string publicToken)
   {
