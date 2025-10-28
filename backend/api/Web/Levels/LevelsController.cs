@@ -3,6 +3,7 @@ using Beloyal.API.Levels;
 using Beloyal.API.Web.Filters;
 using Beloyal.API.Web.Levels.CreateLevel;
 using Beloyal.API.Web.Levels.DeleteLevel;
+using Beloyal.API.Web.Levels.GetLevel;
 using Beloyal.API.Web.Levels.GetLevels;
 using Beloyal.API.Web.Levels.UpdateLevel;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -24,6 +25,19 @@ public class LevelsController : ControllerBase
     await endpoint.Handle(companyAccess.Ensure()) switch
     {
       GetLevelsResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
+
+  [HttpGet("{id}")]
+  public async Task<Results<Ok<GetLevelResponse.Ok>, NotFound, BadRequest>> GetLevels(
+    [FromServices] GetLevelEndpoint endpoint,
+    [FromServices] CompanyAccess? companyAccess,
+    [FromRoute(Name = "id")] Guid levelId
+  ) =>
+    await endpoint.Handle(companyAccess.Ensure(), LevelId.From(levelId)) switch
+    {
+      GetLevelResponse.Ok ok => TypedResults.Ok(ok),
+      GetLevelResponse.NotFound => TypedResults.NotFound(),
       _ => TypedResults.BadRequest(),
     };
 

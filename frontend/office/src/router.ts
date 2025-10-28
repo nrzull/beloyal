@@ -219,6 +219,24 @@ export const router = createRouter({
         },
 
         {
+          path: "levels",
+          children: [
+            {
+              path: "new",
+              component: () => import("~/pages/levels/new.vue"),
+            },
+            {
+              path: ":id",
+              component: () => import("~/pages/levels/_id.vue"),
+            },
+            {
+              path: "",
+              component: () => import("~/pages/levels.vue"),
+            },
+          ],
+        },
+
+        {
           path: "qr-stickers",
           component: () => import("~/pages/qr-stickers.vue"),
         },

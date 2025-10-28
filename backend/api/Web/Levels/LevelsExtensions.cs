@@ -1,5 +1,6 @@
 using Beloyal.API.Web.Levels.CreateLevel;
 using Beloyal.API.Web.Levels.DeleteLevel;
+using Beloyal.API.Web.Levels.GetLevel;
 using Beloyal.API.Web.Levels.GetLevels;
 using Beloyal.API.Web.Levels.UpdateLevel;
 
@@ -13,5 +14,6 @@ public static class LevelsExtensions
     builder.Services.AddScoped<GetLevelsEndpoint>();
     builder.Services.AddScoped<DeleteLevelEndpoint>();
     builder.Services.AddScoped<UpdateLevelEndpoint>();
+    builder.Services.AddScoped<GetLevelEndpoint>();
   }
 }

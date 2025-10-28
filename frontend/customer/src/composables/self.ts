@@ -1,6 +1,7 @@
 import { computed, ref } from "vue";
 import type { Self } from "~/api/self/types";
 import { apiSelfGet } from "~/api/self";
+import { computeLevel } from "@beloyal/shared";
 
 export const self = ref<Self>();
 export const fetchSelf = async () => {
@@ -21,3 +22,10 @@ export const bonusAmount = computed(() => {
 
   return baseAmount * self.value.bonusMultiplier;
 });
+
+export const level = computed(() =>
+  computeLevel({
+    levels: self.value?.companyLevels,
+    points: self.value?.levelPointsAmount!,
+  })
+);

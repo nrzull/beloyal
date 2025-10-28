@@ -8,6 +8,7 @@ export * from "./utils/bonus";
 export * from "./utils/user";
 export * from "./utils/date";
 export * from "./utils/switchGuard";
+export * from "./utils/levels";
 export { default as Icon, type IconVariant } from "./components/Icon.vue";
 export { default as Card } from "./components/Card.vue";
 export { default as AuthForm } from "./components/AuthForm.vue";

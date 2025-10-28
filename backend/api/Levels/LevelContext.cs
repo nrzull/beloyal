@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Customers;
 using Beloyal.API.Types;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,29 @@ public class LevelContext(ApplicationDbContext dbContext)
     await dbContext.Levels.FirstOrDefaultAsync(v =>
       v.CompanyId == companyId.Value && v.Id == levelId.Value
     );
+
+  public async Task<Level?> GetLevel(Customer customer)
+  {
+    var levels = await GetLevels(CompanyId.From(customer));
+    var last = levels.LastOrDefault();
+
+    Level? level = default;
+    foreach (var l in levels)
+    {
+      if (customer.LevelPointsAmount <= l.PointsCapacity)
+      {
+        level = l;
+        break;
+      }
+    }
+
+    if (customer.LevelPointsAmount >= last?.PointsCapacity)
+    {
+      level = last;
+    }
+
+    return level;
+  }
 
   public async Task<Level> CreateLevel(
     Company company,

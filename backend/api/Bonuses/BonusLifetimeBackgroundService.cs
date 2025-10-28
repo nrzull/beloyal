@@ -1,8 +1,5 @@
 using Beloyal.API.Chats;
-using Beloyal.API.Messengers;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Telegram.Bot;
 
 namespace Beloyal.API.Bonuses;
 
@@ -31,7 +28,6 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
       foreach (var bonus in bonuses)
       {
         var customer = bonus.Customer;
-
         if (customer.BonusAmount <= 0)
         {
           continue;
