@@ -13,6 +13,7 @@ public class Customer : IEnsurable
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
   public decimal BonusAmount { get; set; }
+  public decimal LevelPointsAmount { get; set; }
 
   public Guid UserId { get; set; }
   public required User User { get; set; }

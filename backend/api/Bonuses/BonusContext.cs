@@ -82,6 +82,8 @@ public class BonusContext(
     var lastBonus = bonus.Status;
     bonus.Status = BonusStatus.Cancelled;
 
+    customer.LevelPointsAmount -= bonus.CashIncome;
+
     if (lastBonus == BonusStatus.Done)
     {
       if (bonus.Type == BonusType.AddBonus)
@@ -199,9 +201,11 @@ public class BonusContext(
     };
     dbContext.Add(bonus);
 
+    dbContext.Update(customer);
+    customer.LevelPointsAmount += bonus.CashIncome;
+
     if (scheduledAt is null)
     {
-      dbContext.Update(customer);
       customer.BonusAmount += appliedBonus;
     }
 
@@ -265,6 +269,7 @@ public class BonusContext(
     dbContext.Add(bonus);
 
     dbContext.Update(customer);
+    customer.LevelPointsAmount += bonus.CashIncome;
     customer.BonusAmount -= bonusAmount;
 
     await dbContext.SaveChangesAsync();

@@ -1,5 +1,6 @@
 using Beloyal.API.Chats;
 using Beloyal.API.Customers;
+using Beloyal.API.Levels;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Promotions;
@@ -23,6 +24,7 @@ public class Company
   public CompanyBonusFrequency? BonusFrequency { get; set; }
   public TimeSpan? BonusScheduling { get; set; }
   public decimal? WelcomeBonus { get; set; }
+  public required TimeSpan LevelLifetime { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }
@@ -33,4 +35,5 @@ public class Company
   public List<Mailing> Mailings { get; set; } = [];
   public List<Chat> Chats { get; set; } = [];
   public List<Promotion> Promotions { get; set; } = [];
+  public List<Level> Levels { get; set; } = [];
 }

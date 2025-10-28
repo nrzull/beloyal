@@ -44,6 +44,7 @@ const createCompany = async () => {
       cashbackThreshold: 25,
       bonusMultiplier: 10,
       bonusLifetimeInDays: 180,
+      levelLifetimeInDays: 14,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 

@@ -64,6 +64,17 @@
           />
         </Space>
 
+        <Space vertical>
+          <div>Период понижения уровня (в днях)</div>
+          <NInputNumber
+            size="large"
+            :min="1"
+            :precision="0"
+            placeholder="Укажите число, через сколько дней понизится уровень клиента"
+            v-model:value="bonusOptions.levelLifetimeInDays"
+          />
+        </Space>
+
         <Card with-border>
           <NThing>
             <template #header>

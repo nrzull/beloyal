@@ -7,6 +7,7 @@ public abstract record GetCustomerByPublicTokenResponse
   public record OkData(
     decimal BonusAmount,
     decimal BonusMultiplier,
+    decimal LevelPointsAmount,
     string PhoneNumber,
     Guid CustomerId
   );

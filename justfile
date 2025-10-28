@@ -63,13 +63,19 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "bore local 3003 --to dev.beloyal.ru --port 3003" \
   "bore local 9000 --to s3.beloyal.ru --port 9000"
 
-@build:
+@build-backend:
   just api dotnet build
   just api-test dotnet build
+
+@build-frontend:
   just office npm run build
   just customer npm run build
   just agent npm run build
   just links npm run build
+
+@build:
+  just build-backend
+  just build-frontend
 
 @test:
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database drop --force

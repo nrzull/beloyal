@@ -27,7 +27,8 @@ public class CreateCompanyEndpointTest : TestLifetime
           percent.Value,
           1,
           1,
-          TimeZoneInfo.Local.Id
+          TimeZoneInfo.Local.Id,
+          1
         );
 
         await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(user, req));

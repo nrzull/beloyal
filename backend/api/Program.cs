@@ -5,6 +5,7 @@ using Beloyal.API.Boosters;
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Levels;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Promotions;
@@ -23,6 +24,7 @@ using Beloyal.API.Web.CompanyRoles;
 using Beloyal.API.Web.CustomerOperations;
 using Beloyal.API.Web.Customers;
 using Beloyal.API.Web.CustomerSelf;
+using Beloyal.API.Web.Levels;
 using Beloyal.API.Web.Mailings;
 using Beloyal.API.Web.Messengers;
 using Beloyal.API.Web.Middlewares;
@@ -62,8 +64,10 @@ public class Program
     builder.Services.AddScoped<MailingContext>();
     builder.Services.AddScoped<PromotionContext>();
     builder.Services.AddScoped<BoosterContext>();
+    builder.Services.AddScoped<LevelContext>();
     builder.Services.AddHostedService<BonusLifetimeBackgroundService>();
     builder.Services.AddHostedService<BonusSchedulingBackgroundService>();
+    builder.Services.AddHostedService<LevelWorker>();
     builder.Services.AddSignalR();
 
     builder.UseAuthEndpoints();
@@ -86,6 +90,7 @@ public class Program
     builder.UseCustomerOperationsEndpoints();
     builder.UsePromotionsEndpoints();
     builder.UseCustomersEndpoints();
+    builder.UseLevelsEndpoints();
 
     builder.UseTgBotHandlers();
 

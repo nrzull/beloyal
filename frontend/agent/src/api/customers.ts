@@ -11,6 +11,7 @@ export const apiCustomersGetByPublicToken = (params: { publicToken: string }) =>
         bonusMultiplier: number;
         phoneNumber: string;
         customerId: string;
+        levelPointsAmount: number;
       };
     }>(`/api/agent/customers/public-tokens/${params.publicToken}`)
     .then((v) => v.data);
