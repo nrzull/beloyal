@@ -13,7 +13,7 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
 
   public async Task ProcessExistingBonuses(CancellationToken ct)
   {
-    PeriodicTimer time = new(TimeSpan.FromMinutes(1));
+    PeriodicTimer time = new(TimeSpan.FromHours(1));
 
     while (await time.WaitForNextTickAsync(ct))
     {

@@ -7,6 +7,42 @@ namespace Beloyal.API.Levels;
 
 public class LevelContext(ApplicationDbContext dbContext)
 {
+  public async Task DowngradeLevel(Customer customer)
+  {
+    var currentLevel = await GetLevel(customer);
+    if (currentLevel is null)
+    {
+      return;
+    }
+
+    decimal newPoints = customer.LevelPointsAmount;
+    Level prevLevel = currentLevel;
+
+    var levels = await GetLevels(CompanyId.From(customer));
+
+    var idx = levels.FindIndex((v) => v.Id == currentLevel.Id);
+    if (idx != -1)
+    {
+      prevLevel = idx > 0 ? levels[idx - 1] : levels[0];
+    }
+
+    if (prevLevel.Id == currentLevel.Id)
+    {
+      newPoints = 0;
+    }
+    else
+    {
+      newPoints = prevLevel.PointsCapacity - 1;
+    }
+
+    if (customer.LevelPointsAmount != newPoints)
+    {
+      dbContext.Update(customer);
+      customer.LevelPointsAmount = newPoints;
+      await dbContext.SaveChangesAsync();
+    }
+  }
+
   public async Task<List<Level>> GetLevels(CompanyId companyId)
   {
     var levels = await dbContext.Levels.Where(v => v.CompanyId == companyId.Value).ToListAsync();
