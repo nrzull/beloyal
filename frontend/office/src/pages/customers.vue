@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Клиенты</Heading>
     </template>
@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { Heading, type Customer, Table } from "@beloyal/shared";
-import { ref } from "vue";
+import { Heading, type Customer, Table, waitable, wait } from "@beloyal/shared";
+import { computed, ref } from "vue";
 import { apiCustomersGetAll } from "~/api/customers";
 import Page from "~/components/Page.vue";
 import { maskPhone } from "@beloyal/shared";
@@ -33,5 +33,7 @@ import { formatDate } from "@beloyal/shared";
 
 const customers = ref<Customer[]>([]);
 
-apiCustomersGetAll().then((v) => (customers.value = v.data));
+const isLoading = computed(() => wait.some([apiCustomersGetAll]));
+
+waitable(apiCustomersGetAll)().then((v) => (customers.value = v.data));
 </script>

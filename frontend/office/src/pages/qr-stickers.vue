@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>QR-Наклейки</Heading>
     </template>
@@ -23,15 +23,26 @@
 </template>
 
 <script setup lang="ts">
-import { createSSRApp, ref, type Component } from "vue";
+import { computed, createSSRApp, ref, type Component } from "vue";
 import Page from "~/components/Page.vue";
-import { Heading, Card, Space, type CompanyLink } from "@beloyal/shared";
+import {
+  Heading,
+  Card,
+  Space,
+  type CompanyLink,
+  wait,
+  waitable,
+} from "@beloyal/shared";
 import { Button } from "@beloyal/shared";
 import { renderToString } from "vue/server-renderer";
 import ConnectClientsQr from "~/components/QrStickers/ConnectClientsQr.vue";
 import { apiCompanyGetLinks } from "~/api/company";
 
 const connectClientLinks = ref<CompanyLink[]>([]);
+
+const isLoading = computed(() =>
+  wait.some([apiCompanyGetLinks, printConnectClients])
+);
 
 const print = async (component: Component) => {
   const app = createSSRApp(component, { links: connectClientLinks.value });
@@ -50,5 +61,5 @@ const printConnectClients = async () => {
   await print(ConnectClientsQr);
 };
 
-apiCompanyGetLinks().then((v) => (connectClientLinks.value = v.data));
+waitable(apiCompanyGetLinks)().then((v) => (connectClientLinks.value = v.data));
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Белый список</Heading>
       <Button
@@ -13,6 +13,7 @@
 
     <Table
       :data="whiteCompanies"
+      :loading="isLoading"
       :columns="[
         { key: 'tin', title: 'ИНН' },
         { key: 'expiredAt', title: 'Срок действия' },
@@ -34,13 +35,17 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { apiWhiteCompaniesGetAll } from "~/api/whiteCompanies";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { WhiteCompany } from "@beloyal/shared";
-import { Table, Button, Heading } from "@beloyal/shared";
+import { Table, Button, Heading, wait, waitable } from "@beloyal/shared";
 import { formatDistanceStrictDate, formatDate } from "@beloyal/shared";
 import { compareAsc } from "date-fns";
 
 const whiteCompanies = ref<WhiteCompany[]>([]);
 
-apiWhiteCompaniesGetAll().then((v) => (whiteCompanies.value = v.data));
+const isLoading = computed(() => wait.some([apiWhiteCompaniesGetAll]));
+
+waitable(apiWhiteCompaniesGetAll)().then(
+  (v) => (whiteCompanies.value = v.data)
+);
 </script>

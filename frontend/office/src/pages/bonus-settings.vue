@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Бонусы</Heading>
     </template>
@@ -170,7 +170,12 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, wait, type CompanyBonusOptions } from "@beloyal/shared";
+import {
+  Heading,
+  wait,
+  waitable,
+  type CompanyBonusOptions,
+} from "@beloyal/shared";
 import { Card, Button, Space, Icon, Subheading } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import {
@@ -184,7 +189,9 @@ import { serialize } from "tinyduration";
 
 const bonusOptions = ref<CompanyBonusOptions>();
 
-const isLoading = computed(() => wait.some([setBonusOptions]));
+const isLoading = computed(() =>
+  wait.some([apiCompanyGetBonusOptions, setBonusOptions])
+);
 
 const setBonusOptions = async () => {
   try {
@@ -197,5 +204,7 @@ const setBonusOptions = async () => {
   }
 };
 
-apiCompanyGetBonusOptions().then((v) => (bonusOptions.value = v.data));
+waitable(apiCompanyGetBonusOptions)().then(
+  (v) => (bonusOptions.value = v.data)
+);
 </script>

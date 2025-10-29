@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading> Компания </Heading>
     </template>
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, wait } from "@beloyal/shared";
+import { Heading, wait, waitable } from "@beloyal/shared";
 import { self } from "~/composables/self";
 import { Card, Button } from "@beloyal/shared";
 import { computed, ref } from "vue";
@@ -26,7 +26,7 @@ import { fetchSelf } from "~/composables/self";
 
 const model = ref();
 
-const isLoading = computed(() => wait.some([updateCompany]));
+const isLoading = computed(() => wait.some([fetchSelf, updateCompany]));
 
 const updateCompany = async () => {
   try {
@@ -41,7 +41,7 @@ const updateCompany = async () => {
 };
 
 const fetchCompany = async () => {
-  await fetchSelf();
+  await waitable(fetchSelf)();
   model.value = cloneDeep(self.value?.companyAccess?.company!);
 };
 

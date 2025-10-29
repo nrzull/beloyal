@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Уровни</Heading>
       <Button size="medium" type="primary" @click="$router.push('/levels/new')"
@@ -23,13 +23,14 @@
 </template>
 
 <script setup lang="ts">
-import { Heading, Button, type Level } from "@beloyal/shared";
-import { ref } from "vue";
+import { Heading, Button, type Level, wait, waitable } from "@beloyal/shared";
+import { computed, ref } from "vue";
 import { apiLevelsGetAll } from "~/api/levels";
 import Page from "~/components/Page.vue";
 import { Table } from "@beloyal/shared";
 
 const levels = ref<Level[]>([]);
+const isLoading = computed(() => wait.some([apiLevelsGetAll]));
 
-apiLevelsGetAll().then((v) => (levels.value = v.data));
+waitable(apiLevelsGetAll)().then((v) => (levels.value = v.data));
 </script>

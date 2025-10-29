@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Акции</Heading>
       <Button
@@ -44,12 +44,16 @@ import {
   Table,
   type Promotion,
   formatDate,
+  wait,
+  waitable,
 } from "@beloyal/shared";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { apiPromotionsGetAll } from "~/api/promotions";
 import { translatePromotionVariantType } from "~/components/Promotions/utils";
 
 const promotions = ref<Promotion[]>([]);
 
-apiPromotionsGetAll().then((v) => (promotions.value = v.data));
+const isLoading = computed(() => wait.some([apiPromotionsGetAll]));
+
+waitable(apiPromotionsGetAll)().then((v) => (promotions.value = v.data));
 </script>

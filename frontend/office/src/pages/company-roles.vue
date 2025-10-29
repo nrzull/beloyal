@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Роли</Heading>
       <Button
@@ -27,13 +27,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
-import { formatDate, Table, Button, Heading } from "@beloyal/shared";
+import {
+  formatDate,
+  Table,
+  Button,
+  Heading,
+  waitable,
+  wait,
+} from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 
 const companyRoles = ref<CompanyRole[]>([]);
+const isLoading = computed(() => wait.some([apiCompanyRolesGetAll]));
 
-apiCompanyRolesGetAll().then((v) => (companyRoles.value = v.data));
+waitable(apiCompanyRolesGetAll)().then((v) => (companyRoles.value = v.data));
 </script>

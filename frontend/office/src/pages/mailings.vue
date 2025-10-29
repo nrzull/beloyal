@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Рассылки</Heading>
 
@@ -30,12 +30,21 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Mailing } from "@beloyal/shared";
-import { formatDate, Table, Button, Heading } from "@beloyal/shared";
+import {
+  formatDate,
+  Table,
+  Button,
+  Heading,
+  wait,
+  waitable,
+} from "@beloyal/shared";
 import { apiMailingsGetAll } from "~/api/mailings";
 
 const mailings = ref<Mailing[]>([]);
 
-apiMailingsGetAll().then((v) => (mailings.value = v.data));
+const isLoading = computed(() => wait.some([apiMailingsGetAll]));
+
+waitable(apiMailingsGetAll)().then((v) => (mailings.value = v.data));
 </script>
