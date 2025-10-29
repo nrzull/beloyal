@@ -79,6 +79,13 @@ const companyMenu = computed(() => {
 
         {
           type: "route",
+          route: "/levels",
+          label: "Уровни",
+          available: true,
+        },
+
+        {
+          type: "route",
           route: "/mailings",
           label: "Рассылки",
           available: true,

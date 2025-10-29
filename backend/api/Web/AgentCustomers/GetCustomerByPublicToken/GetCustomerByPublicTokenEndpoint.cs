@@ -29,7 +29,8 @@ public class GetCustomerByPublicTokenEndpoint(
         BonusAmount: customer.BonusAmount,
         BonusMultiplier: customer.Company.BonusMultiplier,
         PhoneNumber: customer.User.Phone!,
-        CustomerId: customer.Id
+        CustomerId: customer.Id,
+        LevelPointsAmount: customer.LevelPointsAmount
       )
     );
   }

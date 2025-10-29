@@ -88,7 +88,8 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     Percent cashbackThreshold,
     Percent bonusMultiplier,
     TimeSpan bonusLifetime,
-    TimeZoneInfo tz
+    TimeZoneInfo tz,
+    TimeSpan levelLifetime
   )
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
@@ -108,6 +109,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
       CashbackThreshold = cashbackThreshold.Value,
       BonusMultiplier = bonusMultiplier.Value,
       BonusLifetime = bonusLifetime,
+      LevelLifetime = levelLifetime,
     };
 
     var role = new CompanyRole
@@ -188,7 +190,8 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     TimeSpan bonusLifetime,
     CompanyBonusFrequency? bonusFrequency,
     TimeSpan? bonusScheduling,
-    decimal? welcomeBonus
+    decimal? welcomeBonus,
+    TimeSpan levelLifetime
   )
   {
     dbContext.Update(company);
@@ -199,6 +202,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     company.BonusFrequency = bonusFrequency;
     company.BonusScheduling = bonusScheduling;
     company.WelcomeBonus = welcomeBonus;
+    company.LevelLifetime = levelLifetime;
 
     await dbContext.SaveChangesAsync();
   }

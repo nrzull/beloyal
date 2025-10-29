@@ -2,6 +2,7 @@ using System.Threading.Channels;
 using Beloyal.API.Boosters;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Levels;
 using Beloyal.API.Promotions;
 using Beloyal.API.Shops;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ public class BonusContext(
   ApplicationDbContext dbContext,
   ShopContext shopContext,
   PromotionContext promotionContext,
-  BoosterContext boosterContext
+  BoosterContext boosterContext,
+  LevelContext levelContext
 )
 {
   public static Channel<Guid> NewBonusChannel { get; } = Channel.CreateUnbounded<Guid>();
@@ -81,6 +83,8 @@ public class BonusContext(
 
     var lastBonus = bonus.Status;
     bonus.Status = BonusStatus.Cancelled;
+
+    customer.LevelPointsAmount -= bonus.CashIncome;
 
     if (lastBonus == BonusStatus.Done)
     {
@@ -163,11 +167,14 @@ public class BonusContext(
 
     var booster = await boosterContext.GetAvailableBooster(CustomerId.From(customer));
 
+    var level = await levelContext.GetLevel(customer);
+
     var cashbacks = new List<decimal?>()
     {
       booster?.CashbackPercent,
       promotion?.Variant.CashbackPercent,
       agent.Shop.Company.CashbackPercent,
+      level?.CashbackPercent,
     }
       .Where(v => v is decimal)
       .OrderByDescending(v => v)
@@ -195,13 +202,15 @@ public class BonusContext(
       Status = scheduledAt is { } ? BonusStatus.Scheduled : BonusStatus.Done,
       ScheduledAt = scheduledAt,
       Promotion = promotion is { } p ? BonusPromotion.From(p) : null,
-      Booster = booster,
+      Booster = booster?.CashbackPercent == cashbackPercent ? booster : null,
     };
     dbContext.Add(bonus);
 
+    dbContext.Update(customer);
+    customer.LevelPointsAmount += bonus.CashIncome;
+
     if (scheduledAt is null)
     {
-      dbContext.Update(customer);
       customer.BonusAmount += appliedBonus;
     }
 
@@ -265,6 +274,7 @@ public class BonusContext(
     dbContext.Add(bonus);
 
     dbContext.Update(customer);
+    customer.LevelPointsAmount += bonus.CashIncome;
     customer.BonusAmount -= bonusAmount;
 
     await dbContext.SaveChangesAsync();

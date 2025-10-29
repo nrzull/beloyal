@@ -7,6 +7,7 @@ using Beloyal.API.Boosters;
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
+using Beloyal.API.Levels;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Promotions;
@@ -41,6 +42,7 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   public DbSet<Promotion> Promotions { get; set; }
   public DbSet<ShopPromotion> ShopPromotions { get; set; }
   public DbSet<Booster> Boosters { get; set; }
+  public DbSet<Level> Levels { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder builder)
   {
@@ -354,6 +356,15 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasOne(v => v.Customer)
         .WithMany(v => v.Boosters)
         .HasForeignKey(v => v.CustomerId)
+        .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<Level>(level =>
+    {
+      level
+        .HasOne(v => v.Company)
+        .WithMany(v => v.Levels)
+        .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
     });
   }

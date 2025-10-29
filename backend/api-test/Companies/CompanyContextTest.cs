@@ -26,7 +26,8 @@ public class CompanyContextTest : TestLifetime
             percent,
             new(1),
             TimeSpan.FromDays(1),
-            TimeZoneInfo.Local
+            TimeZoneInfo.Local,
+            TimeSpan.FromDays(1)
           )
         );
 
@@ -43,7 +44,8 @@ public class CompanyContextTest : TestLifetime
           percent,
           new(1),
           TimeSpan.FromDays(1),
-          TimeZoneInfo.Local
+          TimeZoneInfo.Local,
+          TimeSpan.FromDays(1)
         );
 
         whiteCompany = await companyContext.GetWhiteCompany(WhiteCompanyId.From(whiteCompany));
@@ -90,7 +92,8 @@ public class CompanyContextTest : TestLifetime
             percent,
             new(1),
             TimeSpan.FromDays(1),
-            TimeZoneInfo.Local
+            TimeZoneInfo.Local,
+            TimeSpan.FromDays(1)
           )
         );
 
@@ -104,7 +107,8 @@ public class CompanyContextTest : TestLifetime
           percent,
           new(1),
           TimeSpan.FromDays(1),
-          TimeZoneInfo.Local
+          TimeZoneInfo.Local,
+          TimeSpan.FromDays(1)
         );
       }
     );
@@ -135,7 +139,8 @@ public class CompanyContextTest : TestLifetime
             percent,
             new(1),
             TimeSpan.FromDays(1),
-            TimeZoneInfo.Local
+            TimeZoneInfo.Local,
+            TimeSpan.FromDays(1)
           )
         );
       }

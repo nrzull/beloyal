@@ -348,6 +348,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<TimeSpan>("LevelLifetime")
+                        .HasColumnType("interval")
+                        .HasColumnName("level_lifetime");
+
                     b.Property<string>("TimeZone")
                         .IsRequired()
                         .HasColumnType("text")
@@ -513,6 +517,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<decimal>("LevelPointsAmount")
+                        .HasColumnType("numeric")
+                        .HasColumnName("level_points_amount");
+
                     b.Property<Guid?>("MaxBotId")
                         .HasColumnType("uuid")
                         .HasColumnName("max_bot_id");
@@ -542,6 +550,42 @@ namespace Beloyal.API.Migrations
                         .HasDatabaseName("ix_customers_user_id_company_id");
 
                     b.ToTable("customers", (string)null);
+                });
+
+            modelBuilder.Entity("Beloyal.API.Levels.Level", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("CashbackPercent")
+                        .HasColumnType("numeric")
+                        .HasColumnName("cashback_percent");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<decimal>("PointsCapacity")
+                        .HasColumnType("numeric")
+                        .HasColumnName("points_capacity");
+
+                    b.HasKey("Id")
+                        .HasName("pk_levels");
+
+                    b.HasIndex("CompanyId")
+                        .HasDatabaseName("ix_levels_company_id");
+
+                    b.ToTable("levels", (string)null);
                 });
 
             modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>
@@ -1137,6 +1181,18 @@ namespace Beloyal.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Beloyal.API.Levels.Level", b =>
+                {
+                    b.HasOne("Beloyal.API.Companies.Company", "Company")
+                        .WithMany("Levels")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_levels_companies_company_id");
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Beloyal.API.Mailings.Mailing", b =>
                 {
                     b.HasOne("Beloyal.API.Companies.Company", "Company")
@@ -1277,6 +1333,8 @@ namespace Beloyal.API.Migrations
                     b.Navigation("Chats");
 
                     b.Navigation("Customers");
+
+                    b.Navigation("Levels");
 
                     b.Navigation("Mailings");
 
