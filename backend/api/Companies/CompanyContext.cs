@@ -110,6 +110,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
       BonusMultiplier = bonusMultiplier.Value,
       BonusLifetime = bonusLifetime,
       LevelLifetime = levelLifetime,
+      Owner = user,
     };
 
     var role = new CompanyRole
@@ -263,6 +264,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     await dbContext
       .CompanyAccesses.Include(v => v.Company)
       .Include(v => v.User)
+      .Include(v => v.Role)
       .FirstOrDefaultAsync(v => v.Id == id.Value);
 
   public async Task<CompanyAccess?> GetAccess(CompanyId companyId, CompanyAccessId id) =>

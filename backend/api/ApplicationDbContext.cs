@@ -106,6 +106,12 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
       company
         .Property(v => v.TimeZone)
         .HasConversion(v => v.Id, v => TimeZoneInfo.FindSystemTimeZoneById(v));
+
+      company
+        .HasOne(v => v.Owner)
+        .WithMany()
+        .HasForeignKey(v => v.OwnerId)
+        .HasPrincipalKey(v => v.Id);
     });
 
     builder.Entity<CompanyAccess>(companyAccess =>

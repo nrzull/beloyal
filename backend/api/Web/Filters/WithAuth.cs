@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Beloyal.API.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

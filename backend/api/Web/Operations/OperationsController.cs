@@ -15,6 +15,7 @@ namespace Beloyal.API.Web.Operations;
 public class OperationsController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.operations_read))]
   public async Task<Results<Ok<GetOperationsResponse.Ok>, BadRequest>> GetOperations(
     [FromServices] GetOperationsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -26,6 +27,7 @@ public class OperationsController : ControllerBase
     };
 
   [HttpPatch("{id}/cancel")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.operations_write))]
   public async Task<Results<Ok<CancelOperationResponse.Ok>, BadRequest>> CancelOperation(
     [FromServices] CancelOperationEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

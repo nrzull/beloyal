@@ -16,6 +16,7 @@ namespace Beloyal.API.Web.Chats;
 public class ChatsController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.chats_read))]
   public async Task<Results<Ok<GetChatsResponse.Ok>, BadRequest>> GetChats(
     [FromServices] GetChatsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -27,6 +28,7 @@ public class ChatsController : ControllerBase
     };
 
   [HttpGet("{id}/messages")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.chats_read))]
   public async Task<Results<Ok<GetChatMessagesResponse.Ok>, BadRequest>> GetChatMessages(
     [FromServices] GetChatMessagesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -39,6 +41,7 @@ public class ChatsController : ControllerBase
     };
 
   [HttpPost("{id}/messages")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.chats_write))]
   public async Task<Results<Ok<CreateMessageResponse.Ok>, BadRequest>> CreateMessage(
     [FromServices] CreateMessageEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

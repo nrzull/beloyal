@@ -14,6 +14,7 @@ namespace Beloyal.API.Web.Mailings;
 public class MailingsController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.mailings_read))]
   public async Task<Results<Ok<GetMailingsResponse.Ok>, BadRequest>> GetMailings(
     [FromServices] GetMailingsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -25,6 +26,7 @@ public class MailingsController : ControllerBase
     };
 
   [HttpPost]
+  [WithCompanyPermissions(nameof(CompanyPermissions.mailings_write))]
   public async Task<Results<Ok<CreateMailingResponse.Ok>, BadRequest>> CreateMailing(
     [FromServices] CreateMailingEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

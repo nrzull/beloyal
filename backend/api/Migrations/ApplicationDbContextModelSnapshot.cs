@@ -352,6 +352,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("interval")
                         .HasColumnName("level_lifetime");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("owner_id");
+
                     b.Property<string>("TimeZone")
                         .IsRequired()
                         .HasColumnType("text")
@@ -374,6 +378,9 @@ namespace Beloyal.API.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_companies");
+
+                    b.HasIndex("OwnerId")
+                        .HasDatabaseName("ix_companies_owner_id");
 
                     b.HasIndex("Tin")
                         .IsUnique()
@@ -1068,6 +1075,11 @@ namespace Beloyal.API.Migrations
 
             modelBuilder.Entity("Beloyal.API.Companies.Company", b =>
                 {
+                    b.HasOne("Beloyal.API.Users.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .HasConstraintName("fk_companies_users_owner_id");
+
                     b.OwnsOne("Beloyal.API.Companies.CompanyBonusFrequency", "BonusFrequency", b1 =>
                         {
                             b1.Property<Guid>("CompanyId")
@@ -1092,6 +1104,8 @@ namespace Beloyal.API.Migrations
                         });
 
                     b.Navigation("BonusFrequency");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Beloyal.API.Companies.CompanyAccess", b =>

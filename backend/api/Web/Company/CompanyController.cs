@@ -16,6 +16,7 @@ namespace Beloyal.API.Web.Company;
 public class CompanyController : ControllerBase
 {
   [HttpPatch]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_current_write))]
   public async Task<Results<Ok<UpdateCompanyResponse.Ok>, BadRequest>> UpdateCompany(
     [FromServices] UpdateCompanyEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -28,6 +29,7 @@ public class CompanyController : ControllerBase
     };
 
   [HttpGet("cashback")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_options_read))]
   public async Task<Results<Ok<GetBonusOptionsResponse.Ok>, BadRequest>> GetBonusOptions(
     [FromServices] GetBonusOptionsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -39,6 +41,7 @@ public class CompanyController : ControllerBase
     };
 
   [HttpPatch("cashback")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_options_write))]
   public async Task<Results<Ok<SetBonusOptionsResponse.Ok>, BadRequest>> SetBonusOptions(
     [FromServices] SetBonusOptionsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

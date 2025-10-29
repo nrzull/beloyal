@@ -17,6 +17,7 @@ namespace Beloyal.API.Web.CompanyRoles;
 public class CompanyRolesController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_roles_read))]
   public async Task<Results<Ok<GetRolesResponse.Ok>, BadRequest>> GetRoles(
     [FromServices] GetRolesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -28,6 +29,7 @@ public class CompanyRolesController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_roles_read))]
   public async Task<Results<Ok<GetRoleResponse.Ok>, NotFound, BadRequest>> GetRole(
     [FromServices] GetRoleEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -41,6 +43,7 @@ public class CompanyRolesController : ControllerBase
     };
 
   [HttpPost]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_roles_write))]
   public async Task<Results<Ok<CreateRoleResponse.Ok>, BadRequest>> CreateRole(
     [FromServices] CreateRoleEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -53,6 +56,7 @@ public class CompanyRolesController : ControllerBase
     };
 
   [HttpPatch("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_roles_write))]
   public async Task<Results<Ok<UpdateRoleResponse.Ok>, BadRequest>> UpdateRole(
     [FromServices] UpdateRoleEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

@@ -19,6 +19,7 @@ namespace Beloyal.API.Web.Customers;
 public class CustomersController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.customers_read))]
   public async Task<Results<Ok<GetCustomersResponse.Ok>, BadRequest>> GetCustomers(
     [FromServices] GetCustomersEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -30,6 +31,7 @@ public class CustomersController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.customers_read))]
   public async Task<Results<Ok<GetCustomerResponse.Ok>, NotFound, BadRequest>> GetCustomer(
     [FromServices] GetCustomerEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -43,6 +45,7 @@ public class CustomersController : ControllerBase
     };
 
   [HttpGet("{id}/operations")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.operations_read))]
   public async Task<Results<Ok<GetOperationsResponse.Ok>, BadRequest>> GetCustomerOperations(
     [FromServices] GetCustomerOperationsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -55,6 +58,7 @@ public class CustomersController : ControllerBase
     };
 
   [HttpGet("{id}/boosters")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.boosters_read))]
   public async Task<Results<Ok<GetCustomerBoostersResponse.Ok>, BadRequest>> GetCustomerBoosters(
     [FromServices] GetCustomerBoostersEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -67,6 +71,7 @@ public class CustomersController : ControllerBase
     };
 
   [HttpPost("{id}/boosters")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.boosters_write))]
   public async Task<Results<Ok<CreateBoosterResponse.Ok>, BadRequest>> CreateBooster(
     [FromServices] CreateBoosterEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

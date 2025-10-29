@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Beloyal.API.Web.Filters;
 
-public class WithAdminAccessAttribute : TypeFilterAttribute
+public class WithAdminPermissionsAttribute : TypeFilterAttribute
 {
-  public WithAdminAccessAttribute(string permission)
-    : base(typeof(WithAdminAccessFilter))
+  public WithAdminPermissionsAttribute(string permission)
+    : base(typeof(WithAdminPermissionsFilter))
   {
     Arguments = [permission];
   }
 }
 
-public class WithAdminAccessFilter(string permission) : IAsyncActionFilter
+public class WithAdminPermissionsFilter(string permission) : IAsyncActionFilter
 {
   public async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
   {

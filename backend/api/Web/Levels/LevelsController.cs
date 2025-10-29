@@ -18,6 +18,7 @@ namespace Beloyal.API.Web.Levels;
 public class LevelsController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.levels_read))]
   public async Task<Results<Ok<GetLevelsResponse.Ok>, BadRequest>> GetLevels(
     [FromServices] GetLevelsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -29,6 +30,7 @@ public class LevelsController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.levels_read))]
   public async Task<Results<Ok<GetLevelResponse.Ok>, NotFound, BadRequest>> GetLevels(
     [FromServices] GetLevelEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -42,6 +44,7 @@ public class LevelsController : ControllerBase
     };
 
   [HttpPost]
+  [WithCompanyPermissions(nameof(CompanyPermissions.levels_write))]
   public async Task<Results<Ok<CreateLevelResponse.Ok>, BadRequest>> CreateLevel(
     [FromServices] CreateLevelEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -54,6 +57,7 @@ public class LevelsController : ControllerBase
     };
 
   [HttpPatch("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.levels_write))]
   public async Task<Results<Ok<UpdateLevelResponse.Ok>, BadRequest>> UpdateLevel(
     [FromServices] UpdateLevelEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -67,6 +71,7 @@ public class LevelsController : ControllerBase
     };
 
   [HttpDelete("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.levels_write))]
   public async Task<Results<Ok<DeleteLevelResponse.Ok>, BadRequest>> DeleteLevel(
     [FromServices] DeleteLevelEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

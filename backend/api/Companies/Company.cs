@@ -5,6 +5,7 @@ using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Promotions;
 using Beloyal.API.Shops;
+using Beloyal.API.Users;
 
 namespace Beloyal.API.Companies;
 
@@ -25,6 +26,9 @@ public class Company
   public TimeSpan? BonusScheduling { get; set; }
   public decimal? WelcomeBonus { get; set; }
   public required TimeSpan LevelLifetime { get; set; }
+
+  public Guid? OwnerId { get; set; }
+  public User? Owner { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

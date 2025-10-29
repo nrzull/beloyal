@@ -24,6 +24,7 @@ namespace Beloyal.API.Web.Shops;
 public class ShopsController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shops_read))]
   [ProducesResponseType(typeof(GetShopsResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetShopsResponse.Ok>, BadRequest>> GetShops(
     [FromServices] GetShopsEndpoint endpoint,
@@ -36,6 +37,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpPost]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shops_write))]
   [ProducesResponseType(typeof(CreateShopResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<CreateShopResponse.Ok>, BadRequest>> CreateShop(
     [FromServices] CreateShopEndpoint endpoint,
@@ -49,6 +51,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shops_read))]
   [ProducesResponseType(typeof(GetShopResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetShopResponse.Ok>, NotFound, BadRequest>> GetShop(
     [FromServices] GetShopEndpoint endpoint,
@@ -63,6 +66,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpPatch("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shops_write))]
   public async Task<Results<Ok<UpdateShopResponse.Ok>, BadRequest>> UpdateShop(
     [FromServices] UpdateShopEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -76,6 +80,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpGet("{id}/shop-accesses")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shop_accesses_read))]
   [ProducesResponseType(typeof(GetShopAccessesResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<GetShopAccessesResponse.Ok>, BadRequest>> GetShopAccesses(
     [FromServices] GetShopAccessesEndpoint endpoint,
@@ -89,6 +94,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpPost("{id}/shop-accesses")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shop_accesses_write))]
   [ProducesResponseType(typeof(CreateShopAccessResponse.Ok), StatusCodes.Status200OK)]
   public async Task<Results<Ok<CreateShopAccessResponse.Ok>, BadRequest>> CreateShopAccess(
     [FromServices] CreateShopAccessEndpoint endpoint,
@@ -102,6 +108,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpDelete("{id}/shop-accesses/{shopAccessId}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shop_accesses_write))]
   public async Task<Results<Ok<RemoveShopAccessResponse.Ok>, BadRequest>> RemoveShopAccess(
     [FromServices] RemoveShopAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -114,6 +121,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpGet("{id}/shop-promotions")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shop_promotions_read))]
   public async Task<Results<Ok<GetPromotionsResponse.Ok>, BadRequest>> GetShopPromotions(
     [FromServices] GetPromotionsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -126,6 +134,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpPost("{id}/shop-promotions")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shop_promotions_write))]
   public async Task<Results<Ok<AddPromotionResponse.Ok>, BadRequest>> AddPromotion(
     [FromServices] AddPromotionEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -143,6 +152,7 @@ public class ShopsController : ControllerBase
     };
 
   [HttpDelete("{id}/shop-promotions/{shopPromotionId}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.shop_promotions_write))]
   public async Task<Results<Ok<RemovePromotionResponse.Ok>, BadRequest>> RemovePromotion(
     [FromServices] RemovePromotionEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

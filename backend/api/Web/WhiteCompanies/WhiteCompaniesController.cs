@@ -17,7 +17,7 @@ namespace Beloyal.API.Web.WhiteCompanies;
 public class WhiteCompaniesController : ControllerBase
 {
   [HttpGet]
-  [WithAdminAccess(nameof(AdminPermissions.white_companies_read))]
+  [WithAdminPermissions(nameof(AdminPermissions.white_companies_read))]
   public async Task<Results<Ok<GetWhiteCompaniesResponse.Ok>, BadRequest>> GetWhiteCompanies(
     [FromServices] GetWhiteCompaniesEndpoint endpoint
   ) =>
@@ -28,7 +28,7 @@ public class WhiteCompaniesController : ControllerBase
     };
 
   [HttpGet("{id}")]
-  [WithAdminAccess(nameof(AdminPermissions.white_companies_read))]
+  [WithAdminPermissions(nameof(AdminPermissions.white_companies_read))]
   public async Task<Results<Ok<GetWhiteCompanyResponse.Ok>, NotFound, BadRequest>> GetWhiteCompany(
     [FromServices] GetWhiteCompanyEndpoint endpoint,
     [FromRoute(Name = "id")] Guid id
@@ -41,7 +41,7 @@ public class WhiteCompaniesController : ControllerBase
     };
 
   [HttpPatch("{id}")]
-  [WithAdminAccess(nameof(AdminPermissions.white_companies_write))]
+  [WithAdminPermissions(nameof(AdminPermissions.white_companies_write))]
   public async Task<Results<Ok<UpdateCompanyResponse.Ok>, BadRequest>> UpdateCompany(
     [FromServices] UpdateCompanyEndpoint endpoint,
     [FromRoute(Name = "id")] Guid id,
@@ -54,7 +54,7 @@ public class WhiteCompaniesController : ControllerBase
     };
 
   [HttpPost]
-  [WithAdminAccess(nameof(AdminPermissions.white_companies_write))]
+  [WithAdminPermissions(nameof(AdminPermissions.white_companies_write))]
   public async Task<Results<Ok<AddCompanyResponse.Ok>, BadRequest>> AddCompany(
     [FromServices] AddCompanyEndpoint endpoint,
     [FromBody] AddCompanyRequest req

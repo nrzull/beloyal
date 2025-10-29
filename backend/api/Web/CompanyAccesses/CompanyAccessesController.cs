@@ -18,6 +18,7 @@ namespace Beloyal.API.Web.CompanyAccesses;
 public class CompanyAccessesController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_accesses_read))]
   public async Task<Results<Ok<GetAccessesResponse.Ok>, BadRequest>> GetCompanyAccesses(
     [FromServices] GetAccessesEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -29,6 +30,7 @@ public class CompanyAccessesController : ControllerBase
     };
 
   [HttpPost]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_accesses_write))]
   public async Task<Results<Ok<CreateAccessResponse.Ok>, BadRequest>> CreateCompanyAccess(
     [FromServices] CreateAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -41,6 +43,7 @@ public class CompanyAccessesController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_accesses_read))]
   public async Task<Results<NotFound, Ok<GetAccessResponse.Ok>, BadRequest>> GetAccess(
     [FromServices] GetAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -54,6 +57,7 @@ public class CompanyAccessesController : ControllerBase
     };
 
   [HttpPatch("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_accesses_write))]
   public async Task<Results<Ok<UpdateAccessResponse.Ok>, BadRequest>> UpdateCompanyAccess(
     [FromServices] UpdateAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -66,6 +70,7 @@ public class CompanyAccessesController : ControllerBase
     };
 
   [HttpPatch("{id}/block")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_accesses_write))]
   public async Task<Results<Ok<BlockAccessResponse.Ok>, BadRequest>> BlockCompanyAccess(
     [FromServices] BlockAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -78,6 +83,7 @@ public class CompanyAccessesController : ControllerBase
     };
 
   [HttpPatch("{id}/unblock")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.company_accesses_write))]
   public async Task<Results<Ok<UnblockAccessResponse.Ok>, BadRequest>> UnblockCompanyAccess(
     [FromServices] UnblockAccessEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

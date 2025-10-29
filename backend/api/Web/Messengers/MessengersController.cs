@@ -14,6 +14,7 @@ namespace Beloyal.API.Web.Messengers;
 public class MessengersController : ControllerBase
 {
   [HttpGet("telegram-bot")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.messengers_read))]
   public async Task<Results<Ok<GetTgBotResponse.Ok>, NotFound, BadRequest>> GetTgBot(
     [FromServices] GetTgBotEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -26,6 +27,7 @@ public class MessengersController : ControllerBase
     };
 
   [HttpPost("telegram-bot")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.messengers_write))]
   public async Task<Results<Ok<CreateTgBotResponse.Ok>, BadRequest>> CreateTgBot(
     [FromServices] CreateTgBotEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,

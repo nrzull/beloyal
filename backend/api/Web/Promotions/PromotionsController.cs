@@ -17,6 +17,7 @@ namespace Beloyal.API.Web.Promotions;
 public class PromotionsController : ControllerBase
 {
   [HttpGet]
+  [WithCompanyPermissions(nameof(CompanyPermissions.promotions_read))]
   public async Task<Results<Ok<GetPromotionsResponse.Ok>, BadRequest>> GetPromotions(
     [FromServices] GetPromotionsEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess
@@ -28,6 +29,7 @@ public class PromotionsController : ControllerBase
     };
 
   [HttpGet("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.promotions_read))]
   public async Task<Results<Ok<GetPromotionResponse.Ok>, BadRequest, NotFound>> GetPromotion(
     [FromServices] GetPromotionEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -41,6 +43,7 @@ public class PromotionsController : ControllerBase
     };
 
   [HttpPost]
+  [WithCompanyPermissions(nameof(CompanyPermissions.promotions_write))]
   public async Task<Results<Ok<CreatePromotionResponse.Ok>, BadRequest>> CreatePromotion(
     [FromServices] CreatePromotionEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
@@ -53,6 +56,7 @@ public class PromotionsController : ControllerBase
     };
 
   [HttpPatch("{id}")]
+  [WithCompanyPermissions(nameof(CompanyPermissions.promotions_write))]
   public async Task<Results<Ok<UpdatePromotionResponse.Ok>, BadRequest>> UpdatePromotion(
     [FromServices] UpdatePromotionEndpoint endpoint,
     [FromServices] CompanyAccess? companyAccess,
