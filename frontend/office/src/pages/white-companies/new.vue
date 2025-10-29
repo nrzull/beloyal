@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Новая компания</Heading>
     </template>
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, Input, Button, Card, Space } from "@beloyal/shared";
+import { Heading, Input, Button, Card, Space, useToast } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { apiWhiteCompaniesCreate } from "~/api/whiteCompanies";
@@ -38,6 +38,7 @@ const tin = ref();
 const expiredAt = ref();
 const router = useRouter();
 const isLoading = computed(() => wait.some([createWhiteCompany]));
+const { showOk, showError } = useToast();
 
 const createWhiteCompany = async () => {
   if (!tin.value || !expiredAt.value) {
@@ -51,10 +52,11 @@ const createWhiteCompany = async () => {
       tin: tin.value,
       expiredAt: formatISO(startOfDay(expiredAt.value)),
     });
-
+    showOk();
     router.push("/white-companies");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createWhiteCompany);
   }

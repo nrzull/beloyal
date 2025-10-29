@@ -83,6 +83,8 @@ import {
   type Shop,
   type Promotion,
   wait,
+  useToast,
+  waitable,
 } from "@beloyal/shared";
 import {
   apiShopsAddPromotion,
@@ -94,14 +96,21 @@ import { formatDate } from "@beloyal/shared";
 import { apiPromotionsGetAll } from "~/api/promotions";
 import { NModal } from "naive-ui";
 
-const { shop } = defineProps<{ shop: Shop }>();
-
+const { shop, loading } = defineProps<{ shop: Shop; loading: boolean }>();
+const { showOk, showError } = useToast();
 const shopPromotions = ref<ShopPromotion[]>([]);
 const availablePromotions = ref<Promotion[]>([]);
 const addShopPromotionModal = ref(false);
 
-const isLoading = computed(() =>
-  wait.some([fetchShopPromotions, removeShopPromotion, addShopPromotion])
+const isLoading = computed(
+  () =>
+    loading ||
+    wait.some([
+      apiPromotionsGetAll,
+      fetchShopPromotions,
+      removeShopPromotion,
+      addShopPromotion,
+    ])
 );
 
 const fetchShopPromotions = async () => {
@@ -111,6 +120,7 @@ const fetchShopPromotions = async () => {
     shopPromotions.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchShopPromotions);
   }
@@ -132,8 +142,10 @@ const removeShopPromotion = async (v: Promotion) => {
       shopPromotionId: shopPromotion?.id,
     });
     await fetchShopPromotions();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(removeShopPromotion);
   }
@@ -157,14 +169,18 @@ const addShopPromotion = async (v: Promotion) => {
 
     await apiShopsAddPromotion({ shopId: shop.id, promotionId: v.id });
     await fetchShopPromotions();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(addShopPromotion);
   }
 };
 
-apiPromotionsGetAll().then((v) => (availablePromotions.value = v.data));
+waitable(apiPromotionsGetAll)().then(
+  (v) => (availablePromotions.value = v.data)
+);
 fetchShopPromotions();
 </script>
 

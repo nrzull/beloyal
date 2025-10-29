@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Новый пользователь</Heading>
     </template>
@@ -35,7 +35,15 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Input, Card, Button, Heading, unmaskPhone } from "@beloyal/shared";
+import {
+  Input,
+  Card,
+  Button,
+  Heading,
+  unmaskPhone,
+  useToast,
+  waitable,
+} from "@beloyal/shared";
 
 import { NSelect } from "naive-ui";
 import { computed, ref, useTemplateRef } from "vue";
@@ -45,10 +53,13 @@ import type { CompanyRole } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 import { apiCompanyAccessesCreate } from "~/api/companyAccesses";
 
-const isLoading = computed(() => wait.some([createCompanyAccessInvitation]));
+const isLoading = computed(() =>
+  wait.some([apiCompanyRolesGetAll, createCompanyAccessInvitation])
+);
 const router = useRouter();
 const phone = ref<string>();
 const selectedRoleId = ref<string>();
+const { showOk, showError } = useToast();
 
 const phoneRef = useTemplateRef("phoneRef");
 useMask(
@@ -73,15 +84,17 @@ const createCompanyAccessInvitation = async () => {
       roleId: selectedRoleId.value,
     });
 
+    showOk();
     router.push("/company-accesses");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createCompanyAccessInvitation);
   }
 };
 
-apiCompanyRolesGetAll().then((v) => (companyRoles.value = v.data));
+waitable(apiCompanyRolesGetAll)().then((v) => (companyRoles.value = v.data));
 </script>
 
 <style module>

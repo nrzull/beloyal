@@ -186,7 +186,9 @@ import { NInputNumber, NThing } from "naive-ui";
 import CashbackPercentInput from "~/components/CashbackPercentInput.vue";
 import DurationForm from "~/components/DurationForm.vue";
 import { serialize } from "tinyduration";
+import { useToast } from "@beloyal/shared";
 
+const { showOk, showError } = useToast();
 const bonusOptions = ref<CompanyBonusOptions>();
 
 const isLoading = computed(() =>
@@ -197,8 +199,10 @@ const setBonusOptions = async () => {
   try {
     wait.start(setBonusOptions);
     await apiCompanySetBonusOptions(bonusOptions.value!);
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(setBonusOptions);
   }

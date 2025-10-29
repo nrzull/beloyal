@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Новая торговая точка</Heading>
     </template>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, Card, Button } from "@beloyal/shared";
+import { Heading, Card, Button, useToast } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import { useRouter } from "vue-router";
@@ -26,7 +26,7 @@ import type { PartialShop } from "~/components/Shops/utils";
 
 const isLoading = computed(() => wait.some([createShop]));
 const router = useRouter();
-
+const { showOk, showError } = useToast();
 const model = ref<PartialShop>({ name: "", timeZone: undefined });
 
 const createShop = async () => {
@@ -37,9 +37,11 @@ const createShop = async () => {
   try {
     wait.start(createShop);
     await apiShopsCreate(model.value);
+    showOk();
     router.push("/shops");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createShop);
   }

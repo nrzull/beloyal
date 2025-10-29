@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Heading, wait, waitable } from "@beloyal/shared";
+import { Heading, useToast, wait, waitable } from "@beloyal/shared";
 import { self } from "~/composables/self";
 import { Card, Button } from "@beloyal/shared";
 import { computed, ref } from "vue";
@@ -25,7 +25,7 @@ import { apiCompanyUpdate } from "~/api/company";
 import { fetchSelf } from "~/composables/self";
 
 const model = ref();
-
+const { showOk, showError } = useToast();
 const isLoading = computed(() => wait.some([fetchSelf, updateCompany]));
 
 const updateCompany = async () => {
@@ -33,8 +33,10 @@ const updateCompany = async () => {
     wait.start(updateCompany);
     await apiCompanyUpdate(model.value);
     await fetchCompany();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(updateCompany);
   }

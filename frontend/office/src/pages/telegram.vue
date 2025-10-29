@@ -14,10 +14,11 @@ import { apiMessengersGetTgBot } from "~/api/messengers";
 import { computed, ref } from "vue";
 import type { TgBot } from "@beloyal/shared";
 import NewPage from "~/pages/telegram/new.vue";
-import { wait } from "@beloyal/shared";
+import { useToast, wait } from "@beloyal/shared";
 
 const tgBot = ref<TgBot>();
 const isLoading = computed(() => wait.some([fetchBot]));
+const { showError } = useToast();
 
 const fetchBot = async () => {
   try {
@@ -27,6 +28,7 @@ const fetchBot = async () => {
     tgBot.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchBot);
   }

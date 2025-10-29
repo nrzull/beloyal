@@ -33,7 +33,7 @@ import {
   apiChatsCreateMessage,
 } from "~/api/chats";
 import type { Chat, ChatMessage } from "@beloyal/shared";
-import { wait } from "@beloyal/shared";
+import { useToast, wait } from "@beloyal/shared";
 import ChatPreview from "~/components/Chats/Messenger/ChatPreview.vue";
 import ChatConversation from "~/components/Chats/Messenger/ChatConversation.vue";
 import { wsClient } from "~/api/clients";
@@ -42,7 +42,7 @@ import type { ChatInput } from "~/components/Chats/Messenger/types";
 const isLoading = computed(() => wait.some([fetchChats]));
 const chats = ref<Map<Chat, ChatMessage[]>>(new Map());
 const activeChat = ref<Chat>();
-
+const { showError } = useToast();
 const inputHistory = ref<Map<Chat, ChatInput>>(new Map());
 
 const getOrInitChatInput = (v: Chat): ChatInput => {
@@ -68,6 +68,7 @@ const fetchChats = async () => {
     }
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchChats);
   }
@@ -91,6 +92,7 @@ const sendMessage = async (chat: Chat) => {
     });
   } catch (e) {
     console.error(e);
+    showError();
 
     if (!inputHistory.value.has(chat)) {
       inputHistory.value.set(chat, input);

@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Новый уровень</Heading>
     </template>
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import LevelForm from "~/components/Levels/LevelForm.vue";
-import { Card, wait } from "@beloyal/shared";
+import { Card, useToast, wait } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { Heading, Button } from "@beloyal/shared";
 import { computed, ref } from "vue";
@@ -25,6 +25,7 @@ import { useRouter } from "vue-router";
 
 const model = ref(newLevel());
 const router = useRouter();
+const { showOk, showError } = useToast();
 
 const isLoading = computed(() => wait.some([createLevel]));
 
@@ -32,9 +33,11 @@ const createLevel = async () => {
   try {
     wait.start(createLevel);
     await apiLevelsCreate(model.value);
+    showOk();
     router.push("/levels");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createLevel);
   }

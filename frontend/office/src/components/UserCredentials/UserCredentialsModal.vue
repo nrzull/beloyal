@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Button, wait } from "@beloyal/shared";
+import { Button, useToast, wait } from "@beloyal/shared";
 import { NModal } from "naive-ui";
 import { computed, ref } from "vue";
 import { self, fetchSelf } from "~/composables/self";
@@ -28,6 +28,7 @@ import UserCredentialsForm from "~/components/UserCredentials/UserCredentialsFor
 const model = ref({ firstName: "", lastName: "", middleName: "" });
 const forcedHide = ref<boolean>(false);
 const isLoading = computed(() => wait.some([update]));
+const { showOk, showError } = useToast();
 
 const show = computed(() => {
   const partiallyFilled = [
@@ -52,8 +53,10 @@ const update = async () => {
       middleName: model.value.middleName?.trim(),
     });
     await fetchSelf();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(update);
   }

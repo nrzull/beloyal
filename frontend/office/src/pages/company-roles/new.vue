@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Новая роль</Heading>
     </template>
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { computed, ref } from "vue";
-import { Heading, Card, Button } from "@beloyal/shared";
+import { Heading, Card, Button, useToast, waitable } from "@beloyal/shared";
 import {
   apiCompanyRolesGetPermissions,
   apiCompanyRolesCreate,
@@ -33,11 +33,14 @@ import RoleForm from "~/components/RoleForm/RoleForm.vue";
 
 const name = ref<string>();
 const availablePermissions = ref<string[]>([]);
-const isLoading = computed(() => wait.some([createRole]));
+const isLoading = computed(() =>
+  wait.some([createRole, apiCompanyRolesGetPermissions])
+);
 const activePermissions = ref<string[]>([]);
 const router = useRouter();
+const { showOk, showError } = useToast();
 
-apiCompanyRolesGetPermissions().then(
+waitable(apiCompanyRolesGetPermissions)().then(
   (v) => (availablePermissions.value = v.data)
 );
 
@@ -53,10 +56,11 @@ const createRole = async () => {
       name: name.value,
       permissions: activePermissions.value,
     });
-
+    showOk();
     router.push("/company-roles");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createRole);
   }

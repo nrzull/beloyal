@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Button, Card } from "@beloyal/shared";
+import { Button, Card, useToast } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
 import { wait } from "@beloyal/shared";
@@ -29,6 +29,7 @@ const model = ref({ tin: "", title: "" });
 
 const router = useRouter();
 const isLoading = computed(() => wait.some([createCompany]));
+const { showOk, showError } = useToast();
 
 const createCompany = async () => {
   if (!model.value.tin || !model.value.title) {
@@ -48,9 +49,11 @@ const createCompany = async () => {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 
+    showOk();
     router.push("/");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createCompany);
   }

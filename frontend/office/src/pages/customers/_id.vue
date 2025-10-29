@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <NBreadcrumb>
         <NBreadcrumbItem @click="$router.push('/customers')">
@@ -36,13 +36,15 @@ import { useRoute } from "vue-router";
 import { apiCustomersGet } from "~/api/customers";
 import Page from "~/components/Page.vue";
 import { NTab, NTabs, NBreadcrumb, NBreadcrumbItem } from "naive-ui";
-import { maskPhone, wait } from "@beloyal/shared";
+import { maskPhone, wait, waitable } from "@beloyal/shared";
 
 const route = useRoute();
 const customer = ref<Customer>();
-const isLoading = computed(() => wait.some([]));
+const isLoading = computed(() => wait.some([apiCustomersGet]));
 
 const customerId = route.params.id as string;
 
-apiCustomersGet({ customerId }).then((v) => (customer.value = v.data));
+waitable(apiCustomersGet)({ customerId }).then(
+  (v) => (customer.value = v.data)
+);
 </script>

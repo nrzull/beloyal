@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <NBreadcrumb>
         <NBreadcrumbItem @click="$router.push('/company-accesses')">
@@ -41,7 +41,7 @@ import {
   apiCompanyAccessesUpdate,
 } from "~/api/companyAccesses";
 import { useRoute, useRouter } from "vue-router";
-import { Card } from "@beloyal/shared";
+import { Card, useToast, waitable } from "@beloyal/shared";
 import { wait } from "@beloyal/shared";
 import { maskPhone, Button } from "@beloyal/shared";
 
@@ -50,8 +50,10 @@ const router = useRouter();
 const companyAccess = ref<CompanyAccess>();
 const companyRoles = ref<CompanyRole[]>([]);
 const companyAccessId = computed(() => route.params.id as string);
-
-const isLoading = computed(() => wait.some([updateAccess]));
+const { showOk, showError } = useToast();
+const isLoading = computed(() =>
+  wait.some([apiCompanyRolesGetAll, apiCompanyAccessesGet, updateAccess])
+);
 
 const updateAccess = async () => {
   try {
@@ -62,17 +64,19 @@ const updateAccess = async () => {
       companyAccessId: companyAccessId.value,
     });
 
+    showOk();
     router.push("/company-accesses");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(updateAccess);
   }
 };
 
-apiCompanyRolesGetAll().then((v) => (companyRoles.value = v.data));
+waitable(apiCompanyRolesGetAll)().then((v) => (companyRoles.value = v.data));
 
-apiCompanyAccessesGet({ companyAccessId: companyAccessId.value }).then(
-  (v) => (companyAccess.value = v.data)
-);
+waitable(apiCompanyAccessesGet)({
+  companyAccessId: companyAccessId.value,
+}).then((v) => (companyAccess.value = v.data));
 </script>

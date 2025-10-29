@@ -3,6 +3,7 @@ export * from "./composables/wait";
 export * from "./composables/theme";
 export * from "./composables/useMobileVh";
 export * from "./composables/useMask";
+export * from "./composables/useToast";
 export * from "./utils/phone";
 export * from "./utils/bonus";
 export * from "./utils/user";

@@ -4,9 +4,9 @@
       <slot name="top"></slot>
     </div>
 
-    <span v-if="loading" :class="$style.loader"></span>
-
     <slot></slot>
+
+    <span v-if="loading" :class="$style.loader"></span>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ defineProps<{ loading?: boolean }>();
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--background-color);
+  background-color: var(--background-color-loading);
   z-index: 100;
 }
 
@@ -55,7 +55,6 @@ defineProps<{ loading?: boolean }>();
   border: 5px dotted var(--color-primary);
   border-radius: 50%;
   display: inline-block;
-  position: relative;
   box-sizing: border-box;
   animation: rotation 2s linear infinite;
 }

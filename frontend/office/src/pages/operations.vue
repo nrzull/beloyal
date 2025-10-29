@@ -71,7 +71,13 @@
 </template>
 
 <script setup lang="ts">
-import { Button, Heading, wait, type Operation } from "@beloyal/shared";
+import {
+  Button,
+  Heading,
+  useToast,
+  wait,
+  type Operation,
+} from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { apiOperationsCancel, apiOperationsGetAll } from "~/api/operations";
 import { computed, ref } from "vue";
@@ -81,7 +87,7 @@ import { translateBonusType, translateBonusStatus } from "@beloyal/shared";
 import { NTag } from "naive-ui";
 
 const operations = ref<Operation[]>([]);
-
+const { showOk, showError } = useToast();
 const isLoading = computed(() => wait.some([fetchOperations, cancel]));
 
 const fetchOperations = async () => {
@@ -91,6 +97,7 @@ const fetchOperations = async () => {
     operations.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchOperations);
   }
@@ -101,8 +108,10 @@ const cancel = async (v: Operation) => {
     wait.start(cancel);
     await apiOperationsCancel({ bonusId: v.bonus.id });
     await fetchOperations();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(cancel);
   }

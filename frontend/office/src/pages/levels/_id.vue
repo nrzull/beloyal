@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Редактирование уровня</Heading>
     </template>
@@ -28,7 +28,14 @@
 
 <script setup lang="ts">
 import LevelForm from "~/components/Levels/LevelForm.vue";
-import { Card, Space, wait, type Level } from "@beloyal/shared";
+import {
+  Card,
+  Space,
+  useToast,
+  wait,
+  waitable,
+  type Level,
+} from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { Heading, Button } from "@beloyal/shared";
 import { computed, ref } from "vue";
@@ -38,18 +45,22 @@ import { useRoute, useRouter } from "vue-router";
 const model = ref<Level>();
 const router = useRouter();
 const route = useRoute();
-
+const { showOk, showError } = useToast();
 const levelId = route.params.id as string;
 
-const isLoading = computed(() => wait.some([updateLevel, deleteLevel]));
+const isLoading = computed(() =>
+  wait.some([apiLevelsGet, updateLevel, deleteLevel])
+);
 
 const updateLevel = async () => {
   try {
     wait.start(updateLevel);
     await apiLevelsUpdate(model.value!);
+    showOk();
     router.push("/levels");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(updateLevel);
   }
@@ -59,13 +70,15 @@ const deleteLevel = async () => {
   try {
     wait.start(deleteLevel);
     await apiLevelsDelete(model.value!);
+    showOk();
     router.push("/levels");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(deleteLevel);
   }
 };
 
-apiLevelsGet({ id: levelId }).then((v) => (model.value = v.data));
+waitable(apiLevelsGet)({ id: levelId }).then((v) => (model.value = v.data));
 </script>

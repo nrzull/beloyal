@@ -79,17 +79,22 @@ import {
   apiShopsRemoveAccess,
 } from "~/api/shops";
 import type { Shop } from "@beloyal/shared";
-import { wait, Button } from "@beloyal/shared";
+import { wait, Button, useToast, waitable } from "@beloyal/shared";
 import { formatDate } from "@beloyal/shared";
 import { Table, maskPhone, buildFullName } from "@beloyal/shared";
 
 const { shop } = defineProps<{ shop: Shop }>();
-
+const { showOk, showError } = useToast();
 const addShopAccessModal = ref(false);
 const shopAccesses = ref<ShopAccess[]>([]);
 const availableCompanyAccesses = ref<CompanyAccess[]>([]);
 const isLoading = computed(() =>
-  wait.some([removeShopAccess, addShopAccess, fetchShopAccesses])
+  wait.some([
+    removeShopAccess,
+    addShopAccess,
+    fetchShopAccesses,
+    apiCompanyAccessesGetAll,
+  ])
 );
 
 const removeShopAccess = async (v: CompanyAccess) => {
@@ -103,8 +108,10 @@ const removeShopAccess = async (v: CompanyAccess) => {
     wait.start(removeShopAccess);
     await apiShopsRemoveAccess({ shopId: shop.id, shopAccessId: access?.id });
     await fetchShopAccesses();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(removeShopAccess);
   }
@@ -128,8 +135,10 @@ const addShopAccess = async (v: CompanyAccess) => {
 
     await apiShopsCreateAccess({ shopId: shop.id, companyAccessId: v.id });
     await fetchShopAccesses();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(addShopAccess);
   }
@@ -143,12 +152,13 @@ const fetchShopAccesses = async () => {
     shopAccesses.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchShopAccesses);
   }
 };
 
-apiCompanyAccessesGetAll().then(
+waitable(apiCompanyAccessesGetAll)().then(
   (v) => (availableCompanyAccesses.value = v.data)
 );
 

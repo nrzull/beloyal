@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Профиль</Heading>
     </template>
@@ -22,12 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import { Button, Card, Heading, Space, wait } from "@beloyal/shared";
+import { Button, Card, Heading, Space, useToast, wait } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { apiSelfUpdate } from "~/api/self";
 import Page from "~/components/Page.vue";
 import UserCredentialsForm from "~/components/UserCredentials/UserCredentialsForm.vue";
 import { fetchSelf, self } from "~/composables/self";
+
+const { showOk, showError } = useToast();
 
 const model = ref({
   firstName: self.value?.user?.firstName,
@@ -46,8 +48,10 @@ const update = async () => {
       middleName: model.value.middleName?.trim(),
     });
     await fetchSelf();
+    showOk();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(update);
   }

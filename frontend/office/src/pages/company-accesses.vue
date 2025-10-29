@@ -76,10 +76,12 @@ import {
   buildFullName,
   wait,
   Table,
+  useToast,
 } from "@beloyal/shared";
 import { self } from "~/composables/self";
 
 const companyAccesses = ref<CompanyAccess[]>([]);
+const { showOk, showError } = useToast();
 
 const isLoading = computed(() => wait.some([fetchAccesses, block, unblock]));
 
@@ -91,6 +93,7 @@ const fetchAccesses = async () => {
     companyAccesses.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchAccesses);
   }
@@ -101,8 +104,10 @@ const block = async (v: CompanyAccess) => {
     wait.start(block);
     await apiCompanyAccessesBlock({ companyAccessId: v.id });
     await fetchAccesses();
+    showOk();
   } catch (e) {
-    console.error();
+    console.error(e);
+    showError();
   } finally {
     wait.end(block);
   }
@@ -113,8 +118,10 @@ const unblock = async (v: CompanyAccess) => {
     wait.start(unblock);
     await apiCompanyAccessesUnblock({ companyAccessId: v.id });
     await fetchAccesses();
+    showOk();
   } catch (e) {
-    console.error();
+    console.error(e);
+    showError();
   } finally {
     wait.end(unblock);
   }

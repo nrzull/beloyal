@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <NBreadcrumb>
         <NBreadcrumbItem @click="$router.push('/shops')">
@@ -42,14 +42,14 @@ import { apiShopsGet, apiShopsUpdate } from "~/api/shops";
 import type { Shop } from "@beloyal/shared";
 import Page from "~/components/Page.vue";
 import { NBreadcrumb, NBreadcrumbItem, NTabs, NTab } from "naive-ui";
-import { Icon, Space, wait } from "@beloyal/shared";
+import { Icon, Space, useToast, wait } from "@beloyal/shared";
 import ShopModal from "~/components/Shops/ShopModal.vue";
 
 const showShopModal = ref(false);
 const route = useRoute();
 const shopId = computed(() => route.params.id as string);
 const shop = ref<Shop>();
-
+const { showOk, showError } = useToast();
 const isLoading = computed(() => wait.some([fetchShop, updateShop]));
 
 const updateShop = async (v: Shop) => {
@@ -58,10 +58,11 @@ const updateShop = async (v: Shop) => {
 
     await apiShopsUpdate(v);
     await fetchShop();
-
+    showOk();
     showShopModal.value = false;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(updateShop);
   }
@@ -74,6 +75,7 @@ const fetchShop = async () => {
     shop.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchShop);
   }

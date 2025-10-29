@@ -53,9 +53,10 @@
 
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
-import { Table, Heading, wait, Button } from "@beloyal/shared";
+import { Table, Heading, wait, Button, useToast } from "@beloyal/shared";
 import { self } from "~/composables/self";
 import { apiSelfSetCompanyAccess } from "~/api/self";
+const { showError } = useToast();
 
 const setCompanyAccess = async (companyAccessId: string | null) => {
   try {
@@ -68,6 +69,7 @@ const setCompanyAccess = async (companyAccessId: string | null) => {
     location.reload();
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(setCompanyAccess);
   }

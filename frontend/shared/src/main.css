@@ -21,6 +21,7 @@
   --color-success: var(--color-green);
 
   --background-color: #fafafa;
+  --background-color-loading: #fafafa99;
 
   font-family: sans-serif;
   font-synthesis: none;

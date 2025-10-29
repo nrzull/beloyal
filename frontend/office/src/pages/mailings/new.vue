@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <NBreadcrumb>
         <NBreadcrumbItem @click="$router.push('/mailings')">
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { NBreadcrumb, NBreadcrumbItem, NSelect, NSwitch } from "naive-ui";
-import { Card } from "@beloyal/shared";
+import { Card, useToast, waitable } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
 import ChatInput from "~/components/Chats/Messenger/ChatInput.vue";
@@ -58,10 +58,10 @@ const withShops = ref(true);
 const shops = ref<Shop[]>([]);
 const selectedShopIds = ref<string[]>([]);
 const model = ref<TChatInput>({ text: "", attachments: [] });
+const { showOk, showError } = useToast();
+const isLoading = computed(() => wait.some([apiShopsGetAll, createMailing]));
 
-const isLoading = computed(() => wait.some([createMailing]));
-
-apiShopsGetAll().then((v) => (shops.value = v.data));
+waitable(apiShopsGetAll)().then((v) => (shops.value = v.data));
 
 const createMailing = async () => {
   if (withShops.value && !selectedShopIds.value.length) {
@@ -82,9 +82,12 @@ const createMailing = async () => {
       withShops: withShops.value,
     });
 
+    showOk();
+
     router.push("/mailings");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createMailing);
   }

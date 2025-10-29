@@ -62,7 +62,7 @@ import {
   apiCustomersGetBoosters,
   apiCustomersCreateBooster,
 } from "~/api/customers";
-import { Table, Button, wait } from "@beloyal/shared";
+import { Table, Button, wait, useToast } from "@beloyal/shared";
 import { NModal } from "naive-ui";
 import BoosterForm from "~/components/Boosters/BoosterForm.vue";
 import { newBooster } from "~/components/Boosters/utils";
@@ -77,6 +77,8 @@ const isLoading = computed(
   () => loading || wait.some([createBooster, fetchBoosters])
 );
 
+const { showOk, showError } = useToast();
+
 const boosters = ref<Booster[]>([]);
 const createBoosterModal =
   ref<Pick<Booster, "expiredAt" | "cashbackPercent">>();
@@ -89,9 +91,11 @@ const createBooster = async () => {
       ...createBoosterModal.value!,
     });
     await fetchBoosters();
+    showOk();
     createBoosterModal.value = undefined;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(createBooster);
   }
@@ -104,6 +108,7 @@ const fetchBoosters = async () => {
     boosters.value = result.data;
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(fetchBoosters);
   }

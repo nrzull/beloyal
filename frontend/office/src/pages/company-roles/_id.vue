@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Редактирование роли</Heading>
     </template>
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import Page from "~/components/Page.vue";
 import { computed, ref } from "vue";
-import { Card, Button, Heading } from "@beloyal/shared";
+import { Card, Button, Heading, useToast, waitable } from "@beloyal/shared";
 import {
   apiCompanyRolesGetPermissions,
   apiCompanyRolesGet,
@@ -34,18 +34,20 @@ import RoleForm from "~/components/RoleForm/RoleForm.vue";
 
 const name = ref<string>();
 const availablePermissions = ref<string[]>([]);
-const isLoading = computed(() => wait.some([updateRole]));
+const isLoading = computed(() =>
+  wait.some([apiCompanyRolesGetPermissions, updateRole, apiCompanyRolesGet])
+);
 const activePermissions = ref<string[]>([]);
 const router = useRouter();
 const route = useRoute();
-
+const { showOk, showError } = useToast();
 const roleId = computed(() => route.params.id as string);
 
-apiCompanyRolesGetPermissions().then(
+waitable(apiCompanyRolesGetPermissions)().then(
   (v) => (availablePermissions.value = v.data)
 );
 
-apiCompanyRolesGet({ roleId: roleId.value }).then((v) => {
+waitable(apiCompanyRolesGet)({ roleId: roleId.value }).then((v) => {
   name.value = v.data.name;
   activePermissions.value = v.data.permissions;
 });
@@ -63,10 +65,11 @@ const updateRole = async () => {
       name: name.value,
       permissions: activePermissions.value,
     });
-
+    showOk();
     router.push("/company-roles");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(updateRole);
   }

@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page :loading="isLoading">
     <template #top>
       <Heading>Редактирование доступа</Heading>
     </template>
@@ -34,6 +34,8 @@ import {
   Card,
   Space,
   type WhiteCompany,
+  useToast,
+  waitable,
 } from "@beloyal/shared";
 import { computed, ref } from "vue";
 import { wait } from "@beloyal/shared";
@@ -48,8 +50,10 @@ import { NDatePicker } from "naive-ui";
 const router = useRouter();
 const route = useRoute();
 const expiredAt = ref();
-const isLoading = computed(() => wait.some([updateWhiteCompany]));
-
+const isLoading = computed(() =>
+  wait.some([apiWhiteCompaniesGet, updateWhiteCompany])
+);
+const { showOk, showError } = useToast();
 const whiteCompany = ref<WhiteCompany>();
 
 const id = computed(() => route.params.id as string);
@@ -67,15 +71,17 @@ const updateWhiteCompany = async () => {
       expiredAt: formatISO(startOfDay(expiredAt.value)),
     });
 
+    showOk();
     router.push("/white-companies");
   } catch (e) {
     console.error(e);
+    showError();
   } finally {
     wait.end(updateWhiteCompany);
   }
 };
 
-apiWhiteCompaniesGet({ id: id.value }).then(
+waitable(apiWhiteCompaniesGet)({ id: id.value }).then(
   (v) => (whiteCompany.value = v.data)
 );
 </script>
