@@ -21,50 +21,50 @@ public class ChatContext(
   public async Task<Chat?> GetChat(CustomerId customerId) =>
     await dbContext.Chats.FirstOrDefaultAsync(v => v.CustomerId == customerId.Value);
 
-  public async Task<Chat?> GetChat(ChatId chatId, CompanyId companyId) =>
+  public async Task<Chat?> GetChat(CompanyId companyId, ChatId chatId) =>
     await dbContext
       .Chats.Include(v => v.Customer)
       .FirstOrDefaultAsync(v => v.Id == chatId.Value && v.CompanyId == companyId.Value);
 
-  public async Task MarkAsRead(ChatMessageId id, CompanyAccess reader)
-  {
-    var msg = await dbContext.ChatMessages.FirstOrDefaultAsync(v =>
-      v.Id == id.Value && v.AgentId != reader.Id && v.ReadAt == null
-    );
+  public async Task<Chat?> GetChatWithLastMessage(
+    CompanyId companyId,
+    ChatId chatId,
+    bool withSystem
+  ) =>
+    await dbContext
+      .Chats.Include(v =>
+        withSystem
+          ? v.Messages.OrderByDescending(vv => vv.CreatedAt).Take(1)
+          : v
+            .Messages.OrderByDescending(vv => vv.CreatedAt)
+            .Where(vv => vv.AgentId != null || vv.CustomerId != null)
+            .Take(1)
+      )
+      .ThenInclude(v => v.Customer)
+      .ThenInclude(v => v!.User)
+      .Include(v => v.Messages)
+      .ThenInclude(v => v.Agent)
+      .ThenInclude(v => v!.User)
+      .Include(v => v.Messages)
+      .ThenInclude(v => v.MailingUnit)
+      .ThenInclude(v => v!.Mailing)
+      .Include(v => v.Customer)
+      .ThenInclude(v => v.User)
+      .AsSplitQuery()
+      .FirstOrDefaultAsync(v => v.CompanyId == companyId.Value && v.Id == chatId.Value);
 
-    if (msg is null)
-    {
-      return;
-    }
-
-    dbContext.Update(msg);
-    msg.ReadAt = DateTimeOffset.UtcNow;
-
-    await dbContext.SaveChangesAsync();
-  }
-
-  public async Task MarkAsRead(ChatMessageId id, Customer reader)
-  {
-    var msg = await dbContext.ChatMessages.FirstOrDefaultAsync(v =>
-      v.Id == id.Value && v.CustomerId != reader.Id && v.ReadAt == null
-    );
-
-    if (msg is null)
-    {
-      return;
-    }
-
-    dbContext.Update(msg);
-    msg.ReadAt = DateTimeOffset.UtcNow;
-
-    await dbContext.SaveChangesAsync();
-  }
-
-  public async Task<List<Chat>> GetChats(CompanyId companyId)
+  public async Task<List<Chat>> GetChats(CompanyId companyId, bool withSystem)
   {
     var chats = await dbContext
       .Chats.Where(v => v.CompanyId == companyId.Value)
-      .Include(v => v.Messages.OrderByDescending(vv => vv.CreatedAt).Take(1))
+      .Include(v =>
+        withSystem
+          ? v.Messages.OrderByDescending(vv => vv.CreatedAt).Take(1)
+          : v
+            .Messages.OrderByDescending(vv => vv.CreatedAt)
+            .Where(vv => vv.AgentId != null || vv.CustomerId != null)
+            .Take(1)
+      )
       .ThenInclude(v => v.Customer)
       .ThenInclude(v => v!.User)
       .Include(v => v.Messages)
@@ -283,10 +283,20 @@ public class ChatContext(
     return message;
   }
 
-  public async Task<List<ChatMessage>> GetChatMessages(CompanyId companyId, ChatId chatId) =>
+  public async Task<List<ChatMessage>> GetChatMessages(
+    CompanyId companyId,
+    ChatId chatId,
+    bool withSystem
+  ) =>
     await dbContext
       .ChatMessages.Include(v => v.Chat)
-      .Where(v => v.ChatId == chatId.Value && v.Chat.CompanyId == companyId.Value)
+      .Where(v =>
+        withSystem
+          ? v.ChatId == chatId.Value && v.Chat.CompanyId == companyId.Value
+          : v.ChatId == chatId.Value
+            && v.Chat.CompanyId == companyId.Value
+            && (v.AgentId != null || v.CustomerId != null)
+      )
       .Include(v => v.Agent)
       .ThenInclude(v => v!.User)
       .Include(v => v.Customer)

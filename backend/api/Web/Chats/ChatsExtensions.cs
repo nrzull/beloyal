@@ -1,4 +1,5 @@
 using Beloyal.API.Web.Chats.CreateMessage;
+using Beloyal.API.Web.Chats.GetChat;
 using Beloyal.API.Web.Chats.GetChatMessages;
 using Beloyal.API.Web.Chats.GetChats;
 
@@ -11,5 +12,6 @@ public static class ChatsExtensions
     builder.Services.AddScoped<GetChatsEndpoint>();
     builder.Services.AddScoped<GetChatMessagesEndpoint>();
     builder.Services.AddScoped<CreateMessageEndpoint>();
+    builder.Services.AddScoped<GetChatEndpoint>();
   }
 }

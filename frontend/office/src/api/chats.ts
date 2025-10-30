@@ -4,10 +4,19 @@ import { apiClient } from "~/api/clients";
 export const apiChatsGetAll = () =>
   apiClient.get<{ data: Chat[] }>("/api/company/chats").then((v) => v.data);
 
-export const apiChatsGetAllMessages = (params: { chatId: string }) =>
+export const apiChatsGet = (params: { chatId: string }) =>
+  apiClient
+    .get<{ data: Chat }>(`/api/company/chats/${params.chatId}`)
+    .then((v) => v.data);
+
+export const apiChatsGetAllMessages = (params: {
+  chatId: string;
+  withSystem: boolean;
+}) =>
   apiClient
     .get<{ data: ChatMessage[] }>(
-      `/api/company/chats/${params.chatId}/messages`
+      `/api/company/chats/${params.chatId}/messages`,
+      { params: { withSystem: params.withSystem } }
     )
     .then((v) => v.data);
 

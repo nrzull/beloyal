@@ -5,9 +5,11 @@ namespace Beloyal.API.Chats;
 
 public record ChatMessageDTO(
   Guid Id,
+  bool IsSystem,
   DateTimeOffset CreatedAt,
   DateTimeOffset? ReadAt,
   string? Content,
+  Guid? CompanyId,
   Guid? AgentId,
   Guid? CustomerId,
   Guid ChatId,
@@ -19,11 +21,13 @@ public record ChatMessageDTO(
   public static ChatMessageDTO From(ChatMessage v, AmazonS3Client? s3Client) =>
     new(
       Id: v.Id,
+      IsSystem: v.MailingUnit is { } || v.CompanyId is { },
       CreatedAt: v.CreatedAt,
       ReadAt: v.ReadAt,
       AgentId: v.AgentId,
       CustomerId: v.CustomerId,
       ChatId: v.ChatId,
+      CompanyId: v.CompanyId,
       Content: v.Content,
       Name: v.Agent is { } g ? g.User!.Phone!
         : v.Customer is { } c ? c.User!.Phone!

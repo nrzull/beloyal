@@ -56,7 +56,8 @@ public class ChatContextTest : TestLifetime
         var chat = await chatContext.GetChat(CustomerId.From(customer));
         var messages = await chatContext.GetChatMessages(
           CompanyId.From(company),
-          ChatId.From(chat!)
+          ChatId.From(chat!),
+          true
         );
 
         Assert.Equal(

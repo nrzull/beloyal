@@ -6,9 +6,11 @@ export type ChatMessage = {
   content?: string;
   agentId?: string;
   customerId?: string;
+  companyId?: string;
   readAt?: string;
   createdAt: string;
   chatId: string;
   mailingUnitId?: string;
   attachments?: string[];
+  isSystem: boolean;
 };

@@ -8,7 +8,7 @@ public class GetChatsEndpoint(ChatContext chatContext, AmazonS3Client s3Client)
 {
   public async Task<GetChatsResponse> Handle(CompanyAccess companyAccess)
   {
-    var chats = await chatContext.GetChats(CompanyId.From(companyAccess));
+    var chats = await chatContext.GetChats(CompanyId.From(companyAccess), false);
 
     return new GetChatsResponse.Ok(chats.Select((v) => ChatDTO.From(v, s3Client)).ToList());
   }

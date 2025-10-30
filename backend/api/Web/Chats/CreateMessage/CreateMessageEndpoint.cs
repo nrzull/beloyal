@@ -13,7 +13,7 @@ public class CreateMessageEndpoint(ChatContext chatContext, ApplicationDbContext
   {
     await using var tc = await dbContext.MaybeTransactionAsync();
 
-    var chat = await chatContext.GetChat(chatId, CompanyId.From(companyAccess));
+    var chat = await chatContext.GetChat(CompanyId.From(companyAccess), chatId);
     if (chat is null)
     {
       throw new Exception("invalid chat");

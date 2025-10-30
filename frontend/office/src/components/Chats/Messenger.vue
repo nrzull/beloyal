@@ -1,28 +1,44 @@
 <template>
-  <div :class="$style.messenger">
-    <div :class="$style.previews">
-      <ChatPreview
-        v-for="chat in chats.keys()"
-        :key="chat.id"
-        :chat="chat"
-        :messages="chats.get(chat) || []"
+  <Page :loading="isLoading">
+    <template #top>
+      <slot name="top"></slot>
+
+      <div :class="$style.switch">
+        <NSwitch
+          :disabled="isLoading"
+          v-model:value="withSystem"
+          @update:value="fetchChats"
+        >
+        </NSwitch>
+        <div>Системные сообщения</div>
+      </div>
+    </template>
+
+    <div :class="$style.messenger">
+      <div :class="$style.previews">
+        <ChatPreview
+          v-for="chat in chats.keys()"
+          :key="chat.id"
+          :chat="chat"
+          :messages="chats.get(chat) || []"
+          :loading="isLoading"
+          :active="activeChat === chat"
+          @click="activeChat = chat"
+        />
+      </div>
+
+      <ChatConversation
+        v-if="activeChat"
+        :key="activeChat?.id"
         :loading="isLoading"
-        :active="activeChat === chat"
-        @click="activeChat = chat"
+        :chat="activeChat"
+        :messages="chats.get(activeChat) || []"
+        :input="getOrInitChatInput(activeChat)"
+        @update:input="inputHistory.set($event.chat, $event.input)"
+        @send="sendMessage"
       />
     </div>
-
-    <ChatConversation
-      v-if="activeChat"
-      :key="activeChat?.id"
-      :loading="isLoading"
-      :chat="activeChat"
-      :messages="chats.get(activeChat) || []"
-      :input="getOrInitChatInput(activeChat)"
-      @update:input="inputHistory.set($event.chat, $event.input)"
-      @send="sendMessage"
-    />
-  </div>
+  </Page>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +47,7 @@ import {
   apiChatsGetAll,
   apiChatsGetAllMessages,
   apiChatsCreateMessage,
+  apiChatsGet,
 } from "~/api/chats";
 import type { Chat, ChatMessage } from "@beloyal/shared";
 import { useToast, wait } from "@beloyal/shared";
@@ -38,12 +55,17 @@ import ChatPreview from "~/components/Chats/Messenger/ChatPreview.vue";
 import ChatConversation from "~/components/Chats/Messenger/ChatConversation.vue";
 import { wsClient } from "~/api/clients";
 import type { ChatInput } from "~/components/Chats/Messenger/types";
+import Page from "~/components/Page.vue";
+import { NSwitch } from "naive-ui";
+import { useRoute, useRouter } from "vue-router";
 
 const isLoading = computed(() => wait.some([fetchChats]));
 const chats = ref<Map<Chat, ChatMessage[]>>(new Map());
 const activeChat = ref<Chat>();
 const { showError } = useToast();
 const inputHistory = ref<Map<Chat, ChatInput>>(new Map());
+const withSystem = ref(false);
+const router = useRouter();
 
 const getOrInitChatInput = (v: Chat): ChatInput => {
   const input = inputHistory.value.get(v);
@@ -59,9 +81,13 @@ const fetchChats = async () => {
   try {
     wait.start(fetchChats);
 
-    for (const chat of (await apiChatsGetAll()).data) {
+    chats.value.clear();
+
+    const { data: newChats } = await apiChatsGetAll();
+    for (const chat of newChats) {
       const { data: messages } = await apiChatsGetAllMessages({
         chatId: chat.id,
+        withSystem: withSystem.value,
       });
 
       chats.value.set(chat, messages);
@@ -102,16 +128,27 @@ const sendMessage = async (chat: Chat) => {
   }
 };
 
-const onChatMessage = (message: ChatMessage) => {
+const onChatMessage = async (message: ChatMessage) => {
   const chat = Array.from(chats.value.keys()).find(
     (v) => v.id === message.chatId
   );
 
   if (!chat) {
-    console.error("TODO: fetch chat with preview message");
+    const { data: newChat } = await apiChatsGet({ chatId: message.chatId });
+    const { data: messages } = await apiChatsGetAllMessages({
+      chatId: message.chatId,
+      withSystem: withSystem.value,
+    });
+
+    chats.value.set(newChat, messages);
   } else {
     const messages = chats.value.get(chat);
-    messages?.unshift(message);
+
+    if (!message.isSystem) {
+      messages?.unshift(message);
+    } else if (withSystem.value) {
+      messages?.unshift(message);
+    }
   }
 };
 
@@ -122,6 +159,12 @@ fetchChats();
 </script>
 
 <style module>
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .messenger {
   height: inherit;
   display: grid;
