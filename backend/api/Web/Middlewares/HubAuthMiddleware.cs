@@ -11,7 +11,7 @@ public class HubAuthMiddleware(AuthContext authContext) : IMiddleware
       ctx.Request.Cookies.TryGetValue(AuthContext.GetAccessTokenName(), out var token);
       if (token is { Length: > 1 } t1)
       {
-        var decodedAccessToken = authContext.DecodeAccessToken(t1);
+        var decodedAccessToken = await authContext.DecodeAccessToken(t1);
         ctx.Items["accessToken"] = decodedAccessToken;
       }
 
@@ -20,7 +20,7 @@ public class HubAuthMiddleware(AuthContext authContext) : IMiddleware
       var customerToken = rawCustomerTokens.FirstOrDefault()?.Replace("Bearer ", "");
       if (customerToken is { Length: > 1 } t2)
       {
-        var decodedToken = authContext.DecodeCustomerAccessToken(t2);
+        var decodedToken = await authContext.DecodeCustomerAccessToken(t2);
         ctx.Items["customerAccessToken"] = decodedToken;
       }
 

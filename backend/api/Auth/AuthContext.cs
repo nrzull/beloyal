@@ -1,11 +1,12 @@
+using System.Security.Claims;
 using Beloyal.API.Companies;
 using Beloyal.API.Customers;
 using Beloyal.API.Shops;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
-using JWT.Algorithms;
-using JWT.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Beloyal.API.Auth;
 
@@ -53,34 +54,35 @@ public class AuthContext(ApplicationDbContext dbContext)
     Customer customer
   )
   {
-    var token = new CustomerAccessToken(
-      CustomerId: customer.Id,
-      // TODO: change
-      ExpiredAt: DateTimeOffset.UtcNow.AddHours(12),
-      IssuedAt: DateTimeOffset.UtcNow
+    var handler = new JsonWebTokenHandler();
+    var expiredAt = DateTime.UtcNow.AddHours(12);
+    var issuedAt = DateTime.UtcNow;
+
+    var claims = new List<Claim>() { new("customer_id", customer.Id.ToString()) };
+
+    var newDescriptor = (string t) =>
+      new SecurityTokenDescriptor
+      {
+        Subject = new ClaimsIdentity(claims),
+        Expires = expiredAt,
+        IssuedAt = issuedAt,
+        SigningCredentials = new SigningCredentials(
+          new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(t)),
+          SecurityAlgorithms.HmacSha256
+        ),
+      };
+
+    var authToken = handler.CreateToken(newDescriptor(GetTokenSecret()!));
+    var jwtAuthToken = handler.ReadJsonWebToken(authToken);
+
+    var publicToken = new JsonWebTokenHandler().CreateToken(
+      newDescriptor(GetCustomerPublicSecret()!)
     );
-
-    var authToken = JwtBuilder
-      .Create()
-      .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(GetTokenSecret())
-      .AddClaim("exp", token.ExpiredAt.ToUnixTimeSeconds())
-      .AddClaim("iat", token.IssuedAt.ToUnixTimeSeconds())
-      .AddClaim("customer_id", token.CustomerId)
-      .Encode();
-
-    var publicToken = JwtBuilder
-      .Create()
-      .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(GetCustomerPublicSecret())
-      .AddClaim("exp", token.ExpiredAt.ToUnixTimeSeconds())
-      .AddClaim("iat", token.IssuedAt.ToUnixTimeSeconds())
-      .AddClaim("customer_id", token.CustomerId)
-      .Encode();
+    var jwtPublicToken = handler.ReadJsonWebToken(publicToken);
 
     return (
-      new EncodedAccessToken(authToken, token.ExpiredAt),
-      new EncodedAccessToken(publicToken, token.ExpiredAt)
+      new EncodedAccessToken(authToken, new DateTimeOffset(jwtAuthToken.ValidFrom, TimeSpan.Zero)),
+      new EncodedAccessToken(publicToken, new DateTimeOffset(jwtPublicToken.ValidTo, TimeSpan.Zero))
     );
   }
 
@@ -90,95 +92,129 @@ public class AuthContext(ApplicationDbContext dbContext)
     ShopAccess? shopAccess
   )
   {
-    var expiredAt = DateTimeOffset.UtcNow.AddHours(12);
-
-    var token = JwtBuilder
-      .Create()
-      .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(GetTokenSecret())
-      .AddClaim("exp", expiredAt.ToUnixTimeSeconds())
-      .AddClaim("user_id", user.Id)
-      .AddClaim("company_access_id", companyAccess?.Id)
-      .AddClaim("shop_access_id", shopAccess?.Id)
-      .Encode();
-
-    return new EncodedAccessToken(Token: token, ExpiredAt: expiredAt);
-  }
-
-  public CustomerAccessToken DecodeCustomerToken(string token, string secret)
-  {
-    var decoded = JwtBuilder
-      .Create()
-      .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(secret)
-      .MustVerifySignature()
-      .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
-
-    decoded.TryGetValue("exp", out var _expiredAtSeconds);
-    decoded.TryGetValue("iat", out var _issuedAtSeconds);
-    decoded.TryGetValue("customer_id", out var _customerId);
-
-    if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
+    var claims = new List<Claim> { new("user_id", user.Id.ToString()) };
+    if (companyAccess?.Id is { })
     {
-      throw new Exception("exp is invalid");
+      claims.Add(new("company_access_id", companyAccess.Id.ToString()));
+    }
+    if (shopAccess?.Id is { })
+    {
+      claims.Add(new("shop_access_id", shopAccess.Id.ToString()));
     }
 
-    if (!_issuedAtSeconds.TryGetInt64(out long issuedAtSeconds))
-    {
-      throw new Exception("iat is invalid");
-    }
+    var handler = new JsonWebTokenHandler();
+    var token = handler.CreateToken(
+      new SecurityTokenDescriptor
+      {
+        Subject = new ClaimsIdentity(claims),
+        Expires = DateTime.UtcNow.AddMinutes(30),
+        SigningCredentials = new SigningCredentials(
+          new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(GetTokenSecret()!)),
+          SecurityAlgorithms.HmacSha256
+        ),
+      }
+    );
 
-    if (!_customerId.TryGetGuid(out var customerId))
-    {
-      throw new Exception("customer_id is invalid");
-    }
+    var jwt = handler.ReadJsonWebToken(token);
 
-    return new CustomerAccessToken(
-      CustomerId: customerId,
-      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds),
-      IssuedAt: DateTimeOffset.FromUnixTimeSeconds(issuedAtSeconds)
+    return new EncodedAccessToken(
+      Token: token,
+      ExpiredAt: new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero)
     );
   }
 
-  public CustomerAccessToken DecodeCustomerPublicAccessToken(string token) =>
-    DecodeCustomerToken(token, GetCustomerPublicSecret()!);
-
-  public CustomerAccessToken DecodeCustomerAccessToken(string token) =>
-    DecodeCustomerToken(token, GetTokenSecret()!);
-
-  public AccessToken DecodeAccessToken(string token)
+  public async Task<CustomerAccessToken> DecodeCustomerToken(string token, string secretToken)
   {
-    var decoded = JwtBuilder
-      .Create()
-      .WithAlgorithm(new HMACSHA256Algorithm())
-      .WithSecret(GetTokenSecret())
-      .MustVerifySignature()
-      .Decode<IDictionary<string, System.Text.Json.JsonElement>>(token);
+    var handler = new JsonWebTokenHandler();
 
-    decoded.TryGetValue("exp", out var _expiredAtSeconds);
-    decoded.TryGetValue("user_id", out var _userId);
-    decoded.TryGetValue("company_access_id", out var _companyAccessId);
-    decoded.TryGetValue("shop_access_id", out var _shopAccessId);
-
-    if (!_expiredAtSeconds.TryGetInt64(out long expiredAtSeconds))
+    var result = await handler.ValidateTokenAsync(
+      token,
+      new()
+      {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+          System.Text.Encoding.UTF8.GetBytes(secretToken)
+        ),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromMinutes(5),
+      }
+    );
+    if (!result.IsValid)
     {
-      throw new Exception("exp is invalid");
+      throw result.Exception;
     }
 
-    if (!_userId.TryGetGuid(out var userId))
+    var jwt = (JsonWebToken)result.SecurityToken;
+    var expiredAt = new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero);
+    var issuedAt = new DateTimeOffset(jwt.IssuedAt, TimeSpan.Zero);
+
+    Guid customerId =
+      jwt.TryGetClaim("customer_id", out var _customerId)
+      && _customerId.Value is string { Length: > 0 }
+        ? Guid.Parse(_customerId.Value)
+        : throw new Exception("invalid customer_id");
+
+    return new CustomerAccessToken(
+      CustomerId: customerId,
+      ExpiredAt: expiredAt,
+      IssuedAt: issuedAt
+    );
+  }
+
+  public async Task<CustomerAccessToken> DecodeCustomerPublicAccessToken(string token) =>
+    await DecodeCustomerToken(token, GetCustomerPublicSecret()!);
+
+  public async Task<CustomerAccessToken> DecodeCustomerAccessToken(string token) =>
+    await DecodeCustomerToken(token, GetTokenSecret()!);
+
+  public async Task<AccessToken> DecodeAccessToken(string token)
+  {
+    var handler = new JsonWebTokenHandler();
+    var result = await handler.ValidateTokenAsync(
+      token,
+      new()
+      {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+          System.Text.Encoding.UTF8.GetBytes(GetTokenSecret()!)
+        ),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromMinutes(5),
+      }
+    );
+    if (!result.IsValid)
     {
-      throw new Exception("user_id is invalid");
+      throw result.Exception;
     }
+
+    var jwt = (JsonWebToken)result.SecurityToken;
+    var expiredAt = new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero);
+
+    Guid userId = jwt.GetClaim("user_id")?.Value is string { Length: > 0 } _userId
+      ? Guid.Parse(_userId)
+      : throw new Exception("invalid user_id");
+
+    Guid? companyAccessId =
+      jwt.TryGetClaim("company_access_id", out var _companyAccessId)
+      && _companyAccessId.Value is string { }
+        ? Guid.Parse(_companyAccessId.Value)
+        : null;
+
+    Guid? shopAccessId =
+      jwt.TryGetClaim("shop_access_id", out var _shopAccessId)
+      && _shopAccessId.Value is string { Length: > 0 }
+        ? Guid.Parse(_shopAccessId.Value)
+        : null;
 
     return new AccessToken(
       UserId: userId,
-      CompanyAccessId: _companyAccessId.ValueKind == System.Text.Json.JsonValueKind.String
-        ? _companyAccessId.GetGuid()
-        : null,
-      ShopAccessId: _shopAccessId.ValueKind == System.Text.Json.JsonValueKind.String
-        ? _shopAccessId.GetGuid()
-        : null,
-      ExpiredAt: DateTimeOffset.FromUnixTimeSeconds(expiredAtSeconds)
+      CompanyAccessId: companyAccessId,
+      ShopAccessId: shopAccessId,
+      ExpiredAt: expiredAt
     );
   }
 

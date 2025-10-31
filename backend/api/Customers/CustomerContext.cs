@@ -37,7 +37,7 @@ public class CustomerContext(
 
   public async Task<Customer?> GetCustomerByPublicToken(CompanyId companyId, string publicToken)
   {
-    var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
+    var decoded = await authContext.DecodeCustomerPublicAccessToken(publicToken);
     if (decoded is null)
     {
       return null;

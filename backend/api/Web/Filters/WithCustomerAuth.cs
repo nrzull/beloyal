@@ -24,7 +24,7 @@ public class WithCustomerAuthFilter(AuthContext authContext) : IAsyncResourceFil
 
     try
     {
-      var decodedToken = authContext.DecodeCustomerAccessToken(token!);
+      var decodedToken = await authContext.DecodeCustomerAccessToken(token!);
       ctx.HttpContext.Items["customerAccessToken"] = decodedToken;
     }
     catch (Exception e)
