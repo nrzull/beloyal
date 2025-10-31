@@ -17,8 +17,8 @@ public class SetCompanyAccessEndpoint(CompanyContext companyContext, AuthContext
       throw new Exception("invalid company access");
     }
 
-    var token = authContext.EncodeAccessToken(user, companyAccess, null);
+    var (t1, t2) = await authContext.IssueTokens(user, companyAccess, null);
 
-    return new SetCompanyAccessResponse.Ok(token);
+    return new SetCompanyAccessResponse.Ok(t1, t2);
   }
 }

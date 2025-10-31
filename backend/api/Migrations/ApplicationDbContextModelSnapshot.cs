@@ -113,6 +113,28 @@ namespace Beloyal.API.Migrations
                     b.ToTable("auth_otps", (string)null);
                 });
 
+            modelBuilder.Entity("Beloyal.API.Auth.PersistedToken", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("hash");
+
+                    b.Property<DateTimeOffset>("IssuedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("issued_at");
+
+                    b.HasKey("UserId")
+                        .HasName("pk_persisted_tokens");
+
+                    b.ToTable("persisted_tokens", (string)null);
+                });
+
             modelBuilder.Entity("Beloyal.API.Bonuses.Bonus", b =>
                 {
                     b.Property<Guid>("Id")
