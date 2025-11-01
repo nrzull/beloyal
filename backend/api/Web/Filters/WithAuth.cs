@@ -6,7 +6,7 @@ namespace Beloyal.API.Web.Filters;
 
 public class WithAuthAttribute() : TypeFilterAttribute(typeof(WithAuthFilter));
 
-public class WithAuthFilter(AuthContext authContext) : IAsyncResourceFilter
+public class WithAuthFilter(AuthContext authContext, IHostEnvironment env) : IAsyncResourceFilter
 {
   public async Task OnResourceExecutionAsync(
     ResourceExecutingContext ctx,
@@ -15,7 +15,12 @@ public class WithAuthFilter(AuthContext authContext) : IAsyncResourceFilter
   {
     ctx.HttpContext.Request.Cookies.TryGetValue(AuthContext.GetAccessTokenName(), out var token);
 
-    if (token is not { Length: > 1 })
+    ctx.HttpContext.Request.Cookies.TryGetValue(
+      AuthContext.GetRefreshTokenName(),
+      out var refreshToken
+    );
+
+    if (token is not { Length: > 1 } || refreshToken is not { Length: > 1 })
     {
       ctx.Result = new UnauthorizedObjectResult(ctx.ModelState);
       return;
@@ -23,8 +28,21 @@ public class WithAuthFilter(AuthContext authContext) : IAsyncResourceFilter
 
     try
     {
-      var decodedAccessToken = await authContext.DecodeAccessToken(token!);
-      ctx.HttpContext.Items["accessToken"] = decodedAccessToken;
+      var decodedAccessToken = await authContext.VerifyTokens(token, refreshToken);
+
+      if (decodedAccessToken is VerifyTokensResult.Ok ok)
+      {
+        ctx.HttpContext.Items["accessToken"] = ok.AccessToken;
+      }
+      else if (decodedAccessToken is VerifyTokensResult.Refresh refresh)
+      {
+        ctx.HttpContext.SetAuthCookies(
+          refresh.EncodedAccessToken,
+          refresh.EncodedRefreshToken,
+          env.IsProduction()
+        );
+        ctx.HttpContext.Items["accessToken"] = refresh.AccessToken;
+      }
     }
     catch (Exception e)
     {

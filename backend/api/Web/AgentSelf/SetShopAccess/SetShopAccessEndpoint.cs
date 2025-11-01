@@ -28,7 +28,11 @@ public class SetShopAccessEndpoint(
       throw new Exception("invalid shop access");
     }
 
-    var (t1, t2) = await authContext.IssueTokens(user, companyAccess, shopAccess);
+    var (t1, t2) = await authContext.IssueTokens(
+      UserId.From(user),
+      CompanyAccessId.From(companyAccess),
+      ShopAccessId.From(shopAccess)
+    );
 
     return new SetShopAccessResponse.Ok(t1, t2);
   }

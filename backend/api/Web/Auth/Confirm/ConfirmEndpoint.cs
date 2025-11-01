@@ -45,7 +45,11 @@ public class ConfirmEndpoint(
       shopAccess = null;
     }
 
-    var (t1, t2) = await authContext.IssueTokens(user, companyAccess, shopAccess);
+    var (t1, t2) = await authContext.IssueTokens(
+      UserId.From(user),
+      companyAccess is { } ? CompanyAccessId.From(companyAccess) : null,
+      shopAccess is { } ? ShopAccessId.From(shopAccess) : null
+    );
 
     return new ConfirmResponse.Ok(t1, t2);
   }

@@ -90,19 +90,19 @@ public class AuthContext(ApplicationDbContext dbContext)
   }
 
   public EncodedAccessToken EncodeAccessToken(
-    User user,
-    CompanyAccess? companyAccess,
-    ShopAccess? shopAccess
+    UserId userId,
+    CompanyAccessId? companyAccessId,
+    ShopAccessId? shopAccessId
   )
   {
-    var claims = new List<Claim> { new("user_id", user.Id.ToString()) };
-    if (companyAccess?.Id is { })
+    var claims = new List<Claim> { new("user_id", userId.Value.ToString()) };
+    if (companyAccessId?.Value is { })
     {
-      claims.Add(new("company_access_id", companyAccess.Id.ToString()));
+      claims.Add(new("company_access_id", companyAccessId.Value.ToString()));
     }
-    if (shopAccess?.Id is { })
+    if (shopAccessId?.Value is { })
     {
-      claims.Add(new("shop_access_id", shopAccess.Id.ToString()));
+      claims.Add(new("shop_access_id", shopAccessId.Value.ToString()));
     }
 
     var handler = new JsonWebTokenHandler();
@@ -139,7 +139,7 @@ public class AuthContext(ApplicationDbContext dbContext)
         ValidateAudience = false,
         ValidateIssuer = false,
         ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromMinutes(5),
+        ClockSkew = TimeSpan.Zero,
       }
     );
     if (!result.IsValid)
@@ -170,52 +170,77 @@ public class AuthContext(ApplicationDbContext dbContext)
   public async Task<CustomerAccessToken> DecodeCustomerAccessToken(string token) =>
     await DecodeCustomerToken(token, GetTokenSecret()!);
 
-  public async Task<AccessToken> DecodeAccessToken(string token)
+  public abstract record DecodeAccessTokenResult
   {
-    var handler = new JsonWebTokenHandler();
-    var result = await handler.ValidateTokenAsync(
-      token,
-      new()
-      {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GetTokenSecret()!)),
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromMinutes(5),
-      }
-    );
-    if (!result.IsValid)
+    public record Ok(AccessToken AccessToken) : DecodeAccessTokenResult;
+
+    public record Expired : DecodeAccessTokenResult;
+
+    public record Error(Exception Exception) : DecodeAccessTokenResult;
+  }
+
+  public async Task<DecodeAccessTokenResult> DecodeAccessToken(
+    string token,
+    bool validateLifetime = true
+  )
+  {
+    try
     {
-      throw result.Exception;
+      var handler = new JsonWebTokenHandler();
+      var result = await handler.ValidateTokenAsync(
+        token,
+        new()
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GetTokenSecret()!)),
+          ValidateAudience = false,
+          ValidateIssuer = false,
+          ValidateLifetime = validateLifetime,
+          ClockSkew = TimeSpan.Zero,
+        }
+      );
+      if (!result.IsValid)
+      {
+        throw result.Exception;
+      }
+
+      var jwt = (JsonWebToken)result.SecurityToken;
+      var expiredAt = new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero);
+
+      Guid userId =
+        jwt.TryGetClaim("user_id", out var _userId) && _userId.Value is string { Length: > 0 }
+          ? Guid.Parse(_userId.Value)
+          : throw new Exception("invalid user_id");
+
+      Guid? companyAccessId =
+        jwt.TryGetClaim("company_access_id", out var _companyAccessId)
+        && _companyAccessId.Value is string { Length: > 0 }
+          ? Guid.Parse(_companyAccessId.Value)
+          : null;
+
+      Guid? shopAccessId =
+        jwt.TryGetClaim("shop_access_id", out var _shopAccessId)
+        && _shopAccessId.Value is string { Length: > 0 }
+          ? Guid.Parse(_shopAccessId.Value)
+          : null;
+
+      var accessToken = new AccessToken(
+        UserId: userId,
+        CompanyAccessId: companyAccessId,
+        ShopAccessId: shopAccessId,
+        ExpiredAt: expiredAt
+      );
+
+      return new DecodeAccessTokenResult.Ok(accessToken);
     }
-
-    var jwt = (JsonWebToken)result.SecurityToken;
-    var expiredAt = new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero);
-
-    Guid userId =
-      jwt.TryGetClaim("user_id", out var _userId) && _userId.Value is string { Length: > 0 }
-        ? Guid.Parse(_userId.Value)
-        : throw new Exception("invalid user_id");
-
-    Guid? companyAccessId =
-      jwt.TryGetClaim("company_access_id", out var _companyAccessId)
-      && _companyAccessId.Value is string { Length: > 0 }
-        ? Guid.Parse(_companyAccessId.Value)
-        : null;
-
-    Guid? shopAccessId =
-      jwt.TryGetClaim("shop_access_id", out var _shopAccessId)
-      && _shopAccessId.Value is string { Length: > 0 }
-        ? Guid.Parse(_shopAccessId.Value)
-        : null;
-
-    return new AccessToken(
-      UserId: userId,
-      CompanyAccessId: companyAccessId,
-      ShopAccessId: shopAccessId,
-      ExpiredAt: expiredAt
-    );
+    catch (SecurityTokenExpiredException)
+    {
+      return new DecodeAccessTokenResult.Expired();
+    }
+    catch (Exception e)
+    {
+      return new DecodeAccessTokenResult.Error(e);
+    }
   }
 
   public async Task<bool> IsValidPersistedToken(UserId userId, string token) =>
@@ -249,9 +274,9 @@ public class AuthContext(ApplicationDbContext dbContext)
     return persistedToken;
   }
 
-  public async Task<EncodedRefreshToken> EncodeRefreshToken(User user)
+  public async Task<EncodedRefreshToken> EncodeRefreshToken(UserId userId)
   {
-    var claims = new List<Claim> { new("user_id", user.Id.ToString()) };
+    var claims = new List<Claim> { new("user_id", userId.Value.ToString()) };
 
     var handler = new JsonWebTokenHandler();
     var token = handler.CreateToken(
@@ -267,27 +292,84 @@ public class AuthContext(ApplicationDbContext dbContext)
     );
 
     var jwt = handler.ReadJsonWebToken(token);
-    await EnsurePersistedToken(UserId.From(user), token);
+    await EnsurePersistedToken(userId, token);
 
     return new EncodedRefreshToken(token, new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero));
   }
 
+  public async Task<RefreshToken> DecodeRefreshToken(string token)
+  {
+    var handler = new JsonWebTokenHandler();
+    var result = await handler.ValidateTokenAsync(
+      token,
+      new()
+      {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GetTokenSecret()!)),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+      }
+    );
+    if (!result.IsValid)
+    {
+      throw result.Exception;
+    }
+
+    var jwt = (JsonWebToken)result.SecurityToken;
+    var expiredAt = new DateTimeOffset(jwt.ValidTo, TimeSpan.Zero);
+
+    Guid userId =
+      jwt.TryGetClaim("user_id", out var _userId) && _userId.Value is string { Length: > 0 }
+        ? Guid.Parse(_userId.Value)
+        : throw new Exception("invalid user_id");
+
+    return new RefreshToken(UserId: userId, ExpiredAt: expiredAt);
+  }
+
   public async Task<(EncodedAccessToken, EncodedRefreshToken)> IssueTokens(
-    User user,
-    CompanyAccess? companyAccess,
-    ShopAccess? shopAccess
+    UserId userId,
+    CompanyAccessId? companyAccessId,
+    ShopAccessId? shopAccessId
   )
   {
-    var accessToken = EncodeAccessToken(user, companyAccess, shopAccess);
-    var refreshToken = await EncodeRefreshToken(user);
+    var accessToken = EncodeAccessToken(userId, companyAccessId, shopAccessId);
+    var refreshToken = await EncodeRefreshToken(userId);
     return (accessToken, refreshToken);
   }
 
-  public async Task<AccessToken> VerifyTokens(string accessToken)
-  {
-    var decodedAccessToken = await DecodeAccessToken(accessToken);
-    return decodedAccessToken;
-  }
+  public async Task<VerifyTokensResult> VerifyTokens(
+    string rawAccessToken,
+    string rawRefreshToken
+  ) =>
+    await DecodeAccessToken(rawAccessToken) switch
+    {
+      DecodeAccessTokenResult.Ok ok => new VerifyTokensResult.Ok(ok.AccessToken),
+      DecodeAccessTokenResult.Error error => throw error.Exception,
+      DecodeAccessTokenResult.Expired => await DecodeAccessToken(rawAccessToken, false) switch
+      {
+        DecodeAccessTokenResult.Error error => throw error.Exception,
+        DecodeAccessTokenResult.Ok ok => await new Func<Task<VerifyTokensResult>>(async () =>
+        {
+          var refreshToken = await DecodeRefreshToken(rawRefreshToken);
+          if (!await IsValidPersistedToken(UserId.From(refreshToken.UserId), rawRefreshToken))
+          {
+            throw new Exception("invalid refresh token");
+          }
+
+          var newTokens = await IssueTokens(
+            UserId.From(refreshToken.UserId),
+            ok.AccessToken.CompanyAccessId is { } cid ? CompanyAccessId.From(cid) : null,
+            ok.AccessToken.ShopAccessId is { } sid ? ShopAccessId.From(sid) : null
+          );
+
+          return new VerifyTokensResult.Refresh(ok.AccessToken, newTokens.Item1, newTokens.Item2);
+        })(),
+        _ => throw new Exception("inner verify tokens failed"),
+      },
+      _ => throw new Exception("outer verify tokens failed"),
+    };
 
   string? GetCustomerPublicSecret() =>
     Environment.GetEnvironmentVariable("API_AUTH_CUSTOMER_PUBLIC_SECRET");
@@ -296,4 +378,15 @@ public class AuthContext(ApplicationDbContext dbContext)
 
   string GenCode() =>
     string.Join("", Enumerable.Range(1, 8).Select(_ => Random.Shared.NextInt64(1, 9)));
+}
+
+public abstract record VerifyTokensResult
+{
+  public record Ok(AccessToken AccessToken) : VerifyTokensResult;
+
+  public record Refresh(
+    AccessToken AccessToken,
+    EncodedAccessToken EncodedAccessToken,
+    EncodedRefreshToken EncodedRefreshToken
+  ) : VerifyTokensResult;
 }

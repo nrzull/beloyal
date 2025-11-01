@@ -2,17 +2,32 @@ using Beloyal.API.Auth;
 
 namespace Beloyal.API.Web.Middlewares;
 
-public class HubAuthMiddleware(AuthContext authContext) : IMiddleware
+public class HubAuthMiddleware(AuthContext authContext, IHostEnvironment env) : IMiddleware
 {
   public async Task InvokeAsync(HttpContext ctx, RequestDelegate next)
   {
     if (ctx.Request.Path.StartsWithSegments("/api/ws"))
     {
       ctx.Request.Cookies.TryGetValue(AuthContext.GetAccessTokenName(), out var token);
-      if (token is { Length: > 1 } t1)
+
+      ctx.Request.Cookies.TryGetValue(AuthContext.GetRefreshTokenName(), out var refreshToken);
+
+      if (token is { Length: > 1 } && refreshToken is { Length: > 1 })
       {
-        var decodedAccessToken = await authContext.DecodeAccessToken(t1);
-        ctx.Items["accessToken"] = decodedAccessToken;
+        var result = await authContext.VerifyTokens(token, refreshToken);
+        if (result is VerifyTokensResult.Ok ok)
+        {
+          ctx.Items["accessToken"] = ok.AccessToken;
+        }
+        else if (result is VerifyTokensResult.Refresh refresh)
+        {
+          ctx.SetAuthCookies(
+            refresh.EncodedAccessToken,
+            refresh.EncodedRefreshToken,
+            env.IsProduction()
+          );
+          ctx.Items["accessToken"] = refresh.AccessToken;
+        }
       }
 
       ctx.Request.Headers.TryGetValue("Authorization", out var rawCustomerTokens);

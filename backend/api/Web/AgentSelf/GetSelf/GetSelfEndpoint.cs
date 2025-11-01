@@ -46,7 +46,11 @@ public class GetSelfEndpoint(
     var shop = shopAccess is { } sa ? await shopContext.GetShop(ShopAccessId.From(sa)) : null;
 
     var (t1, t2) = isNewToken
-      ? await authContext.IssueTokens(user, companyAccess, null)
+      ? await authContext.IssueTokens(
+        UserId.From(user),
+        companyAccess is { } ? CompanyAccessId.From(companyAccess) : null,
+        null
+      )
       : (null, null);
 
     return (

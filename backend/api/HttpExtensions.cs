@@ -59,7 +59,7 @@ public static class HttpExtensions
       httpContext,
       AuthContext.GetAccessTokenName(),
       accessToken.Token,
-      accessToken.ExpiredAt,
+      refreshToken.ExpiredAt,
       secure
     );
 

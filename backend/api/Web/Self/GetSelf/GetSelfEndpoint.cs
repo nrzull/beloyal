@@ -31,7 +31,11 @@ public class GetSelfEndpoint(
         ? null
         : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
-      newTokens = await authContext.IssueTokens(user, companyAccess, null);
+      newTokens = await authContext.IssueTokens(
+        UserId.From(user),
+        companyAccess is { } ? CompanyAccessId.From(companyAccess) : null,
+        null
+      );
     }
 
     return (
