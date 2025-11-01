@@ -41,7 +41,7 @@ public class AuthController(IHostEnvironment env) : ControllerBase
     {
       ConfirmResponse.Ok ok => new Func<Ok>(() =>
       {
-        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        HttpContext.SetAuthCookies(ok.AccessToken, ok.RefreshToken, env.IsProduction());
         return TypedResults.Ok();
       })(),
       _ => TypedResults.BadRequest(),

@@ -11,7 +11,7 @@ public class GetSelfEndpoint(
   AuthContext authContext
 )
 {
-  public async Task<(EncodedAccessToken?, GetSelfResponse)> Handle(
+  public async Task<(EncodedAccessToken?, EncodedRefreshToken?, GetSelfResponse)> Handle(
     User user,
     AccessToken accessToken
   )
@@ -24,18 +24,23 @@ public class GetSelfEndpoint(
 
     var companyAccesses = await companyContext.GetCompanyAccesses(UserId.From(user));
 
-    EncodedAccessToken? newToken = default;
+    (EncodedAccessToken?, EncodedRefreshToken?) newTokens = default;
     if (companyAccess is null)
     {
       companyAccess = adminAccess is { }
         ? null
         : (await companyContext.GetCompanyAccesses(UserId.From(user))).FirstOrDefault();
 
-      newToken = authContext.EncodeAccessToken(user, companyAccess, null);
+      newTokens = await authContext.IssueTokens(
+        UserId.From(user),
+        companyAccess is { } ? CompanyAccessId.From(companyAccess) : null,
+        null
+      );
     }
 
     return (
-      newToken,
+      newTokens.Item1,
+      newTokens.Item2,
       new GetSelfResponse.Ok(
         User: UserDTO.From(user),
         AdminAccess: adminAccess is { } ? AdminAccessDTO.From(adminAccess) : null,

@@ -25,10 +25,14 @@ public class AgentSelfController(IHostEnvironment env) : ControllerBase
   ) =>
     await endpoint.Handle(user.Ensure(), accessToken!) switch
     {
-      (null, GetSelfResponse.Ok ok) => TypedResults.Ok(ok),
-      (EncodedAccessToken newToken, GetSelfResponse.Ok ok) => new Func<Ok<GetSelfResponse.Ok>>(() =>
+      (null, null, GetSelfResponse.Ok ok) => TypedResults.Ok(ok),
+      (
+        EncodedAccessToken newAccessToken,
+        EncodedRefreshToken newRefreshToken,
+        GetSelfResponse.Ok ok
+      ) => new Func<Ok<GetSelfResponse.Ok>>(() =>
       {
-        HttpContext.SetAccessTokenCookie(newToken, env.IsProduction());
+        HttpContext.SetAuthCookies(newAccessToken, newRefreshToken, env.IsProduction());
         return TypedResults.Ok(ok);
       })(),
       _ => TypedResults.BadRequest(),
@@ -44,7 +48,7 @@ public class AgentSelfController(IHostEnvironment env) : ControllerBase
     {
       SetCompanyAccessResponse.Ok ok => new Func<Ok>(() =>
       {
-        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        HttpContext.SetAuthCookies(ok.AccessToken, ok.RefreshToken, env.IsProduction());
         return TypedResults.Ok();
       })(),
       _ => TypedResults.BadRequest(),
@@ -60,7 +64,7 @@ public class AgentSelfController(IHostEnvironment env) : ControllerBase
     {
       SetShopAccessResponse.Ok ok => new Func<Ok>(() =>
       {
-        HttpContext.SetAccessTokenCookie(ok.Token, env.IsProduction());
+        HttpContext.SetAuthCookies(ok.AccessToken, ok.RefreshToken, env.IsProduction());
         return TypedResults.Ok();
       })(),
       _ => TypedResults.BadRequest(),

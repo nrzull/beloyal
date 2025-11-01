@@ -11,7 +11,7 @@ public class GetSelfEndpoint(
   ShopContext shopContext
 )
 {
-  public async Task<(EncodedAccessToken? accessToken, GetSelfResponse.Ok)> Handle(
+  public async Task<(EncodedAccessToken?, EncodedRefreshToken?, GetSelfResponse.Ok)> Handle(
     User user,
     AccessToken accessToken
   )
@@ -45,10 +45,17 @@ public class GetSelfEndpoint(
 
     var shop = shopAccess is { } sa ? await shopContext.GetShop(ShopAccessId.From(sa)) : null;
 
-    var newToken = isNewToken ? authContext.EncodeAccessToken(user, companyAccess, null) : null;
+    var (t1, t2) = isNewToken
+      ? await authContext.IssueTokens(
+        UserId.From(user),
+        companyAccess is { } ? CompanyAccessId.From(companyAccess) : null,
+        null
+      )
+      : (null, null);
 
     return (
-      newToken,
+      t1,
+      t2,
       new GetSelfResponse.Ok(
         User: UserDTO.From(user),
         Shop: shop is { } ? ShopDTO.From(shop) : null,

@@ -17,8 +17,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageReference Include="JWT" Version="11.0.0" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.8.0" />
     <PackageReference Include="Telegram.Bot" Version="22.6.0" />
     <PackageReference Include="Vogen" Version="7.0.4" />

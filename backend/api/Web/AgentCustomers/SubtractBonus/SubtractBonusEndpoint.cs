@@ -29,7 +29,7 @@ public class SubtractBonusEndpoint(
       throw new Exception("invalid publicToken");
     }
 
-    var decoded = authContext.DecodeCustomerPublicAccessToken(publicToken);
+    var decoded = await authContext.DecodeCustomerPublicAccessToken(publicToken);
     var bonus = await bonusContext.SubtractBonus(customer, agent, req.Income, decoded.IssuedAt);
 
     var conn = ApplicationHub.GetCustomerConnection(CustomerId.From(decoded.CustomerId))!;

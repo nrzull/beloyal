@@ -22,6 +22,7 @@ namespace Beloyal.API;
 public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 {
   public DbSet<AuthOtp> AuthOtps { get; set; }
+  public DbSet<PersistedToken> PersistedTokens { get; set; }
   public DbSet<User> Users { get; set; }
   public DbSet<AdminAccess> AdminAccesses { get; set; }
   public DbSet<AdminRole> AdminRoles { get; set; }
@@ -372,6 +373,11 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany(v => v.Levels)
         .HasForeignKey(v => v.CompanyId)
         .HasPrincipalKey(v => v.Id);
+    });
+
+    builder.Entity<PersistedToken>(persistedToken =>
+    {
+      persistedToken.HasKey(v => v.UserId);
     });
   }
 

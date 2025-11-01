@@ -45,20 +45,49 @@ public static class HttpExtensions
   public static string? GetAccessTokenCookie(this HttpContext ctx) =>
     ctx.Request.Cookies.FirstOrDefault(v => v.Key == AuthContext.GetAccessTokenName()).Value;
 
-  public static void SetAccessTokenCookie(
+  public static string? GetRefreshTokenCookie(this HttpContext ctx) =>
+    ctx.Request.Cookies.FirstOrDefault(v => v.Key == AuthContext.GetRefreshTokenName()).Value;
+
+  public static void SetAuthCookies(
     this HttpContext httpContext,
-    EncodedAccessToken token,
+    EncodedAccessToken accessToken,
+    EncodedRefreshToken refreshToken,
+    bool secure
+  )
+  {
+    SetCookie(
+      httpContext,
+      AuthContext.GetAccessTokenName(),
+      accessToken.Token,
+      refreshToken.ExpiredAt,
+      secure
+    );
+
+    SetCookie(
+      httpContext,
+      AuthContext.GetRefreshTokenName(),
+      refreshToken.Token,
+      refreshToken.ExpiredAt,
+      secure
+    );
+  }
+
+  static void SetCookie(
+    HttpContext httpContext,
+    string cookieName,
+    string token,
+    DateTimeOffset expiredAt,
     bool secure
   )
   {
     httpContext.Response.Cookies.Append(
-      AuthContext.GetAccessTokenName(),
-      token.Token,
+      cookieName,
+      token,
       new CookieOptions
       {
         Path = "/",
         SameSite = secure ? SameSiteMode.None : SameSiteMode.Unspecified,
-        Expires = token.ExpiredAt,
+        Expires = expiredAt,
         HttpOnly = true,
         Secure = secure,
         Domain = httpContext.Request.Host.Host,
