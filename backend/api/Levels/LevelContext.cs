@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Levels;
 
-public class LevelContext(ApplicationDbContext dbContext)
+public class LevelContext(ApplicationDbContext dbContext, ILogger<LevelContext> logger)
 {
   public async Task DowngradeLevel(Customer customer)
   {
     var currentLevel = await GetLevel(customer);
     if (currentLevel is null)
     {
+      logger.LogInformation("no level for Customer {CustomerId}", customer.Id);
       return;
     }
 
@@ -40,6 +41,12 @@ public class LevelContext(ApplicationDbContext dbContext)
       dbContext.Update(customer);
       customer.LevelPointsAmount = newPoints;
       await dbContext.SaveChangesAsync();
+
+      logger.LogInformation(
+        "downgraded level for Customer {CustomerId}. New points: {newPoints}",
+        customer.Id,
+        newPoints
+      );
     }
   }
 
@@ -89,7 +96,8 @@ public class LevelContext(ApplicationDbContext dbContext)
   {
     if (pointsCapacity <= 0)
     {
-      throw new Exception("pointsCapacity should be more than 0");
+      logger.LogError("pointsCapacity should be more than 0. Company: {CompanyId}", company.Id);
+      throw new Exception();
     }
 
     var level = new Level
@@ -102,6 +110,12 @@ public class LevelContext(ApplicationDbContext dbContext)
 
     dbContext.Add(level);
     await dbContext.SaveChangesAsync();
+
+    logger.LogInformation(
+      "created new level for company {CompanyId}  with pointsCapacity: {pointsCapacity}",
+      company.Id,
+      pointsCapacity
+    );
 
     return level;
   }

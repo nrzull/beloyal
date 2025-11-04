@@ -24,6 +24,7 @@ using Beloyal.API.Web.CompanyRoles;
 using Beloyal.API.Web.CustomerOperations;
 using Beloyal.API.Web.Customers;
 using Beloyal.API.Web.CustomerSelf;
+using Beloyal.API.Web.Handlers;
 using Beloyal.API.Web.Levels;
 using Beloyal.API.Web.Mailings;
 using Beloyal.API.Web.Messengers;
@@ -33,6 +34,8 @@ using Beloyal.API.Web.Promotions;
 using Beloyal.API.Web.Self;
 using Beloyal.API.Web.Shops;
 using Beloyal.API.Web.WhiteCompanies;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
 
 namespace Beloyal.API;
@@ -43,12 +46,52 @@ public class Program
   {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Logging.ClearProviders();
+
+    builder
+      .Services.AddOpenTelemetry()
+      .WithLogging(
+        opts =>
+        {
+          opts.SetResourceBuilder(
+            ResourceBuilder
+              .CreateEmpty()
+              .AddService(builder.Environment.ApplicationName)
+              .AddAttributes(
+                new Dictionary<string, object>()
+                {
+                  ["deployment.Environment"] = builder.Environment.EnvironmentName,
+                }
+              )
+          );
+
+          if (builder.Environment.IsDevelopment())
+          {
+            opts.AddConsoleExporter();
+          }
+
+          opts.AddOtlpExporter(v =>
+          {
+            v.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+            v.Endpoint = new Uri(Environment.GetEnvironmentVariable("SEQ_INGEST_URL")!);
+            v.Headers = $"X-Seq-ApiKey={Environment.GetEnvironmentVariable("SEQ_INGEST_TOKEN")!}";
+          });
+        },
+        opts =>
+        {
+          opts.IncludeScopes = true;
+          opts.IncludeFormattedMessage = true;
+        }
+      );
+
     builder.SetupNpgsql();
     builder.SetupHttp();
     builder.SetupCors();
     builder.SetupOpenApi();
     builder.SetupS3();
     builder.Services.AddControllers();
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
 
     builder.Services.AddTransient<HubAuthMiddleware>();
 
@@ -112,6 +155,15 @@ public class Program
     app.UseAuthorization();
     app.MapControllers();
     app.MapHub<ApplicationHub>("/api/ws");
+    app.UseExceptionHandler();
+    app.UseStatusCodePages();
+
+    AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+    {
+      var logger = app.Services.GetRequiredService<ILogger<Program>>();
+      var exception = (Exception)e.ExceptionObject;
+      logger.LogError(exception, "Uncaught error: {UncaughtMessage}", exception.Message);
+    };
 
     await using var scope = app.Services.CreateAsyncScope();
     var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
