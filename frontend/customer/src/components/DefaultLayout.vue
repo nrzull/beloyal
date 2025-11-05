@@ -6,7 +6,6 @@
         :items="[
           {
             to: { path: `/${$route.params.messenger}`, query: $route.query },
-            title: 'Главная',
             iconVariant: 'home',
           },
           {
@@ -14,7 +13,6 @@
               path: `/${$route.params.messenger}/operations`,
               query: $route.query,
             },
-            title: 'История',
             iconVariant: 'history',
           },
         ]"

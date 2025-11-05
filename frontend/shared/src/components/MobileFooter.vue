@@ -1,15 +1,16 @@
 <template>
   <div :class="$style.footer">
-    <NTabs :value="$route.path" @update:value="$router.push(getByPath($event))">
+    <NTabs
+      :class="$style.tabs"
+      :value="$route.path"
+      @update:value="$router.push(getByPath($event))"
+    >
       <NTab
         v-for="item in items"
-        :key="item.title"
+        :key="item.iconVariant"
         :name="typeof item.to === 'string' ? item.to : item.to.path!"
       >
-        <Space align="center" :size="[4, 0]">
-          <Icon :variant="item.iconVariant" />
-          {{ item.title }}
-        </Space>
+        <Icon :variant="item.iconVariant" />
       </NTab>
     </NTabs>
   </div>
@@ -18,13 +19,12 @@
 <script setup lang="ts">
 import { NTabs, NTab } from "naive-ui";
 import Icon, { type IconVariant } from "./Icon.vue";
-import Space from "./Space";
 import type { RouteLocationRaw } from "vue-router";
 
 const { items } = defineProps<{
   items: Array<{
     to: RouteLocationRaw;
-    title: string;
+
     iconVariant: IconVariant;
   }>;
 }>();
@@ -37,12 +37,15 @@ const getByPath = (v: string) =>
 
 <style module>
 .footer {
-  padding: 0 24px;
+  padding: 0 12px;
   background-color: #fff;
-  border-radius: 16px 16px 0 0;
+  border-radius: 12px 12px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+}
+
+.tabs {
+  width: max-content;
 }
 </style>
