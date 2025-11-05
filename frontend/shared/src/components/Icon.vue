@@ -28,6 +28,13 @@ import cancel from "./Icon/assets/cancel.svg?raw";
 import edit from "./Icon/assets/edit.svg?raw";
 import attach from "./Icon/assets/attach.svg?raw";
 import file from "./Icon/assets/file.svg?raw";
+import analytics from "./Icon/assets/analytics.svg?raw";
+import users from "./Icon/assets/users.svg?raw";
+import shop from "./Icon/assets/shop.svg?raw";
+import settings from "./Icon/assets/settings.svg?raw";
+import chats from "./Icon/assets/chats.svg?raw";
+import usersSettings from "./Icon/assets/usersSettings.svg?raw";
+import adsClick from "./Icon/assets/adsClick.svg?raw";
 
 const icons = {
   user,
@@ -52,6 +59,13 @@ const icons = {
   edit,
   attach,
   file,
+  analytics,
+  users,
+  shop,
+  settings,
+  chats,
+  usersSettings,
+  adsClick,
 } as const;
 
 export type IconVariant = keyof typeof icons;

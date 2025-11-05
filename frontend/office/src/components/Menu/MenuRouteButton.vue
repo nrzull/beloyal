@@ -9,6 +9,7 @@
       :label="item.label"
       :active="item.exact ? isExactActive : isActive"
       @click="navigate"
+      :icon="item.icon"
     />
   </RouterLink>
 </template>

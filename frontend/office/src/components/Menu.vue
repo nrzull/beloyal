@@ -8,6 +8,7 @@
           :label="item.label"
           :active="hasActiveChild(item)"
           @click="expanded.set(item, true)"
+          :icon="item.icon"
         />
 
         <template v-if="expanded.get(item)">
@@ -60,12 +61,12 @@ watch(() => route.path, syncWithRoutes, { flush: "post", immediate: true });
 <style module>
 .menu {
   padding: 12px 24px;
-  padding-left: 36px;
   height: auto;
   line-height: 1;
 }
 
 .child {
+  margin-left: 8px;
   padding-left: 12px;
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 }

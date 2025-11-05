@@ -1,3 +1,4 @@
+import type { IconVariant } from "@beloyal/shared";
 import type { RouteLocationRaw } from "vue-router";
 
 export type MenuRouteItem = {
@@ -6,6 +7,7 @@ export type MenuRouteItem = {
   label: string;
   available?: boolean;
   exact?: boolean;
+  icon?: IconVariant;
 };
 
 export type MenuGroupItem = {
@@ -14,6 +16,7 @@ export type MenuGroupItem = {
   children: MenuRouteItem[];
   available?: boolean;
   exact?: boolean;
+  icon?: IconVariant;
 };
 
 export type MenuItem = MenuGroupItem | MenuRouteItem;

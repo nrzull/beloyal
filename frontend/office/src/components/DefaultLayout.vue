@@ -41,12 +41,14 @@ const companyMenu = computed(() => {
       type: "route",
       route: "/shops",
       label: "Торговые точки",
+      icon: "shop",
       available: true,
     },
 
     {
       type: "group",
       label: "Аналитика",
+      icon: "analytics",
       available: true,
       children: [
         {
@@ -62,6 +64,7 @@ const companyMenu = computed(() => {
       type: "group",
       label: "Маркетинг",
       available: true,
+      icon: "adsClick",
       children: [
         {
           type: "route",
@@ -105,6 +108,7 @@ const companyMenu = computed(() => {
       route: "/customers",
       label: "Клиенты",
       available: true,
+      icon: "users",
     },
 
     {
@@ -112,12 +116,14 @@ const companyMenu = computed(() => {
       route: "/chats",
       label: "Чаты",
       available: true,
+      icon: "chats",
     },
 
     {
       type: "group",
       label: "Персонал",
       available: true,
+      icon: "usersSettings",
       children: [
         {
           type: "route",
@@ -139,6 +145,7 @@ const companyMenu = computed(() => {
       type: "group",
       label: "Настройки",
       available: true,
+      icon: "settings",
       children: [
         {
           type: "route",
@@ -182,7 +189,8 @@ wsClient.start().then(() => (done.value = true));
   overflow-x: clip;
   display: flex;
   flex-flow: column;
-  border-right: 2px solid rgba(0, 0, 0, 0.025);
+  border-right: 1px solid rgba(0, 0, 0, 0.075);
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .main {
