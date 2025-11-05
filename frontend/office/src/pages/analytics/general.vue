@@ -5,7 +5,7 @@
     </template>
 
     <Card class="v-space-24">
-      <Card with-border :with-shadow="false" :class="$style.filters">
+      <Card with-border :class="$style.filters">
         <Space vertical>
           <div>Торговая точка</div>
           <NSelect
@@ -39,12 +39,7 @@
         </Space>
       </Card>
 
-      <Card
-        v-if="analytics"
-        with-border
-        :with-shadow="false"
-        :class="$style.analytics"
-      >
+      <Card v-if="analytics" with-border :class="$style.analytics">
         <Card :class="$style.cashIncome" with-border :with-shadow="false">
           <Page>
             <template #top> Прибыль: {{ analytics.data.cashIncome }}</template>
@@ -53,28 +48,28 @@
           </Page>
         </Card>
 
-        <Card>
+        <Card with-border :with-shadow="false">
           <Page>
             <template #top>Доход</template>
             {{ analytics.data.rawCashIncome }}
           </Page>
         </Card>
 
-        <Card>
+        <Card with-border :with-shadow="false">
           <Page>
             <template #top>Средний чек</template>
             {{ analytics.data.averageCheck }}
           </Page>
         </Card>
 
-        <Card>
+        <Card with-border :with-shadow="false">
           <Page>
             <template #top>Кол-во клиентов</template>
             {{ analytics.data.customersCount }}
           </Page>
         </Card>
 
-        <Card>
+        <Card with-border :with-shadow="false">
           <Page>
             <template #top>Кол-во операций</template>
             {{ analytics.data.operationsCount }}
