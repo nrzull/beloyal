@@ -15,6 +15,7 @@ public class Bonus
   public required BonusStatus Status { get; set; }
 
   public decimal Amount { get; set; }
+  public decimal RawCashIncome { get; set; }
   public decimal CashIncome { get; set; }
   public decimal CashbackPercent { get; set; }
   public decimal CashbackThreshold { get; set; }

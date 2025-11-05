@@ -53,6 +53,13 @@ const companyMenu = computed(() => {
       children: [
         {
           type: "route",
+          route: "/analytics",
+          label: "Главная",
+          available: true,
+        },
+
+        {
+          type: "route",
           route: "/operations",
           label: "Операции",
           available: true,

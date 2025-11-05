@@ -126,6 +126,16 @@ export const router = createRouter({
         },
 
         {
+          path: "analytics",
+          children: [
+            {
+              path: "",
+              component: () => import("~/pages/analytics/general.vue"),
+            },
+          ],
+        },
+
+        {
           path: "customers",
           children: [
             {

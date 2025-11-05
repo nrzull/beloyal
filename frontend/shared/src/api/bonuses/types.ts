@@ -6,6 +6,7 @@ export type Bonus = {
   type: "AddBonus" | "SubtractBonus" | "RevertBonus" | "BurnBonus";
   amount: number;
   cashIncome: number;
+  rawCashIncome: number;
   cashbackPercent: number;
   promotionType?: PromotionVariant["$type"];
   scheduledAt?: string;

@@ -174,6 +174,10 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
+                    b.Property<decimal>("RawCashIncome")
+                        .HasColumnType("numeric")
+                        .HasColumnName("raw_cash_income");
+
                     b.Property<DateTimeOffset?>("ScheduledAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("scheduled_at");

@@ -48,6 +48,7 @@ public class ApplicationHub : Hub
       if (connectionIds is null)
       {
         Companies.TryAdd(CompanyId.From(companyAccess), []);
+        Companies.TryGetValue(CompanyId.From(companyAccess), out connectionIds);
       }
 
       connectionIds!.Add(Context.ConnectionId);

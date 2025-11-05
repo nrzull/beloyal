@@ -48,6 +48,8 @@ public static class CompanyPermissions
 
   public static string customers_read = nameof(customers_read);
 
+  public static string analytics_read = nameof(analytics_read);
+
   public static List<string> GetAllPermissions() =>
     typeof(CompanyPermissions).GetFields().Select(f => (string)f.GetValue(null)!).ToList();
 

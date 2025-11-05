@@ -16,6 +16,7 @@ using Beloyal.API.Web.AdminRoles;
 using Beloyal.API.Web.AgentCustomers;
 using Beloyal.API.Web.AgentOperations;
 using Beloyal.API.Web.AgentSelf;
+using Beloyal.API.Web.Analytics;
 using Beloyal.API.Web.Auth;
 using Beloyal.API.Web.Chats;
 using Beloyal.API.Web.Company;
@@ -134,6 +135,7 @@ public class Program
     builder.UsePromotionsEndpoints();
     builder.UseCustomersEndpoints();
     builder.UseLevelsEndpoints();
+    builder.UseAnalyticsEndpoints();
 
     builder.UseTgBotHandlers();
 
