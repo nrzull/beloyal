@@ -62,8 +62,8 @@ import Card from "./Card.vue";
 import Button from "./Button";
 import Input from "./Input";
 import { useTemplateRef } from "vue";
-import { useMask } from "../composables/useMask";
-import { unmaskPhone, phoneMask } from "../utils/phone";
+import { usePhoneMask } from "../composables/useMask";
+import { unmaskPhone } from "../utils/phone";
 import { NThing, NInputOtp } from "naive-ui";
 import Space from "./Space";
 
@@ -92,10 +92,7 @@ const reset = () => {
 };
 
 const phoneRef = useTemplateRef("phoneRef");
-useMask(
-  computed(() => phoneRef.value?.inputElRef!),
-  phoneMask
-);
+usePhoneMask(computed(() => phoneRef.value?.inputElRef));
 
 const isLoading = computed(() => wait.some([sendPhone, sendCode]));
 

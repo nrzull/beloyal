@@ -56,7 +56,7 @@
         </template>
 
         <template #name="{ item }">
-          {{ buildFullName(item) }}
+          {{ buildFullName(item.user) }}
         </template>
 
         <template #role="{ item }">

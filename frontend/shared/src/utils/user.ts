@@ -1,6 +1,10 @@
 import type { User } from "../api";
 
-export const buildFullName = (v?: User) => {
+export const buildFullName = (v?: {
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
+}) => {
   if (!v) {
     return "";
   }

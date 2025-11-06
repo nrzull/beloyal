@@ -47,7 +47,7 @@ import {
 
 import { NSelect } from "naive-ui";
 import { computed, ref, useTemplateRef } from "vue";
-import { wait, useMask, phoneMask } from "@beloyal/shared";
+import { wait, usePhoneMask } from "@beloyal/shared";
 import { apiCompanyRolesGetAll } from "~/api/companyRoles";
 import type { CompanyRole } from "@beloyal/shared";
 import { useRouter } from "vue-router";
@@ -62,10 +62,7 @@ const selectedRoleId = ref<string>();
 const { showOk, showError } = useToast();
 
 const phoneRef = useTemplateRef("phoneRef");
-useMask(
-  computed(() => phoneRef.value?.inputElRef!),
-  phoneMask
-);
+usePhoneMask(computed(() => phoneRef.value?.inputElRef!));
 
 const companyRoles = ref<CompanyRole[]>([]);
 

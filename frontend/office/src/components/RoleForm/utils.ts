@@ -1,4 +1,4 @@
-export const permissionGroupTitles = {
+export const permissionGroupTitles: Record<any, any> = {
   company_roles: "Роли",
   company_accesses: "Пользователи",
   company_access_invitations: "Приглашения",
@@ -15,6 +15,7 @@ export const permissionGroupTitles = {
   boosters: "Бустеры",
   operations: "Операции",
   customers: "Клиенты",
+  analytics: "Аналитика",
 };
 
 export const permissionTitles: Record<any, any> = {
@@ -48,4 +49,5 @@ export const permissionTitles: Record<any, any> = {
   shop_accesses_write: "Запись",
   shop_promotions_read: "Чтение",
   shop_promotions_write: "Запись",
+  analytics_read: "Чтение",
 };

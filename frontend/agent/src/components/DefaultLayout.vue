@@ -4,9 +4,9 @@
       <MobileFooter
         :class="footerClass"
         :items="[
-          { to: '/', title: 'Главная', iconVariant: 'home' },
-          { to: '/operations', title: 'Операции', iconVariant: 'paymentCard' },
-          { to: '/profile', title: 'Профиль', iconVariant: 'user' },
+          { to: '/', iconVariant: 'home' },
+          { to: '/operations', iconVariant: 'paymentCard' },
+          { to: '/profile', iconVariant: 'user' },
         ]"
       />
     </template>

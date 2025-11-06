@@ -1,4 +1,6 @@
 import { maskitoTransform } from "@maskito/core";
+import { maskitoPhoneOptionsGenerator } from "@maskito/phone";
+import metadata from "libphonenumber-js/min/metadata";
 
 export const phoneMask = [
   "+",
@@ -24,4 +26,9 @@ export const unmaskPhone = (v: string = "") =>
   v ? `+${v.replace(/[^\d]/g, "")}` : v;
 
 export const maskPhone = (v: string = "") =>
-  v ? maskitoTransform(v, { mask: phoneMask }) : v;
+  v
+    ? maskitoTransform(
+        v,
+        maskitoPhoneOptionsGenerator({ metadata, strict: false })
+      )
+    : v;

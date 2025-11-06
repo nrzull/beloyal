@@ -4,7 +4,8 @@
     "node": "22"
   },
   "dependencies": {
-    "@maskito/core": "3.10.3",
+    "@maskito/core": "4.0.0",
+    "@maskito/phone": "4.0.0",
     "@microsoft/signalr": "9.0.6",
     "@vuelidate/core": "2.0.3",
     "@vuelidate/validators": "2.0.4",
@@ -14,8 +15,8 @@
     "naive-ui": "2.42.0",
     "qrcode-generator": "2.0.4",
     "vue": "3.5.18",
-    "vue-router": "4.5.1",
-    "vue-i18n": "11.1.12"
+    "vue-i18n": "11.1.12",
+    "vue-router": "4.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "6.0.1",
