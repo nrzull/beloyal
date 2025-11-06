@@ -5,7 +5,6 @@ export type Company = {
   tin: string;
   timeZone: string;
   countryCode: string;
-  countryLangs: string[];
 };
 
 export type CompanyBonusOptions = {

@@ -118,23 +118,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .HasPrincipalKey(v => v.Id);
 
       company.Property(v => v.CountryCode).HasConversion<string>();
-
-      company
-        .Property(v => v.CountryLangs)
-        .HasConversion(
-          v =>
-            JsonSerializer.Serialize(
-              v.Select(vv => vv.ToString()).ToList(),
-              JsonSerializerOptions.Web
-            ),
-          v =>
-            v == null
-              ? new List<CountryLang>()
-              : JsonSerializer
-                .Deserialize<List<string>>(v, JsonSerializerOptions.Web)!
-                .Select(vv => Enum.Parse<CountryLang>(vv))
-                .ToList()
-        );
     });
 
     builder.Entity<CompanyAccess>(companyAccess =>

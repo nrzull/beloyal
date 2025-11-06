@@ -15,6 +15,7 @@ export const apiSelfUpdate = (params: {
   firstName?: string;
   lastName?: string;
   middleName?: string;
+  countryLang?: string;
 }) => apiClient.patch<unknown>("/api/self", params).then((v) => v.data);
 
 export const apiSelfCreateCompany = (params: {
@@ -27,7 +28,6 @@ export const apiSelfCreateCompany = (params: {
   levelLifetimeInDays: number;
   timeZone: string;
   countryCode: string;
-  countryLangs: string[];
 }) => apiClient.post("/api/self/company", params);
 
 export const apiSelfSetCompanyAccess = (params: {

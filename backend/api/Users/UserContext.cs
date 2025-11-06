@@ -1,3 +1,4 @@
+using Beloyal.API.Countries;
 using Beloyal.API.Types;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,7 +58,8 @@ public class UserContext(ApplicationDbContext dbContext)
     User user,
     string? firstName,
     string? lastName,
-    string? middleName
+    string? middleName,
+    string countryLang
   )
   {
     dbContext.Update(user);
@@ -65,6 +67,7 @@ public class UserContext(ApplicationDbContext dbContext)
     user.FirstName = firstName;
     user.LastName = lastName;
     user.MiddleName = middleName;
+    user.CountryLang = Enum.Parse<CountryLang>(countryLang);
 
     await dbContext.SaveChangesAsync();
   }

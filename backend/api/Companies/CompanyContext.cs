@@ -91,8 +91,7 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     TimeSpan bonusLifetime,
     TimeZoneInfo tz,
     TimeSpan levelLifetime,
-    CountryCode countryCode,
-    List<CountryLang> countryLangs
+    CountryCode countryCode
   )
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
@@ -115,7 +114,6 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
       LevelLifetime = levelLifetime,
       Owner = user,
       CountryCode = countryCode,
-      CountryLangs = countryLangs,
     };
 
     var role = new CompanyRole

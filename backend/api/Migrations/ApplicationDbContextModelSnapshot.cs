@@ -375,11 +375,6 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("text")
                         .HasColumnName("country_code");
 
-                    b.Property<string>("CountryLangs")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("country_langs");
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");

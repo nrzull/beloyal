@@ -19,7 +19,6 @@ public class Company
   public required string Title { get; set; }
   public required TimeZoneInfo TimeZone { get; set; }
   public required CountryCode CountryCode { get; set; }
-  public List<CountryLang> CountryLangs { get; set; } = [];
 
   public required decimal CashbackPercent { get; set; }
   public required decimal CashbackThreshold { get; set; }

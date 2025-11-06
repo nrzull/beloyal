@@ -3,14 +3,18 @@ import {
   type AdminRolePermission,
 } from "@beloyal/shared";
 import { ref, computed, type ComputedRef } from "vue";
-
+import { globalI18n } from "~/locales";
 import { apiSelfGet } from "~/api/self";
+import { getKnownLocale } from "~/locales/utils";
 
 export const self = ref<Awaited<ReturnType<typeof apiSelfGet>>>();
 
 export const fetchSelf = async () => {
   try {
     self.value = await apiSelfGet();
+    globalI18n.global.locale.value = getKnownLocale(
+      self.value.user.countryLang
+    );
   } catch (e) {
     console.error(e);
   }

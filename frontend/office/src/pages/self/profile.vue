@@ -1,12 +1,12 @@
 <template>
   <Page :loading="isLoading">
     <template #top>
-      <Heading>Профиль</Heading>
+      <Heading>{{ t("userMenu.profileMenuTitle") }}</Heading>
     </template>
 
     <Card>
       <Space vertical>
-        <div>Укажите ваши данные</div>
+        <div>{{ t("profilePage.setYourDataLabel") }}</div>
         <UserCredentialsForm v-model="model" />
         <Button
           :disabled="isLoading"
@@ -14,7 +14,7 @@
           size="large"
           @click="update"
         >
-          Сохранить
+          {{ t("profilePage.submitButton") }}
         </Button>
       </Space>
     </Card>
@@ -28,13 +28,18 @@ import { apiSelfUpdate } from "~/api/self";
 import Page from "~/components/Page.vue";
 import UserCredentialsForm from "~/components/UserCredentials/UserCredentialsForm.vue";
 import { fetchSelf, self } from "~/composables/self";
+import { useI18n } from "vue-i18n";
+import type { CountryMessages } from "~/locales/types";
 
 const { showOk, showError } = useToast();
+
+const { t } = useI18n<{ message: CountryMessages }>();
 
 const model = ref({
   firstName: self.value?.user?.firstName,
   lastName: self.value?.user?.lastName,
   middleName: self.value?.user?.middleName,
+  countryLang: self.value?.user.countryLang,
 });
 
 const isLoading = computed(() => wait.some([update]));
@@ -46,6 +51,7 @@ const update = async () => {
       firstName: model.value.firstName?.trim(),
       lastName: model.value.lastName?.trim(),
       middleName: model.value.middleName?.trim(),
+      countryLang: model.value.countryLang,
     });
     await fetchSelf();
     showOk();
