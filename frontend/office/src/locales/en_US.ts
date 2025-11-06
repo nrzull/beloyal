@@ -39,4 +39,21 @@ export const en_US: CountryMessages = {
     companyAccessesMenuTitle: "Users",
     rolesMenuTitle: "Roles",
   },
+
+  userMenu: {
+    profileMenuTitle: "Profile",
+    companiesMenuTitle: "Companies",
+    exitMenuTitle: "Log Out",
+  },
+
+  profilePage: {
+    setYourDataLabel: "Enter your data",
+    submitButton: "Save",
+  },
+
+  userCredentialsForm: {
+    firstName: "First name",
+    lastName: "Last name",
+    middleName: "Middle name (Optional)",
+  },
 };

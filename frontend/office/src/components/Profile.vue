@@ -6,9 +6,17 @@
     @select="(v) => $router.push(v)"
     key-field="route"
     :options="[
-      { type: 'route', label: 'Профиль', route: '/self/profile' },
-      { type: 'route', label: 'Компании', route: '/self/company-accesses' },
-      { type: 'route', label: 'Выйти', route: '/auth' },
+      {
+        type: 'route',
+        label: t('userMenu.profileMenuTitle'),
+        route: '/self/profile',
+      },
+      {
+        type: 'route',
+        label: t('userMenu.companiesMenuTitle'),
+        route: '/self/company-accesses',
+      },
+      { type: 'route', label: t('userMenu.exitMenuTitle'), route: '/auth' },
     ]"
   >
     <div :class="$style.profile">
@@ -29,6 +37,10 @@
 import { self } from "~/composables/self";
 import { NDropdown } from "naive-ui";
 import { maskPhone, Space, Icon } from "@beloyal/shared";
+import { useI18n } from "vue-i18n";
+import type { CountryMessages } from "~/locales/types";
+
+const { t } = useI18n<{ message: CountryMessages }>();
 </script>
 
 <style module>

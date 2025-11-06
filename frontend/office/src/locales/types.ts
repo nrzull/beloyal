@@ -40,4 +40,21 @@ export type CountryMessages = {
     companyMenuTitle: string;
     telegramMenuTitle: string;
   };
+
+  userMenu: {
+    profileMenuTitle: string;
+    companiesMenuTitle: string;
+    exitMenuTitle: string;
+  };
+
+  profilePage: {
+    setYourDataLabel: string;
+    submitButton: string;
+  };
+
+  userCredentialsForm: {
+    lastName: string;
+    firstName: string;
+    middleName: string;
+  };
 };

@@ -39,4 +39,21 @@ export const ru_RU: CountryMessages = {
     companyAccessesMenuTitle: "Пользователи",
     rolesMenuTitle: "Роли",
   },
+
+  userMenu: {
+    profileMenuTitle: "Профиль",
+    companiesMenuTitle: "Компании",
+    exitMenuTitle: "Выйти",
+  },
+
+  profilePage: {
+    setYourDataLabel: "Укажите ваши данные",
+    submitButton: "Сохранить",
+  },
+
+  userCredentialsForm: {
+    firstName: "Имя",
+    lastName: "Фамилия",
+    middleName: "Отчество (по умолчанию)",
+  },
 };
