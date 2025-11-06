@@ -42,7 +42,7 @@ export const usePhoneMask = (el: ComputedRef<HTMLInputElement>) => {
         maskito.value?.destroy();
         maskito.value = new Maskito(
           v,
-          maskitoPhoneOptionsGenerator({ metadata, strict: false })
+          maskitoPhoneOptionsGenerator({ metadata })
         );
       }
     },
