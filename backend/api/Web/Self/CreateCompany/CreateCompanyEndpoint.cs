@@ -19,8 +19,7 @@ public class CreateCompanyEndpoint(CompanyContext companyContext)
       TimeSpan.FromDays(req.BonusLifetimeInDays),
       TimeZoneInfo.FindSystemTimeZoneById(req.TimeZone),
       TimeSpan.FromDays(req.LevelLifetimeInDays),
-      Enum.Parse<CountryCode>(req.CountryCode),
-      req.CountryLangs.Select(Enum.Parse<CountryLang>).ToList()
+      Enum.Parse<CountryCode>(req.CountryCode)
     );
 
     return new CreateCompanyResponse.Ok();

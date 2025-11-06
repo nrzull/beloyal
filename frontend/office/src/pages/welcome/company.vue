@@ -46,16 +46,11 @@ const model = ref<CompanyFormModel>({
   tin: "",
   title: "",
   countryCode: undefined as any,
-  countryLangs: [],
 });
 
 watch(
   () => model.value.countryCode,
   (v) => {
-    waitable(apiCountriesGetLangs)({ countryCode: v }).then(
-      (v) => (model.value.countryLangs = v.data)
-    );
-
     waitable(apiCountriesGetTimeZones)({ countryCode: v }).then(
       (v) => (countryTimeZones.value = v.data)
     );

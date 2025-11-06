@@ -9,6 +9,5 @@ public record CreateCompanyRequest(
   ushort BonusLifetimeInDays,
   string TimeZone,
   ushort LevelLifetimeInDays,
-  string CountryCode,
-  List<string> CountryLangs
+  string CountryCode
 );

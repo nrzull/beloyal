@@ -6,8 +6,7 @@ public record CompanyDTO(
   string Tin,
   string Title,
   string TimeZone,
-  string CountryCode,
-  List<string> CountryLangs
+  string CountryCode
 )
 {
   public static CompanyDTO From(Company v) =>
@@ -17,7 +16,6 @@ public record CompanyDTO(
       CreatedAt: v.CreatedAt,
       Title: v.Title,
       TimeZone: v.TimeZone.Id,
-      CountryCode: v.CountryCode.ToString(),
-      CountryLangs: v.CountryLangs.Select(v => v.ToString()).ToList()
+      CountryCode: v.CountryCode.ToString()
     );
 };

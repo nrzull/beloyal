@@ -3,5 +3,4 @@ export type CompanyFormModel = {
   title: string;
   timeZone?: string;
   countryCode: string;
-  countryLangs: string[];
 };
