@@ -39,6 +39,7 @@ const model = ref({
   firstName: self.value?.user?.firstName,
   lastName: self.value?.user?.lastName,
   middleName: self.value?.user?.middleName,
+  countryLang: self.value?.user.countryLang,
 });
 
 const isLoading = computed(() => wait.some([update]));
@@ -50,6 +51,7 @@ const update = async () => {
       firstName: model.value.firstName?.trim(),
       lastName: model.value.lastName?.trim(),
       middleName: model.value.middleName?.trim(),
+      countryLang: model.value.countryLang,
     });
     await fetchSelf();
     showOk();

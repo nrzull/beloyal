@@ -56,5 +56,6 @@ export type CountryMessages = {
     lastName: string;
     firstName: string;
     middleName: string;
+    countryLang: string;
   };
 };

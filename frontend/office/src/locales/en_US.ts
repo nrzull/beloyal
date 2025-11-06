@@ -55,5 +55,6 @@ export const en_US: CountryMessages = {
     firstName: "First name",
     lastName: "Last name",
     middleName: "Middle name (Optional)",
+    countryLang: "Language",
   },
 };

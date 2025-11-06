@@ -55,5 +55,6 @@ export const ru_RU: CountryMessages = {
     firstName: "Имя",
     lastName: "Фамилия",
     middleName: "Отчество (по умолчанию)",
+    countryLang: "Локаль",
   },
 };
