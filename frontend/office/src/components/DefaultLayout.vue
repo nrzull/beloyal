@@ -21,6 +21,10 @@ import type { MenuItem } from "~/components/Menu/types";
 import { admin_white_companies_read, isAdmin } from "~/composables/self";
 import { wsClient } from "~/api/clients";
 import UserCredentialsModal from "~/components/UserCredentials/UserCredentialsModal.vue";
+import { useI18n } from "vue-i18n";
+import type { CountryMessages } from "~/locales/types";
+
+const { t } = useI18n<{ message: CountryMessages }>();
 
 const adminMenu = computed(() => {
   const base: MenuItem[] = [
@@ -40,28 +44,28 @@ const companyMenu = computed(() => {
     {
       type: "route",
       route: "/shops",
-      label: "Торговые точки",
+      label: t("shops.menuTitle"),
       icon: "shop",
       available: true,
     },
 
     {
       type: "group",
-      label: "Аналитика",
+      label: t("analytics.menuTitle"),
       icon: "analytics",
       available: true,
       children: [
         {
           type: "route",
           route: "/analytics",
-          label: "Главная",
+          label: t("analytics.mainMenuTitle"),
           available: true,
         },
 
         {
           type: "route",
           route: "/operations",
-          label: "Операции",
+          label: t("analytics.operationsMenuTitle"),
           available: true,
         },
       ],
@@ -69,42 +73,42 @@ const companyMenu = computed(() => {
 
     {
       type: "group",
-      label: "Маркетинг",
+      label: t("marketing.menuTitle"),
       available: true,
       icon: "adsClick",
       children: [
         {
           type: "route",
           route: "/bonus-settings",
-          label: "Бонусы",
+          label: t("marketing.bonusesMenuTitle"),
           available: true,
         },
 
         {
           type: "route",
           route: "/promotions",
-          label: "Акции",
+          label: t("marketing.promotionsMenuTitle"),
           available: true,
         },
 
         {
           type: "route",
           route: "/levels",
-          label: "Уровни",
+          label: t("marketing.levelsMenuTitle"),
           available: true,
         },
 
         {
           type: "route",
           route: "/mailings",
-          label: "Рассылки",
+          label: t("marketing.mailingsMenuTitle"),
           available: true,
         },
 
         {
           type: "route",
           route: "/qr-stickers",
-          label: "QR-Наклейки",
+          label: t("marketing.qrStickersMenuTitle"),
           available: true,
         },
       ],
@@ -113,7 +117,7 @@ const companyMenu = computed(() => {
     {
       type: "route",
       route: "/customers",
-      label: "Клиенты",
+      label: t("clients.menuTitle"),
       available: true,
       icon: "users",
     },
@@ -121,28 +125,28 @@ const companyMenu = computed(() => {
     {
       type: "route",
       route: "/chats",
-      label: "Чаты",
+      label: t("chats.menuTitle"),
       available: true,
       icon: "chats",
     },
 
     {
       type: "group",
-      label: "Персонал",
+      label: t("staff.menuTitle"),
       available: true,
       icon: "usersSettings",
       children: [
         {
           type: "route",
           route: "/company-accesses",
-          label: "Пользователи",
+          label: t("staff.companyAccessesMenuTitle"),
           available: true,
         },
 
         {
           type: "route",
           route: "/company-roles",
-          label: "Роли",
+          label: t("staff.rolesMenuTitle"),
           available: true,
         },
       ],
@@ -150,20 +154,20 @@ const companyMenu = computed(() => {
 
     {
       type: "group",
-      label: "Настройки",
+      label: t("settings.menuTitle"),
       available: true,
       icon: "settings",
       children: [
         {
           type: "route",
           route: "/company",
-          label: "Компания",
+          label: t("settings.companyMenuTitle"),
           available: true,
         },
         {
           type: "route",
           route: "/telegram",
-          label: "Telegram",
+          label: t("settings.telegramMenuTitle"),
           available: true,
         },
       ],
