@@ -1,4 +1,5 @@
 using Beloyal.API.Companies;
+using Beloyal.API.Countries;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
 
@@ -17,7 +18,9 @@ public class CreateCompanyEndpoint(CompanyContext companyContext)
       new Percent(req.BonusMultiplier, false),
       TimeSpan.FromDays(req.BonusLifetimeInDays),
       TimeZoneInfo.FindSystemTimeZoneById(req.TimeZone),
-      TimeSpan.FromDays(req.LevelLifetimeInDays)
+      TimeSpan.FromDays(req.LevelLifetimeInDays),
+      Enum.Parse<CountryCode>(req.CountryCode),
+      req.CountryLangs.Select(Enum.Parse<CountryLang>).ToList()
     );
 
     return new CreateCompanyResponse.Ok();

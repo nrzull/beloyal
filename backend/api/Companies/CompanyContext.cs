@@ -1,3 +1,4 @@
+using Beloyal.API.Countries;
 using Beloyal.API.Shops;
 using Beloyal.API.Types;
 using Beloyal.API.Users;
@@ -89,7 +90,9 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
     Percent bonusMultiplier,
     TimeSpan bonusLifetime,
     TimeZoneInfo tz,
-    TimeSpan levelLifetime
+    TimeSpan levelLifetime,
+    CountryCode countryCode,
+    List<CountryLang> countryLangs
   )
   {
     var whiteCompany = await dbContext.WhiteCompanies.FirstOrDefaultAsync(v =>
@@ -111,6 +114,8 @@ public class CompanyContext(ApplicationDbContext dbContext, ShopContext shopCont
       BonusLifetime = bonusLifetime,
       LevelLifetime = levelLifetime,
       Owner = user,
+      CountryCode = countryCode,
+      CountryLangs = countryLangs,
     };
 
     var role = new CompanyRole

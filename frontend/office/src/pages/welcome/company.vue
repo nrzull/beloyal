@@ -1,7 +1,14 @@
 <template>
   <div :class="$style.company">
     <Card :class="$style.form">
-      <CompanyForm :loading="isLoading" v-model="model" />
+      <CompanyForm
+        :loading="isLoading"
+        v-model="model"
+        with-country-code
+        with-timezone
+        :country-time-zones="transformCountryTimeZones(countryTimeZones)"
+        :country-codes="transformCountryCodes(countryCodes)"
+      />
       <Button type="primary" :disabled="isLoading" @click="createCompany">
         Создать компанию
       </Button>
@@ -19,16 +26,54 @@
 
 <script setup lang="ts">
 import { Button, Card, useToast } from "@beloyal/shared";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { apiSelfCreateCompany } from "~/api/self";
-import { wait } from "@beloyal/shared";
+import { wait, waitable } from "@beloyal/shared";
 import { useRouter } from "vue-router";
 import CompanyForm from "~/components/Company/CompanyForm.vue";
+import {
+  apiCountriesGetAll,
+  apiCountriesGetLangs,
+  apiCountriesGetTimeZones,
+} from "~/api/countries";
+import type { CompanyFormModel } from "~/components/Company/types";
+import {
+  transformCountryCodes,
+  transformCountryTimeZones,
+} from "~/components/Countries/utils";
 
-const model = ref({ tin: "", title: "" });
+const model = ref<CompanyFormModel>({
+  tin: "",
+  title: "",
+  countryCode: undefined as any,
+  countryLangs: [],
+});
+
+watch(
+  () => model.value.countryCode,
+  (v) => {
+    waitable(apiCountriesGetLangs)({ countryCode: v }).then(
+      (v) => (model.value.countryLangs = v.data)
+    );
+
+    waitable(apiCountriesGetTimeZones)({ countryCode: v }).then(
+      (v) => (countryTimeZones.value = v.data)
+    );
+  }
+);
+
+const countryCodes = ref<string[]>([]);
+const countryTimeZones = ref<string[]>([]);
 
 const router = useRouter();
-const isLoading = computed(() => wait.some([createCompany]));
+const isLoading = computed(() =>
+  wait.some([
+    apiCountriesGetLangs,
+    apiCountriesGetAll,
+    apiCountriesGetTimeZones,
+    createCompany,
+  ])
+);
 const { showOk, showError } = useToast();
 
 const createCompany = async () => {
@@ -58,6 +103,8 @@ const createCompany = async () => {
     wait.end(createCompany);
   }
 };
+
+waitable(apiCountriesGetAll)().then((v) => (countryCodes.value = v.data));
 </script>
 
 <style module>

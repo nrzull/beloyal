@@ -8,5 +8,7 @@ public record CreateCompanyRequest(
   decimal BonusMultiplier,
   ushort BonusLifetimeInDays,
   string TimeZone,
-  ushort LevelLifetimeInDays
+  ushort LevelLifetimeInDays,
+  string CountryCode,
+  List<string> CountryLangs
 );

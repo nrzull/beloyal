@@ -1,4 +1,5 @@
 using Beloyal.API.Chats;
+using Beloyal.API.Countries;
 using Beloyal.API.Customers;
 using Beloyal.API.Levels;
 using Beloyal.API.Mailings;
@@ -17,6 +18,8 @@ public class Company
   public required string Tin { get; set; }
   public required string Title { get; set; }
   public required TimeZoneInfo TimeZone { get; set; }
+  public required CountryCode CountryCode { get; set; }
+  public List<CountryLang> CountryLangs { get; set; } = [];
 
   public required decimal CashbackPercent { get; set; }
   public required decimal CashbackThreshold { get; set; }
@@ -27,8 +30,8 @@ public class Company
   public decimal? WelcomeBonus { get; set; }
   public required TimeSpan LevelLifetime { get; set; }
 
-  public Guid? OwnerId { get; set; }
-  public User? Owner { get; set; }
+  public Guid OwnerId { get; set; }
+  public required User Owner { get; set; }
 
   public MaxBot? MaxBot { get; set; }
   public TgBot? TgBot { get; set; }

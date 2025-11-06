@@ -370,6 +370,16 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("cashback_threshold");
 
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("country_code");
+
+                    b.Property<string>("CountryLangs")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("country_langs");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -378,7 +388,7 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("interval")
                         .HasColumnName("level_lifetime");
 
-                    b.Property<Guid?>("OwnerId")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
@@ -891,6 +901,11 @@ namespace Beloyal.API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("CountryLang")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("country_lang");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -1104,6 +1119,8 @@ namespace Beloyal.API.Migrations
                     b.HasOne("Beloyal.API.Users.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_companies_users_owner_id");
 
                     b.OwnsOne("Beloyal.API.Companies.CompanyBonusFrequency", "BonusFrequency", b1 =>

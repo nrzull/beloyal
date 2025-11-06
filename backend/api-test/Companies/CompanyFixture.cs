@@ -31,7 +31,9 @@ public static class CompanyFixture
       new(bonusMultiplier),
       TimeSpan.FromDays(1),
       TimeZoneInfo.Local,
-      TimeSpan.FromDays(1)
+      TimeSpan.FromDays(1),
+      Countries.CountryCode.RU,
+      []
     );
 
     return (company, access, user);

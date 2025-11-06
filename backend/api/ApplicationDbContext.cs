@@ -6,6 +6,7 @@ using Beloyal.API.Bonuses;
 using Beloyal.API.Boosters;
 using Beloyal.API.Chats;
 using Beloyal.API.Companies;
+using Beloyal.API.Countries;
 using Beloyal.API.Customers;
 using Beloyal.API.Levels;
 using Beloyal.API.Mailings;
@@ -70,6 +71,8 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 
       user.Property(v => v.MaxUserId).HasMaxLength(32);
       user.HasIndex(v => v.MaxUserId).IsUnique();
+
+      user.Property(v => v.CountryLang).HasConversion<string>();
     });
 
     builder.Entity<AdminAccess>(adminAccess =>
@@ -113,6 +116,25 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
         .WithMany()
         .HasForeignKey(v => v.OwnerId)
         .HasPrincipalKey(v => v.Id);
+
+      company.Property(v => v.CountryCode).HasConversion<string>();
+
+      company
+        .Property(v => v.CountryLangs)
+        .HasConversion(
+          v =>
+            JsonSerializer.Serialize(
+              v.Select(vv => vv.ToString()).ToList(),
+              JsonSerializerOptions.Web
+            ),
+          v =>
+            v == null
+              ? new List<CountryLang>()
+              : JsonSerializer
+                .Deserialize<List<string>>(v, JsonSerializerOptions.Web)!
+                .Select(vv => Enum.Parse<CountryLang>(vv))
+                .ToList()
+        );
     });
 
     builder.Entity<CompanyAccess>(companyAccess =>

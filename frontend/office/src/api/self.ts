@@ -26,6 +26,8 @@ export const apiSelfCreateCompany = (params: {
   bonusLifetimeInDays: number;
   levelLifetimeInDays: number;
   timeZone: string;
+  countryCode: string;
+  countryLangs: string[];
 }) => apiClient.post("/api/self/company", params);
 
 export const apiSelfSetCompanyAccess = (params: {

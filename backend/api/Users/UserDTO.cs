@@ -5,7 +5,8 @@ public record UserDTO(
   string? Phone,
   string? FirstName,
   string? LastName,
-  string? MiddleName
+  string? MiddleName,
+  string CountryLang
 )
 {
   public static UserDTO From(User v) =>
@@ -14,6 +15,7 @@ public record UserDTO(
       Phone: v.Phone,
       FirstName: v.FirstName,
       LastName: v.LastName,
-      MiddleName: v.MiddleName
+      MiddleName: v.MiddleName,
+      CountryLang: v.CountryLang.ToString()
     );
 };

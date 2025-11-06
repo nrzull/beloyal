@@ -1,5 +1,6 @@
 using Beloyal.API.Admin;
 using Beloyal.API.Companies;
+using Beloyal.API.Countries;
 using Beloyal.API.Customers;
 using Beloyal.API.Types;
 
@@ -11,6 +12,7 @@ public class User : IEnsurable
   public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
   public DateTimeOffset? VerifiedAt { get; set; }
 
+  public CountryLang CountryLang { get; set; }
   public required string Phone { get; set; }
 
   public string? FirstName { get; set; }
