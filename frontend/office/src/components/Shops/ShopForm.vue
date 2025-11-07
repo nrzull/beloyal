@@ -23,9 +23,9 @@
         v-model:value="model.timeZone"
         clearable
         :disabled="loading"
-        label-field="label"
-        value-field="value"
-        :options="timeZones"
+        label-field="title"
+        value-field="timeZone"
+        :options="validTimeZones"
         filterable
       />
     </Space>
@@ -35,11 +35,22 @@
 <script setup lang="ts">
 import { Space, Subheading, Input } from "@beloyal/shared";
 import { NSelect } from "naive-ui";
+import { computed } from "vue";
 import { timeZones } from "~/utils/tz";
 
-defineProps<{ loading: boolean }>();
+const { countryTimeZones } = defineProps<{
+  loading: boolean;
+  countryTimeZones?: Array<{ timeZone: string; title: string }>;
+}>();
 
 const model = defineModel<{ name: string; timeZone?: string }>({
   required: true,
 });
+
+const validTimeZones = computed(
+  () =>
+    countryTimeZones?.filter((v) =>
+      timeZones.some((vv) => vv.value === v.timeZone)
+    ) || []
+);
 </script>
