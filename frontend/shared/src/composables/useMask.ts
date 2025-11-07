@@ -42,7 +42,11 @@ export const usePhoneMask = (el: ComputedRef<HTMLInputElement>) => {
         maskito.value?.destroy();
         maskito.value = new Maskito(
           v,
-          maskitoPhoneOptionsGenerator({ metadata })
+          maskitoPhoneOptionsGenerator({
+            metadata,
+            countryIsoCode: "RU",
+            strict: true,
+          })
         );
       }
     },

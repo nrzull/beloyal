@@ -6,4 +6,13 @@ export const unmaskPhone = (v: string = "") =>
   v ? `+${v.replace(/[^\d]/g, "")}` : v;
 
 export const maskPhone = (v: string = "") =>
-  v ? maskitoTransform(v, maskitoPhoneOptionsGenerator({ metadata })) : v;
+  v
+    ? maskitoTransform(
+        v,
+        maskitoPhoneOptionsGenerator({
+          metadata,
+          countryIsoCode: "RU",
+          strict: true,
+        })
+      )
+    : v;

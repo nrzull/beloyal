@@ -4,5 +4,4 @@ export type User = {
   firstName?: string;
   lastName?: string;
   middleName?: string;
-  countryLang: string;
 };

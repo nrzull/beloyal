@@ -71,8 +71,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
 
       user.Property(v => v.MaxUserId).HasMaxLength(32);
       user.HasIndex(v => v.MaxUserId).IsUnique();
-
-      user.Property(v => v.CountryLang).HasConversion<string>();
     });
 
     builder.Entity<AdminAccess>(adminAccess =>

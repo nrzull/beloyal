@@ -15,7 +15,6 @@ export const apiSelfUpdate = (params: {
   firstName?: string;
   lastName?: string;
   middleName?: string;
-  countryLang?: string;
 }) => apiClient.patch<unknown>("/api/self", params).then((v) => v.data);
 
 export const apiSelfCreateCompany = (params: {

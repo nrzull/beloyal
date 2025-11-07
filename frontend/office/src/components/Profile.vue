@@ -8,15 +8,15 @@
     :options="[
       {
         type: 'route',
-        label: t('userMenu.profileMenuTitle'),
+        label: 'Профиль',
         route: '/self/profile',
       },
       {
         type: 'route',
-        label: t('userMenu.companiesMenuTitle'),
+        label: 'Компании',
         route: '/self/company-accesses',
       },
-      { type: 'route', label: t('userMenu.exitMenuTitle'), route: '/auth' },
+      { type: 'route', label: 'Выйти', route: '/auth' },
     ]"
   >
     <div :class="$style.profile">
@@ -37,10 +37,6 @@
 import { self } from "~/composables/self";
 import { NDropdown } from "naive-ui";
 import { maskPhone, Space, Icon } from "@beloyal/shared";
-import { useI18n } from "vue-i18n";
-import type { CountryMessages } from "~/locales/types";
-
-const { t } = useI18n<{ message: CountryMessages }>();
 </script>
 
 <style module>

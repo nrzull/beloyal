@@ -35,20 +35,5 @@ public static class CountryTimeZones
         "Asia/Anadyr",
       ]
     },
-    {
-      CountryCode.KZ,
-      [
-        "Asia/Almaty",
-        "Asia/Qyzylorda",
-        "Asia/Qostanay",
-        "Asia/Aqtobe",
-        "Asia/Aqtau",
-        "Asia/Atyrau",
-        "Asia/Oral",
-      ]
-    },
-    { CountryCode.KG, ["Asia/Bishkek"] },
-    { CountryCode.UZ, ["Asia/Samarkand", "Asia/Tashkent"] },
-    { CountryCode.BY, ["Europe/Minsk"] },
   };
 }

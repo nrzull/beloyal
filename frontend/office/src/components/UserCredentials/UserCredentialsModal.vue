@@ -29,7 +29,6 @@ const model = ref({
   firstName: "",
   lastName: "",
   middleName: "",
-  countryLang: undefined,
 });
 const forcedHide = ref<boolean>(false);
 const isLoading = computed(() => wait.some([update]));
@@ -56,7 +55,6 @@ const update = async () => {
       firstName: model.value.firstName?.trim(),
       lastName: model.value.lastName?.trim(),
       middleName: model.value.middleName?.trim(),
-      countryLang: model.value.countryLang,
     });
     await fetchSelf();
     showOk();

@@ -10,8 +10,7 @@ public class UpdateSelfEndpoint(UserContext userContext)
       user,
       firstName: req.FirstName,
       lastName: req.LastName,
-      middleName: req.MiddleName,
-      countryLang: req.CountryLang
+      middleName: req.MiddleName
     );
 
     return new UpdateSelfResponse.Ok();

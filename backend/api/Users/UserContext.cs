@@ -58,8 +58,7 @@ public class UserContext(ApplicationDbContext dbContext)
     User user,
     string? firstName,
     string? lastName,
-    string? middleName,
-    string countryLang
+    string? middleName
   )
   {
     dbContext.Update(user);
@@ -67,7 +66,6 @@ public class UserContext(ApplicationDbContext dbContext)
     user.FirstName = firstName;
     user.LastName = lastName;
     user.MiddleName = middleName;
-    user.CountryLang = Enum.Parse<CountryLang>(countryLang);
 
     await dbContext.SaveChangesAsync();
   }
