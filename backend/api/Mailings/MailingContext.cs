@@ -103,8 +103,6 @@ public class MailingContext(
 
   public async Task StartUnit(MailingUnit unit, List<ChatFileStream> chatFiles)
   {
-    await using var tc = await dbContext.MaybeTransactionAsync();
-
     var customer = await customerContext.GetCustomer(CustomerId.From(unit.CustomerId));
     if (customer is null)
     {
@@ -118,8 +116,5 @@ public class MailingContext(
 
     var msg = await chatContext.CreateMessage(unit, customer, unit.Mailing.Content);
     await chatContext.SendMessage(msg, chatFiles, closeFileStream: false);
-
-    await dbContext.SaveChangesAsync();
-    await tc.CommitAsync();
   }
 }

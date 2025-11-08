@@ -178,5 +178,7 @@ fetchChats();
   display: flex;
   flex-flow: column;
   gap: 4px;
+  overflow-x: clip;
+  overflow-y: auto;
 }
 </style>

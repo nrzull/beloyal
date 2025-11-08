@@ -31,7 +31,7 @@ public class CreateMailingEndpoint(
       req.Attachments
     );
 
-    await tc.CommitAsync();
+    await dbContext.SaveChangesAsync();
 
     List<ChatFileStream> files = [];
     if (mailing.AttachmentKeys is { Count: > 0 } attachmentKeys)
@@ -50,20 +50,16 @@ public class CreateMailingEndpoint(
       }
     }
 
-    await Parallel.ForEachAsync(
-      mailing.Units,
-      async (unit, _cts) =>
+    foreach (var group in mailing.Units.Chunk(10))
+    {
+      foreach (var unit in group)
       {
-        try
-        {
-          await mailingContext.StartUnit(unit, files);
-        }
-        catch (Exception e)
-        {
-          Console.WriteLine(e);
-        }
+        await mailingContext.StartUnit(unit, files);
       }
-    );
+
+      await tc.CommitAsync();
+      await Task.Delay(TimeSpan.FromSeconds(1));
+    }
 
     foreach (var file in files)
     {
