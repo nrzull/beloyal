@@ -1,4 +1,6 @@
 using Beloyal.API.Auth;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace Beloyal.API;
 
@@ -11,6 +13,17 @@ public static class HttpExtensions
       var port = int.Parse(Environment.GetEnvironmentVariable("API_WEB_PORT")!);
       opts.ListenLocalhost(port);
     });
+
+    var timeoutPolicy = HttpPolicyExtensions
+      .HandleTransientHttpError()
+      .WaitAndRetryAsync(
+        retryCount: 3,
+        sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(4, retryAttempt))
+      );
+
+    var policy = Policy.WrapAsync(timeoutPolicy);
+
+    builder.Services.AddHttpClient("TgHttpClient").AddPolicyHandler(policy);
   }
 
   public static void SetupCors(this WebApplicationBuilder builder)

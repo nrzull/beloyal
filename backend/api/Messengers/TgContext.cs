@@ -5,8 +5,11 @@ using Telegram.Bot;
 
 namespace Beloyal.API.Messengers;
 
-public class TgContext(ApplicationDbContext dbContext, IServiceScopeFactory sf)
-  : IMessengerContext<TgBot, TelegramBotClient>
+public class TgContext(
+  ApplicationDbContext dbContext,
+  IServiceScopeFactory sf,
+  IHttpClientFactory httpClientFactory
+) : IMessengerContext<TgBot, TelegramBotClient>
 {
   static Dictionary<CompanyId, TelegramBotClient> Pool { get; set; } = new() { };
 
@@ -64,7 +67,8 @@ public class TgContext(ApplicationDbContext dbContext, IServiceScopeFactory sf)
       return existing;
     }
 
-    var client = new TelegramBotClient(tgBot.Token);
+    var httpClient = httpClientFactory.CreateClient("TgHttpClient");
+    var client = new TelegramBotClient(tgBot.Token, httpClient);
     await client.DropPendingUpdates();
 
     client.OnError += async (e, _) =>
