@@ -50,23 +50,25 @@ public class EnsureTgUserHandler(CustomerContext customerContext, UserContext us
       return new EnsureTgUserResponse.InvalidCustomer();
     }
 
-    var url =
-      $"{Environment.GetEnvironmentVariable("CUSTOMER_WEB_PUBLIC_URL")!}/telegram?tgBotId={tgBot.Id}";
-
-    var text = "Мой кабинет";
-
-    if (
-      await client.GetChatMenuButton(chatId: uid) is MenuButtonWebApp btn
-      && (btn.WebApp.Url != url || btn.Text != text)
-    )
+    if (msg.Contact is { PhoneNumber: { } })
     {
       await client.SetChatMenuButton(
         chatId: uid,
         menuButton: new MenuButtonWebApp
         {
-          Text = text,
-          WebApp = new() { Url = url },
+          Text = "Мой кабинет",
+          WebApp = new()
+          {
+            Url =
+              $"{Environment.GetEnvironmentVariable("CUSTOMER_WEB_PUBLIC_URL")!}/telegram?tgBotId={tgBot.Id}",
+          },
         }
+      );
+
+      await client.SendMessage(
+        chatId: uid,
+        text: "Регистрация прошла успешно. Зайдите в <b>Мой кабинет</b> для проверки баланса или показа QR-кода сотруднику.",
+        parseMode: ParseMode.Html
       );
     }
 

@@ -14,14 +14,12 @@ public static class HttpExtensions
       opts.ListenLocalhost(port);
     });
 
-    var timeoutPolicy = HttpPolicyExtensions
+    var policy = HttpPolicyExtensions
       .HandleTransientHttpError()
       .WaitAndRetryAsync(
         retryCount: 3,
         sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(4, retryAttempt))
       );
-
-    var policy = Policy.WrapAsync(timeoutPolicy);
 
     builder.Services.AddHttpClient("TgHttpClient").AddPolicyHandler(policy);
   }
