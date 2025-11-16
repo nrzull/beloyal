@@ -1,6 +1,19 @@
 set dotenv-load
 export PATH := "./node_modules/.bin:" + env_var('PATH')
 
+# screen -dmS bore bash -c 'bore server --secret $BORE_SECRET'
+# screen -ls
+# screen -r bore
+# Ctrl+A D
+
+@devops:
+  docker compose up -d
+
+@ci:
+  dotnet restore
+  dotnet tool restore
+  npm ci
+
 @api *args:
   cd backend/api && {{args}}
 
@@ -26,14 +39,6 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @links *args:
   cd frontend/links && {{args}}
 
-@devops:
-  docker compose up -d
-
-@ci:
-  dotnet restore
-  dotnet tool restore
-  npm ci
-
 @dev-local:
   npx concurrently -n api,office,customer,agent \
   "just api dotnet run" \
@@ -42,7 +47,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "just agent npm run dev" \
   "just links npm run dev"
 
-@dev:
+@dev-remote:
   S3_PUBLIC_URL=https://s3.beloyal.ru \
   CUSTOMER_WEB_PUBLIC_URL=https://dev.beloyal.ru/customer \
   API_WEB_PUBLIC_URL=https://dev.beloyal.ru \
@@ -80,12 +85,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   ASPNETCORE_ENVIRONMENT=Test POSTGRES_DATABASE=beloyal_test just api-test dotnet test
 
 @retest:
-  BELOYAL_ENVIRONMENT=test ASPNETCORE_ENVIRONMENT=Test POSTGRES_DATABASE=beloyal_test just api-test dotnet test
-
-# screen -dmS bore bash -c 'bore server --secret $BORE_SECRET'
-# screen -ls
-# screen -r bore
-# Ctrl+A D
+  ASPNETCORE_ENVIRONMENT=Test POSTGRES_DATABASE=beloyal_test just api-test dotnet test
 
 @office-dockerfile-build:
   export DOCKER_BUILDKIT=1
@@ -109,11 +109,11 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   just links-dockerfile-build
   just customer-dockerfile-build
 
-@api-dockerfile-build:
+@backend-dockerfile-build:
   export DOCKER_BUILDKIT=1
   docker build -t api --ssh default -f Api.Dockerfile .
   docker build -t api-migrations --ssh default -f ApiMigrations.Dockerfile .
 
 @dockerfile-build:
+  just backend-dockerfile-build
   just frontend-dockerfile-build
-  just api-dockerfile-build
