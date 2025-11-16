@@ -92,7 +92,7 @@ const reset = () => {
 };
 
 const phoneRef = useTemplateRef("phoneRef");
-usePhoneMask(computed(() => phoneRef.value?.inputElRef));
+usePhoneMask(computed(() => phoneRef.value?.inputElRef!));
 
 const isLoading = computed(() => wait.some([sendPhone, sendCode]));
 

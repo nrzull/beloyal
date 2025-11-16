@@ -1,12 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
-const {
-  OFFICE_WEB_PORT,
-  OFFICE_WEB_PUBLIC_URL,
-  API_WEB_PUBLIC_URL,
-  LINKS_WEB_PUBLIC_URL,
-} =
+const { OFFICE_WEB_PORT, API_WEB_PUBLIC_URL, LINKS_WEB_PUBLIC_URL } =
   // @ts-ignore
   process.env;
 
@@ -23,7 +18,7 @@ export default defineConfig({
 
   server: {
     port: Number(OFFICE_WEB_PORT),
-    allowedHosts: [new URL(OFFICE_WEB_PUBLIC_URL).host],
+    allowedHosts: [new URL(API_WEB_PUBLIC_URL).host],
   },
 
   define: {

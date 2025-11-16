@@ -46,9 +46,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @dev:
   S3_PUBLIC_URL=https://s3.beloyal.ru \
   CUSTOMER_WEB_PUBLIC_URL=https://dev.beloyal.ru/customer \
-  AGENT_WEB_PUBLIC_URL=https://dev.beloyal.ru/agent \
   API_WEB_PUBLIC_URL=https://dev.beloyal.ru \
-  OFFICE_WEB_PUBLIC_URL=https://dev.beloyal.ru/office \
   LINKS_WEB_PUBLIC_URL=https://dev.beloyal.ru/links \
   npx concurrently -n api,office,customer,agent,links,apibore,officebore,customerbore,agentbore,linksbore,s3bore \
   "just api dotnet run" \
@@ -90,3 +88,25 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 # screen -ls
 # screen -r bore
 # Ctrl+A D
+
+@office-dockerfile-build:
+  export DOCKER_BUILDKIT=1
+  docker build -t office-app --ssh default --build-arg API_WEB_PUBLIC_URL --build-arg LINKS_WEB_PUBLIC_URL -f Office.Dockerfile .
+
+@agent-dockerfile-build:
+  export DOCKER_BUILDKIT=1
+  docker build -t agent-app --ssh default --build-arg API_WEB_PUBLIC_URL -f Agent.Dockerfile .
+
+@links-dockerfile-build:
+  export DOCKER_BUILDKIT=1
+  docker build -t links-app --ssh default --build-arg API_WEB_PUBLIC_URL -f Links.Dockerfile .
+
+@customer-dockerfile-build:
+  export DOCKER_BUILDKIT=1
+  docker build -t customer-app --ssh default --build-arg API_WEB_PUBLIC_URL -f Customer.Dockerfile .
+
+@frontend-dockerfile-build:
+  just office-dockerfile-build
+  just agent-dockerfile-build
+  just links-dockerfile-build
+  just customer-dockerfile-build

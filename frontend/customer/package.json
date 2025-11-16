@@ -1,5 +1,5 @@
 {
-  "name": "@beloyal/office",
+  "name": "@beloyal/customer",
   "type": "module",
   "scripts": {
     "dev": "vite",
