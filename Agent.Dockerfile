@@ -3,7 +3,9 @@ FROM node:22.21.1-alpine AS build
 ARG API_WEB_PUBLIC_URL
 
 WORKDIR /src
-COPY . .
+COPY package.json package-lock.json .npmrc ./
+COPY frontend/agent ./frontend/agent
+COPY frontend/shared ./frontend/shared
 
 RUN --mount=type=ssh npm ci
 RUN npm run build -w @beloyal/agent

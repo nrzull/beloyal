@@ -4,7 +4,9 @@ ARG API_WEB_PUBLIC_URL
 ARG LINKS_WEB_PUBLIC_URL
 
 WORKDIR /src
-COPY . .
+COPY package.json package-lock.json .npmrc ./
+COPY frontend/office ./frontend/office
+COPY frontend/shared ./frontend/shared
 
 RUN --mount=type=ssh npm ci
 RUN npm run build -w @beloyal/office
