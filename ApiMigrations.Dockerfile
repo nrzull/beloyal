@@ -1,11 +1,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 WORKDIR /src
 
-COPY backend/api /src
+COPY backend/api/Beloyal.API.csproj /src/
 RUN dotnet restore
 
 COPY .config /src/
 RUN dotnet tool restore
+
+COPY backend/api /src
 RUN dotnet ef migrations script --idempotent -o /src/migrations.sql
 
 FROM alpine/psql:17.4 AS final
