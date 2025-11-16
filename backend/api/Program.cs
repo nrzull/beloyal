@@ -73,12 +73,18 @@ public class Program
             opts.AddConsoleExporter();
           }
 
-          opts.AddOtlpExporter(v =>
+          if (
+            Environment.GetEnvironmentVariable("SEQ_INGEST_URL") is string url
+            && Environment.GetEnvironmentVariable("SEQ_INGEST_TOKEN") is string token
+          )
           {
-            v.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
-            v.Endpoint = new Uri(Environment.GetEnvironmentVariable("SEQ_INGEST_URL")!);
-            v.Headers = $"X-Seq-ApiKey={Environment.GetEnvironmentVariable("SEQ_INGEST_TOKEN")!}";
-          });
+            opts.AddOtlpExporter(v =>
+            {
+              v.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+              v.Endpoint = new Uri(url);
+              v.Headers = $"X-Seq-ApiKey={token}";
+            });
+          }
         },
         opts =>
         {

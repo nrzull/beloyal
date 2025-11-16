@@ -110,3 +110,12 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   just agent-dockerfile-build
   just links-dockerfile-build
   just customer-dockerfile-build
+
+@api-dockerfile-build:
+  export DOCKER_BUILDKIT=1
+  docker build -t api --ssh default -f Api.Dockerfile .
+  docker build -t api-migrations --ssh default -f ApiMigrations.Dockerfile .
+
+@dockerfile-build:
+  just frontend-dockerfile-build
+  just api-dockerfile-build
