@@ -29,8 +29,7 @@ public class CreateCompanyEndpointTest : TestLifetime
           1,
           TimeZoneInfo.Local.Id,
           1,
-          Countries.CountryCode.RU.ToString(),
-          []
+          Countries.CountryCode.RU.ToString()
         );
 
         await Assert.ThrowsAnyAsync<Exception>(() => endpoint.Handle(user, req));

@@ -13,7 +13,6 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @db-reset:
   just api dotnet ef database drop --force
   just api dotnet ef database update
-  API_USE_SEEDING=1 just api dotnet ef database update
 
 @office *args:
   cd frontend/office && {{args}}
@@ -78,11 +77,10 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @test:
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database drop --force
   POSTGRES_DATABASE=beloyal_test just api dotnet ef database update
-  POSTGRES_DATABASE=beloyal_test API_USE_SEEDING=1 just api dotnet ef database update
-  ASPNETCORE_ENVIRONMENT=Development POSTGRES_DATABASE=beloyal_test just api-test dotnet test
+  ASPNETCORE_ENVIRONMENT=Test POSTGRES_DATABASE=beloyal_test just api-test dotnet test
 
 @retest:
-  ASPNETCORE_ENVIRONMENT=Development POSTGRES_DATABASE=beloyal_test just api-test dotnet test
+  BELOYAL_ENVIRONMENT=test ASPNETCORE_ENVIRONMENT=Test POSTGRES_DATABASE=beloyal_test just api-test dotnet test
 
 # screen -dmS bore bash -c 'bore server --secret $BORE_SECRET'
 # screen -ls

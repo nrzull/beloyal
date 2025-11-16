@@ -32,8 +32,7 @@ public static class CompanyFixture
       TimeSpan.FromDays(1),
       TimeZoneInfo.Local,
       TimeSpan.FromDays(1),
-      Countries.CountryCode.RU,
-      []
+      Countries.CountryCode.RU
     );
 
     return (company, access, user);

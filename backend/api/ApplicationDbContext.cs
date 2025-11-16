@@ -50,11 +50,6 @@ public class ApplicationDbContext(DbContextOptions opts) : DbContext(opts)
   {
     base.OnConfiguring(builder);
     builder.UseSnakeCaseNamingConvention(CultureInfo.InvariantCulture);
-
-    if (Environment.GetEnvironmentVariable("API_USE_SEEDING") == "1")
-    {
-      builder.UseSeeding((dbContext, _) => SeedAdminUser.Run(dbContext));
-    }
   }
 
   protected override void OnModelCreating(ModelBuilder builder)

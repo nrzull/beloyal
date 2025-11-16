@@ -23,7 +23,7 @@ public class AuthController(IHostEnvironment env) : ControllerBase
     {
       LoginResponse.Ok ok => TypedResults.Ok(
         new LoginEndpointResponse(
-          Code: env.IsDevelopment() ? ok.Code : null,
+          Code: env.IsProduction() ? null : ok.Code,
           ExpiredAt: ok.ExpiredAt
         )
       ),

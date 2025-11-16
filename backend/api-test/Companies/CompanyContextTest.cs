@@ -28,8 +28,7 @@ public class CompanyContextTest : TestLifetime
             TimeSpan.FromDays(1),
             TimeZoneInfo.Local,
             TimeSpan.FromDays(1),
-            Countries.CountryCode.RU,
-            []
+            Countries.CountryCode.RU
           )
         );
 
@@ -48,8 +47,7 @@ public class CompanyContextTest : TestLifetime
           TimeSpan.FromDays(1),
           TimeZoneInfo.Local,
           TimeSpan.FromDays(1),
-          Countries.CountryCode.RU,
-          []
+          Countries.CountryCode.RU
         );
 
         whiteCompany = await companyContext.GetWhiteCompany(WhiteCompanyId.From(whiteCompany));
@@ -98,8 +96,7 @@ public class CompanyContextTest : TestLifetime
             TimeSpan.FromDays(1),
             TimeZoneInfo.Local,
             TimeSpan.FromDays(1),
-            Countries.CountryCode.RU,
-            []
+            Countries.CountryCode.RU
           )
         );
 
@@ -115,8 +112,7 @@ public class CompanyContextTest : TestLifetime
           TimeSpan.FromDays(1),
           TimeZoneInfo.Local,
           TimeSpan.FromDays(1),
-          Countries.CountryCode.RU,
-          []
+          Countries.CountryCode.RU
         );
       }
     );
@@ -149,8 +145,7 @@ public class CompanyContextTest : TestLifetime
             TimeSpan.FromDays(1),
             TimeZoneInfo.Local,
             TimeSpan.FromDays(1),
-            Countries.CountryCode.RU,
-            []
+            Countries.CountryCode.RU
           )
         );
       }

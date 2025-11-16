@@ -10,6 +10,7 @@ using Beloyal.API.Levels;
 using Beloyal.API.Mailings;
 using Beloyal.API.Messengers;
 using Beloyal.API.Promotions;
+using Beloyal.API.Seeds;
 using Beloyal.API.Shops;
 using Beloyal.API.Users;
 using Beloyal.API.Web.AdminAccesses;
@@ -179,6 +180,12 @@ public class Program
 
     await using var scope = app.Services.CreateAsyncScope();
     var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    if (builder.Environment.EnvironmentName is "Test")
+    {
+      SeedAdminUser.Run(dbContext);
+    }
 
     await tgContext.PrepareClients();
 

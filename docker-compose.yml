@@ -12,11 +12,15 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   s3:
-    image: rustfs/rustfs:1.0.0-alpha.64
+    image: rustfs/rustfs:1.0.0-alpha.68
     volumes:
       - s3:/data
     networks:
       - common
+
+    environment:
+      - RUSTFS_ACCESS_KEY=${S3_ACCESS_KEY}
+      - RUSTFS_SECRET_KEY=${S3_SECRET_KEY}
     ports:
       - ${S3_PORT}:9000
   seq:
