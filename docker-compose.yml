@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:17.4
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_PORT}:5432
     networks:
@@ -12,9 +12,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   s3:
-    image: rustfs/rustfs:1.0.0-alpha.68
+    image: rustfs/rustfs:1.0.0-alpha.64
     volumes:
-      - s3:/data
+      - s3_data:/data
+      - s3_logs:/app/logs
     networks:
       - common
 
@@ -25,6 +26,8 @@ services:
       - ${S3_PORT}:9000
   seq:
     image: datalust/seq:2025.2
+    networks:
+      - common
     environment:
       - SEQ_FIRSTRUN_ADMINPASSWORD=${SEQ_ADMIN_PASSWORD}
       - ACCEPT_EULA=Y
@@ -32,13 +35,14 @@ services:
       - ${SEQ_INGEST_PORT}:5341
       - ${SEQ_UI_PORT}:80
     volumes:
-      - seq:/data
+      - seq_data:/data
 
 networks:
   common:
     driver: bridge
 
 volumes:
-  postgres:
-  s3:
-  seq:
+  postgres_data:
+  s3_data:
+  s3_logs:
+  seq_data:
