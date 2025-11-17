@@ -59,12 +59,12 @@ public class Program
         {
           opts.SetResourceBuilder(
             ResourceBuilder
-              .CreateEmpty()
+              .CreateDefault()
               .AddService(builder.Environment.ApplicationName)
               .AddAttributes(
                 new Dictionary<string, object>()
                 {
-                  ["deployment.Environment"] = builder.Environment.EnvironmentName,
+                  ["environment"] = builder.Environment.EnvironmentName,
                 }
               )
           );
@@ -75,15 +75,15 @@ public class Program
           }
 
           if (
-            Environment.GetEnvironmentVariable("SEQ_INGEST_URL") is string url
-            && Environment.GetEnvironmentVariable("SEQ_INGEST_TOKEN") is string token
+            Environment.GetEnvironmentVariable("OTLP_LOGGING_INGEST_URL") is string url
+            && Environment.GetEnvironmentVariable("OTLP_LOGGING_INGEST_TOKEN") is string token
           )
           {
             opts.AddOtlpExporter(v =>
             {
               v.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
               v.Endpoint = new Uri(url);
-              v.Headers = $"X-Seq-ApiKey={token}";
+              v.Headers = $"Authorization=Basic {token}";
             });
           }
         },

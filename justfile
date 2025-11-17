@@ -48,7 +48,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   "just links npm run dev"
 
 @dev-remote:
-  S3_PUBLIC_URL=https://s3.beloyal.ru \
+  RUSTFS_PUBLIC_URL=https://s3.beloyal.ru \
   CUSTOMER_WEB_PUBLIC_URL=https://dev.beloyal.ru/customer \
   API_WEB_PUBLIC_URL=https://dev.beloyal.ru \
   LINKS_WEB_PUBLIC_URL=https://dev.beloyal.ru/links \

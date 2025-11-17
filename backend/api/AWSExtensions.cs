@@ -13,12 +13,12 @@ public static class AWSExtensions
       {
         ForcePathStyle = true,
         UseHttp = true,
-        ServiceURL = Environment.GetEnvironmentVariable("S3_PUBLIC_URL"),
+        ServiceURL = Environment.GetEnvironmentVariable("RUSTFS_PUBLIC_URL"),
       };
 
       var credentials = new BasicAWSCredentials(
-        Environment.GetEnvironmentVariable("S3_ACCESS_KEY"),
-        Environment.GetEnvironmentVariable("S3_SECRET_KEY")
+        Environment.GetEnvironmentVariable("RUSTFS_ACCESS_KEY"),
+        Environment.GetEnvironmentVariable("RUSTFS_SECRET_KEY")
       );
 
       var client = new AmazonS3Client(clientConfig: config, credentials: credentials);
