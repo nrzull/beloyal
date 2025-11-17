@@ -10,8 +10,13 @@ public static class HttpExtensions
   {
     builder.WebHost.ConfigureKestrel(opts =>
     {
-      var port = int.Parse(Environment.GetEnvironmentVariable("API_WEB_PORT")!);
-      opts.ListenLocalhost(port);
+      if (
+        !builder.Environment.IsProduction()
+        && int.TryParse(Environment.GetEnvironmentVariable("API_WEB_PORT"), out var port)
+      )
+      {
+        opts.ListenLocalhost(port);
+      }
     });
 
     var policy = HttpPolicyExtensions

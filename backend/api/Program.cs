@@ -50,49 +50,49 @@ public class Program
   {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Logging.ClearProviders();
+    // builder.Logging.ClearProviders();
 
-    builder
-      .Services.AddOpenTelemetry()
-      .WithLogging(
-        opts =>
-        {
-          opts.SetResourceBuilder(
-            ResourceBuilder
-              .CreateDefault()
-              .AddService(builder.Environment.ApplicationName)
-              .AddAttributes(
-                new Dictionary<string, object>()
-                {
-                  ["environment"] = builder.Environment.EnvironmentName,
-                }
-              )
-          );
+    // builder
+    //   .Services.AddOpenTelemetry()
+    //   .WithLogging(
+    //     opts =>
+    //     {
+    //       opts.SetResourceBuilder(
+    //         ResourceBuilder
+    //           .CreateDefault()
+    //           .AddService(builder.Environment.ApplicationName)
+    //           .AddAttributes(
+    //             new Dictionary<string, object>()
+    //             {
+    //               ["environment"] = builder.Environment.EnvironmentName,
+    //             }
+    //           )
+    //       );
 
-          if (builder.Environment.IsDevelopment())
-          {
-            opts.AddConsoleExporter();
-          }
+    //       if (builder.Environment.IsDevelopment())
+    //       {
+    //         opts.AddConsoleExporter();
+    //       }
 
-          if (
-            Environment.GetEnvironmentVariable("OTLP_LOGGING_INGEST_URL") is string url
-            && Environment.GetEnvironmentVariable("OTLP_LOGGING_INGEST_TOKEN") is string token
-          )
-          {
-            opts.AddOtlpExporter(v =>
-            {
-              v.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
-              v.Endpoint = new Uri(url);
-              v.Headers = $"Authorization=Basic {token}";
-            });
-          }
-        },
-        opts =>
-        {
-          opts.IncludeScopes = true;
-          opts.IncludeFormattedMessage = true;
-        }
-      );
+    //       if (
+    //         Environment.GetEnvironmentVariable("OTLP_LOGGING_INGEST_URL") is string url
+    //         && Environment.GetEnvironmentVariable("OTLP_LOGGING_INGEST_TOKEN") is string token
+    //       )
+    //       {
+    //         opts.AddOtlpExporter(v =>
+    //         {
+    //           v.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+    //           v.Endpoint = new Uri(url);
+    //           v.Headers = $"Authorization=Basic {token}";
+    //         });
+    //       }
+    //     },
+    //     opts =>
+    //     {
+    //       opts.IncludeScopes = true;
+    //       opts.IncludeFormattedMessage = true;
+    //     }
+    //   );
 
     builder.SetupNpgsql();
     builder.SetupHttp();
@@ -182,7 +182,7 @@ public class Program
     var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    if (builder.Environment.EnvironmentName is "Test")
+    if (builder.Environment.EnvironmentName != "Test")
     {
       SeedAdminUser.Run(dbContext);
     }
