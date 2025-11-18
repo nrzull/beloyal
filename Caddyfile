@@ -8,41 +8,17 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
-s3.beloyal.ru {
-	file_server
-	reverse_proxy localhost:9000
-}
-
-dev.beloyal.ru {
-	# Set this path to your site's directory.
-	# root * /usr/share/caddy
-
-	# Enable the static file server.
-	file_server
-
-	# Another common task is to set up a reverse proxy:
-
-	handle /api* {
-		reverse_proxy localhost:8080
-	}
-
-	handle /office* {
-		reverse_proxy localhost:3000
-	}
-
-  handle /customer* {
-    reverse_proxy localhost:3001
-  }
-
-  handle /agent* {
-    reverse_proxy localhost:3002
-  }
-
-  handle /links* {
-    reverse_proxy localhost:3003
+proxy3000.beloyal.ru {
+  handle /* {
+    reverse_proxy localhost:3000
   }
 }
 
+proxy4000.beloyal.ru {
+  handle /* {
+    reverse_proxy localhost:4000
+  }
+}
 
 # Refer to the Caddy docs for more information:
 # https://caddyserver.com/docs/caddyfile

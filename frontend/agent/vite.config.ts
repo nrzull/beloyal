@@ -17,7 +17,6 @@ export default defineConfig({
 
   server: {
     port: Number(AGENT_WEB_PORT),
-    allowedHosts: [new URL(API_WEB_PUBLIC_URL!).host],
   },
 
   define: {

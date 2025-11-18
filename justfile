@@ -10,6 +10,8 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   docker compose up -d
 
 @ci:
+  touch acme.json
+  chmod 600 acme.json
   dotnet restore
   dotnet tool restore
   npm ci
@@ -39,31 +41,14 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @links *args:
   cd frontend/links && {{args}}
 
-@dev-local:
-  npx concurrently -n api,office,customer,agent \
-  "just api dotnet run" \
-  "just office npm run dev" \
-  "just customer npm run dev" \
-  "just agent npm run dev" \
-  "just links npm run dev"
-
-@dev-remote:
-  RUSTFS_PUBLIC_URL=https://s3.beloyal.ru \
-  CUSTOMER_WEB_PUBLIC_URL=https://dev.beloyal.ru/customer \
-  API_WEB_PUBLIC_URL=https://dev.beloyal.ru \
-  LINKS_WEB_PUBLIC_URL=https://dev.beloyal.ru/links \
-  npx concurrently -n api,office,customer,agent,links,apibore,officebore,customerbore,agentbore,linksbore,s3bore \
+@dev:
+  npx concurrently -n api,office,customer,agent,links,proxy4000 \
   "just api dotnet run" \
   "just office npm run dev" \
   "just customer npm run dev" \
   "just agent npm run dev" \
   "just links npm run dev" \
-  "bore local 8080 --to dev.beloyal.ru --port 8080" \
-  "bore local 3000 --to dev.beloyal.ru --port 3000" \
-  "bore local 3001 --to dev.beloyal.ru --port 3001" \
-  "bore local 3002 --to dev.beloyal.ru --port 3002" \
-  "bore local 3003 --to dev.beloyal.ru --port 3003" \
-  "bore local 9000 --to s3.beloyal.ru --port 9000"
+  "bore local 4000 --to proxy4000.beloyal.ru --port 4000"
 
 @build-backend:
   just api dotnet build
