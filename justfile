@@ -14,6 +14,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   chmod 600 acme.json
   dotnet restore
   dotnet tool restore
+  docker compose pull
   npm ci
 
 @api *args:

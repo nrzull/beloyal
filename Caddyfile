@@ -8,6 +8,12 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
+beloyal.ru {
+  handle /api* {
+    reverse_proxy localhost:8080
+  }
+}
+
 proxy3000.beloyal.ru {
   handle /* {
     reverse_proxy localhost:3000
