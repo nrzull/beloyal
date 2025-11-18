@@ -8,9 +8,42 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
+rustfs.beloyal.ru {
+	file_server
+	reverse_proxy localhost:9000
+}
+
+rustfs-ui.beloyal.ru {
+	file_server
+	reverse_proxy localhost:9001
+}
+
+o2.beloyal.ru {
+	file_server
+	reverse_proxy localhost:5080
+}
+
 beloyal.ru {
-  handle /api* {
-    reverse_proxy localhost:8080
+	file_server
+
+	handle /api* {
+		reverse_proxy localhost:8080
+	}
+
+	handle /office* {
+		reverse_proxy localhost:3000
+	}
+
+  handle /customer* {
+    reverse_proxy localhost:3001
+  }
+
+  handle /agent* {
+    reverse_proxy localhost:3002
+  }
+
+  handle /links* {
+    reverse_proxy localhost:3003
   }
 }
 

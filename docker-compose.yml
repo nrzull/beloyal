@@ -1,72 +1,92 @@
 services:
+  api:
+    profiles:
+      - deploy
+    networks:
+      - common
+    ports:
+      - ${API_WEB_PORT}:8080
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Api.Dockerfile
+
+  api-migrations:
+    profiles:
+      - deploy
+    networks:
+      - common
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DATABASE}
+    build:
+      context: .
+      dockerfile: ApiMigrations.Dockerfile
+    entrypoint: sh
+    command: >
+      -c "
+          until psql -c 'select 1'; do
+            echo 'PostgreSQL is unavailable - sleeping' &&
+            sleep 1
+          done && psql -f /app/migrations.sql -v ON_ERROR_STOP=1
+          "
+
   office:
     profiles:
       - deploy
     networks:
       - common
+    ports:
+      - ${OFFICE_WEB_PORT}:80
     build:
       context: .
       dockerfile: Office.Dockerfile
       args:
         - API_WEB_PUBLIC_URL=${API_WEB_PUBLIC_URL}
         - LINKS_WEB_PUBLIC_URL=${LINKS_WEB_PUBLIC_URL}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.office.rule=Host(`${BELOYAL_HOST}`) && PathPrefix(`/office`)
-      - traefik.http.routers.office.entrypoints=websecure
-      - traefik.http.routers.office.tls.certresolver=letsencrypt
-      - traefik.http.services.office.loadbalancer.server.port=80
 
   links:
     profiles:
       - deploy
     networks:
       - common
+    ports:
+      - ${LINKS_WEB_PORT}:80
     build:
       context: .
       dockerfile: Links.Dockerfile
       args:
         - API_WEB_PUBLIC_URL=${API_WEB_PUBLIC_URL}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.links.rule=Host(`${BELOYAL_HOST}`) && PathPrefix(`/links`)
-      - traefik.http.routers.links.entrypoints=websecure
-      - traefik.http.routers.links.tls.certresolver=letsencrypt
-      - traefik.http.services.links.loadbalancer.server.port=80
 
   agent:
     profiles:
       - deploy
     networks:
       - common
+    ports:
+      - ${AGENT_WEB_PORT}:80
     build:
       context: .
       dockerfile: Agent.Dockerfile
       args:
         - API_WEB_PUBLIC_URL=${API_WEB_PUBLIC_URL}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.agent.rule=Host(`${BELOYAL_HOST}`) && PathPrefix(`/agent`)
-      - traefik.http.routers.agent.entrypoints=websecure
-      - traefik.http.routers.agent.tls.certresolver=letsencrypt
-      - traefik.http.services.agent.loadbalancer.server.port=80
 
   customer:
     profiles:
       - deploy
     networks:
       - common
+    ports:
+      - ${CUSTOMER_WEB_PORT}:80
     build:
       context: .
       dockerfile: Customer.Dockerfile
       args:
         - API_WEB_PUBLIC_URL=${API_WEB_PUBLIC_URL}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.customer.rule=Host(`${BELOYAL_HOST}`) && PathPrefix(`/customer`)
-      - traefik.http.routers.customer.entrypoints=websecure
-      - traefik.http.routers.customer.tls.certresolver=letsencrypt
-      - traefik.http.services.customer.loadbalancer.server.port=80
 
   postgres:
     image: postgres:17.4-alpine
@@ -94,12 +114,6 @@ services:
       - RUSTFS_SECRET_KEY=${RUSTFS_SECRET_KEY}
     ports:
       - ${RUSTFS_PORT}:9000
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.rustfs.rule=Host(`rustfs.${BELOYAL_HOST}`)
-      - traefik.http.routers.rustfs.entrypoints=websecure
-      - traefik.http.routers.rustfs.tls.certresolver=letsencrypt
-      - traefik.http.services.rustfs.loadbalancer.server.port=9001
 
   o2:
     image: public.ecr.aws/zinclabs/openobserve:v0.16.2-amd64
@@ -113,26 +127,6 @@ services:
       - ZO_ROOT_USER_PASSWORD=${ZO_ROOT_USER_PASSWORD}
     ports:
       - ${ZO_PORT}:5080
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.o2.rule=Host(`o2.${BELOYAL_HOST}`)
-      - traefik.http.routers.o2.entrypoints=websecure
-      - traefik.http.routers.o2.tls.certresolver=letsencrypt
-      - traefik.http.services.o2.loadbalancer.server.port=5080
-
-  traefik:
-    image: traefik:3.6.1
-    security_opt:
-      - no-new-privileges:true
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./acme.json:/acme.json
-      - ./traefik.yml:/traefik.yml:ro
-    networks:
-      - common
 
 networks:
   common:

@@ -10,12 +10,28 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   docker compose up -d
 
 @ci:
-  touch acme.json
-  chmod 600 acme.json
   dotnet restore
   dotnet tool restore
   docker compose pull
   npm ci
+
+@caddy:
+  cat Caddyfile > /etc/caddy/Caddyfile
+  caddy fmt --overwrite
+  caddy reload
+
+@deploy:
+  git pull
+  docker compose pull
+  docker compose --profile deploy build api
+  docker compose --profile deploy build api-migrations
+  docker compose --profile deploy build office
+  docker compose --profile deploy build customer
+  docker compose --profile deploy build agent
+  docker compose --profile deploy build links
+  docker compose --profile deploy run api-migrations
+  docker compose --profile down
+  docker compose --profile up -d
 
 @api *args:
   cd backend/api && {{args}}
