@@ -23,6 +23,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @deploy:
   git pull
   docker compose pull
+  docker compose up -d
   docker compose --profile deploy build api
   docker compose --profile deploy build api-migrations
   docker compose --profile deploy build office
@@ -30,7 +31,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   docker compose --profile deploy build agent
   docker compose --profile deploy build links
   docker compose --profile deploy run api-migrations
-  docker compose --profile down
+  docker compose --profile down api office customer agent links
   docker compose --profile up -d
 
 @api *args:
