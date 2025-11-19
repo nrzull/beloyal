@@ -46,7 +46,7 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
           )
           .FirstOrDefaultAsync();
 
-        if (notification is null)
+        if (notification is null && notificationDeadline < now)
         {
           var msg = await chatContext.CreateMessage(
             chat.Company,
