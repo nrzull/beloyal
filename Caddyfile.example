@@ -13,11 +13,6 @@ rustfs.beloyal.ru {
 	reverse_proxy localhost:9000
 }
 
-rustfs-ui.beloyal.ru {
-	file_server
-	reverse_proxy localhost:9001
-}
-
 o2.beloyal.ru {
 	file_server
 	reverse_proxy localhost:5080

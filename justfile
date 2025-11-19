@@ -63,10 +63,11 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   npx concurrently -n api,office,customer,agent,links,proxy4000 \
   "just api dotnet run" \
   "just office npm run dev" \
-  "just customer npm run dev" \
+  "API_WEB_PUBLIC_URL=https://proxy5000.beloyal.ru just customer npm run dev" \
   "just agent npm run dev" \
   "just links npm run dev" \
-  "bore local 4000 --to proxy4000.beloyal.ru --port 4000"
+  "bore local 4000 --to proxy4000.beloyal.ru --port 4000" \
+  "bore local 5000 --to proxy5000.beloyal.ru --port 5000"
 
 @build-backend:
   just api dotnet build
