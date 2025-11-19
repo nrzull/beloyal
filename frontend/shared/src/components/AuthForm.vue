@@ -82,12 +82,12 @@ if (profile) {
 
 const router = useRouter();
 const expiredAt = ref();
-const code = ref();
+const code = ref<string[]>([]);
 const phone = ref();
 
 const reset = () => {
   phone.value = undefined;
-  code.value = undefined;
+  code.value = [];
   expiredAt.value = undefined;
 };
 
@@ -108,7 +108,7 @@ const sendPhone = async () => {
 
     const result = await authFn({ phone: unmaskedPhone });
     expiredAt.value = result.expiredAt;
-    code.value = result.code;
+    code.value = result.code?.split("") || [];
   } catch (e) {
     console.error(e);
   } finally {
@@ -125,7 +125,7 @@ const sendCode = async () => {
 
   try {
     wait.start(sendCode);
-    await confirmFn({ phone: unmaskedPhone, code: code.value });
+    await confirmFn({ phone: unmaskedPhone, code: code.value.join("") });
     router.push("/");
   } catch (e) {
     console.error(e);
