@@ -11,6 +11,7 @@ import { theme } from "@beloyal/shared";
 import {
   retrieveRawInitData,
   parseInitDataQuery,
+  hapticFeedback,
 } from "@telegram-apps/sdk-vue";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
@@ -38,6 +39,10 @@ const refresh = async () => {
     authToken.value = result.data.authToken.token;
     publicToken.value = result.data.publicToken.token;
     await fetchSelf();
+
+    if (hapticFeedback.isSupported()) {
+      hapticFeedback.notificationOccurred("success");
+    }
   }
 };
 
