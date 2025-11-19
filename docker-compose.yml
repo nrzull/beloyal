@@ -89,7 +89,7 @@ services:
         - API_WEB_PUBLIC_URL=${API_WEB_PUBLIC_URL}
 
   postgres:
-    image: postgres:17.4-alpine
+    image: postgres:17.4
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
