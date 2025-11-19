@@ -32,7 +32,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   docker compose --profile deploy build links
   docker compose --profile deploy run api-migrations
   docker compose --profile deploy down api office customer agent links
-  docker compose --profile deploy up -d
+  docker compose --profile deploy up --remove-orphans -d
 
 @api *args:
   cd backend/api && {{args}}
