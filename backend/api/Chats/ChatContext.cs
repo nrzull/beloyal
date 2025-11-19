@@ -15,7 +15,8 @@ public class ChatContext(
   ApplicationDbContext dbContext,
   IHubContext<ApplicationHub> appHub,
   TgContext tgContext,
-  AmazonS3Client s3Client
+  AmazonS3Client s3Client,
+  ILogger<ChatContext> logger
 )
 {
   public async Task<Chat?> GetChat(CustomerId customerId) =>
@@ -97,6 +98,10 @@ public class ChatContext(
 
   public async Task SendVirtualMessage(Customer customer, string content)
   {
+    using var _ = logger.BeginScope("SendVirtualMessage");
+
+    await dbContext.Entry(customer).Reference(v => v.TgBot).LoadAsync();
+
     var client = customer.TgBot is { }
       ? await tgContext.EnsureClient(CompanyId.From(customer), customer.TgBot)
       : null;
@@ -111,6 +116,8 @@ public class ChatContext(
       text: content,
       parseMode: Telegram.Bot.Types.Enums.ParseMode.None
     );
+
+    logger.LogInformation("sent for {tgUserId} text {text}", customer.User.TgUserId!, content);
   }
 
   public async Task SendMessage(
