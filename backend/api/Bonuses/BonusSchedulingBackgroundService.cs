@@ -2,7 +2,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Bonuses;
 
-public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : BackgroundService
+public class BonusSchedulingBackgroundService(
+  IServiceScopeFactory sf,
+  ILogger<BonusSchedulingBackgroundService> logger
+) : BackgroundService
 {
   protected override async Task ExecuteAsync(CancellationToken ct)
   {
@@ -30,7 +33,9 @@ public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : Backgro
   {
     await foreach (var bonusId in BonusContext.NewBonusChannel.Reader.ReadAllAsync(ct))
     {
-      Console.WriteLine($"ReadNewBonuses new bonus: {bonusId}");
+      using var _ = logger.BeginScope("ReadNewBonuses");
+
+      logger.LogInformation("ReadNewBonuses new bonus: {bonusId}", bonusId);
 
       await using var scope = sf.CreateAsyncScope();
 
@@ -56,6 +61,8 @@ public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : Backgro
 
   public async Task RegisterJob(CancellationToken ct, Bonus? bonusToRegister)
   {
+    using var _ = logger.BeginScope("RegisterJob");
+
     var now = DateTimeOffset.UtcNow;
 
     await using var scope = sf.CreateAsyncScope();
@@ -74,7 +81,7 @@ public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : Backgro
     {
       if (bonus.ScheduledAt is { } scheduledAt)
       {
-        Console.WriteLine($"RegisterJob new bonus: {bonus.Id}");
+        logger.LogInformation("RegisterJob new bonus: {bonusId}", bonus.Id);
         SheduleBonus(BonusId.From(bonus), scheduledAt, ct);
       }
     }
@@ -82,9 +89,11 @@ public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : Backgro
 
   public void SheduleBonus(BonusId bonusId, DateTimeOffset scheduledAt, CancellationToken ct)
   {
+    using var _ = logger.BeginScope("SheduleBonus");
+
     ct.ThrowIfCancellationRequested();
 
-    Console.WriteLine($"SheduleBonus new bonus: {bonusId.Value}");
+    logger.LogInformation("SheduleBonus new bonus: {bonusId}", bonusId.Value);
 
     var delay = scheduledAt - DateTimeOffset.UtcNow;
     Timer timer = new Timer(
@@ -97,9 +106,11 @@ public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : Backgro
 
   async Task ProcessBonus(BonusId bonusId, CancellationToken ct)
   {
+    using var _ = logger.BeginScope("ProcessBonus");
+
     try
     {
-      Console.WriteLine($"ProcessBonus new bonus: {bonusId.Value}");
+      logger.LogInformation("ProcessBonus new bonus: {bonusId}", bonusId.Value);
 
       ct.ThrowIfCancellationRequested();
 
@@ -124,11 +135,11 @@ public class BonusSchedulingBackgroundService(IServiceScopeFactory sf) : Backgro
       bonus.Status = BonusStatus.Done;
 
       await dbContext.SaveChangesAsync();
-      Console.WriteLine($"ProcessBonus save new bonus: {bonusId.Value}");
+      logger.LogInformation("ProcessBonus save new bonus: {bonusId}", bonusId.Value);
     }
     catch (Exception e)
     {
-      Console.WriteLine(e);
+      logger.LogError(e, e.Message);
     }
   }
 }

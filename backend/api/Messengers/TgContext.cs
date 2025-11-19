@@ -8,13 +8,15 @@ namespace Beloyal.API.Messengers;
 public class TgContext(
   ApplicationDbContext dbContext,
   IServiceScopeFactory sf,
-  IHttpClientFactory httpClientFactory
+  IHttpClientFactory httpClientFactory,
+  ILogger<TgContext> logger
 ) : IMessengerContext<TgBot, TelegramBotClient>
 {
   static Dictionary<CompanyId, TelegramBotClient> Pool { get; set; } = new() { };
 
   public async Task PrepareClients()
   {
+    using var _ = logger.BeginScope("TgContext.PrepareClients");
     var bots = await dbContext.TgBots.ToListAsync();
 
     await Parallel.ForEachAsync(
@@ -29,7 +31,7 @@ public class TgContext(
         }
         catch (Exception e)
         {
-          Console.WriteLine(e);
+          logger.LogError(e, e.Message);
         }
       }
     );

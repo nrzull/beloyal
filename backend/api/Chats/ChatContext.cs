@@ -95,6 +95,20 @@ public class ChatContext(
     return chat;
   }
 
+  public async Task SendVirtualMessage(Customer customer, string content)
+  {
+    var client = customer.TgBot is { }
+      ? await tgContext.EnsureClient(CompanyId.From(customer), customer.TgBot)
+      : null;
+
+    if (client is null)
+    {
+      throw new Exception("no client");
+    }
+
+    await client.SendMessage(customer.User.TgUserId!, content);
+  }
+
   public async Task SendMessage(
     ChatMessage msg,
     List<ChatFileStream>? attachments,

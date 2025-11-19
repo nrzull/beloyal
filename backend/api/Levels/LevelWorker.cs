@@ -2,7 +2,7 @@ using Beloyal.API.Bonuses;
 
 namespace Beloyal.API.Levels;
 
-public class LevelWorker(IServiceScopeFactory sf) : BackgroundService
+public class LevelWorker(IServiceScopeFactory sf, ILogger<LevelWorker> logger) : BackgroundService
 {
   protected override async Task ExecuteAsync(CancellationToken ct)
   {
@@ -15,6 +15,8 @@ public class LevelWorker(IServiceScopeFactory sf) : BackgroundService
 
     while (await time.WaitForNextTickAsync(ct))
     {
+      using var _ = logger.BeginScope("LevelWorker.Process");
+
       await using var scope = sf.CreateAsyncScope();
 
       var bonusContext = scope.ServiceProvider.GetRequiredService<BonusContext>();
@@ -35,7 +37,7 @@ public class LevelWorker(IServiceScopeFactory sf) : BackgroundService
         }
         catch (Exception e)
         {
-          Console.WriteLine(e);
+          logger.LogError(e, e.Message);
         }
       }
     }

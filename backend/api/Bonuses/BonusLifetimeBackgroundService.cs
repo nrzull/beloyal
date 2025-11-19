@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Beloyal.API.Bonuses;
 
-public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : BackgroundService
+public class BonusLifetimeBackgroundService(
+  IServiceScopeFactory sf,
+  ILogger<BonusLifetimeBackgroundService> logger
+) : BackgroundService
 {
   protected override async Task ExecuteAsync(CancellationToken ct)
   {
-    _ = ReadNewBonuses(ct);
     await ProcessExistingBonuses(ct);
   }
 
@@ -17,6 +19,8 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
 
     while (await time.WaitForNextTickAsync(ct))
     {
+      using var _ = logger.BeginScope("ProcessExistingBonuses");
+
       await using var scope = sf.CreateAsyncScope();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
       var bonusContext = scope.ServiceProvider.GetRequiredService<BonusContext>();
@@ -65,18 +69,10 @@ public class BonusLifetimeBackgroundService(IServiceScopeFactory sf) : Backgroun
           }
           catch (Exception e)
           {
-            Console.WriteLine(e);
+            logger.LogError(e, e.Message);
           }
         }
       }
-    }
-  }
-
-  public async Task ReadNewBonuses(CancellationToken ct)
-  {
-    await foreach (var bonusId in BonusContext.NewBonusChannel.Reader.ReadAllAsync(ct))
-    {
-      Console.WriteLine($"new bonus: {bonusId}");
     }
   }
 }
