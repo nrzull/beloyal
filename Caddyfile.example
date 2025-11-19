@@ -47,15 +47,15 @@ beloyal.ru {
   }
 }
 
-proxy3000.beloyal.ru {
-  handle /* {
-    reverse_proxy localhost:3000
-  }
-}
-
 proxy4000.beloyal.ru {
   handle /* {
     reverse_proxy localhost:4000
+  }
+}
+
+proxy5000.beloyal.ru {
+  handle /* {
+    reverse_proxy localhost:5000
   }
 }
 

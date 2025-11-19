@@ -1,8 +1,9 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
-// @ts-ignore
-const { CUSTOMER_WEB_PORT, API_WEB_PUBLIC_URL } = process.env;
+const { CUSTOMER_WEB_PORT, CUSTOMER_WEB_PUBLIC_URL, API_WEB_PUBLIC_URL } =
+  // @ts-ignore
+  process.env;
 
 export default defineConfig({
   plugins: [vue()],
@@ -17,6 +18,9 @@ export default defineConfig({
 
   server: {
     port: Number(CUSTOMER_WEB_PORT),
+    allowedHosts: CUSTOMER_WEB_PUBLIC_URL
+      ? [new URL(CUSTOMER_WEB_PUBLIC_URL).host]
+      : [],
   },
 
   define: {
