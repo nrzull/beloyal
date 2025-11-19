@@ -106,7 +106,11 @@ public class ChatContext(
       throw new Exception("no client");
     }
 
-    await client.SendMessage(customer.User.TgUserId!, content);
+    await client.SendMessage(
+      customer.User.TgUserId!,
+      text: content,
+      parseMode: Telegram.Bot.Types.Enums.ParseMode.None
+    );
   }
 
   public async Task SendMessage(
