@@ -21,7 +21,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
   caddy reload
 
 @deploy:
-  ssh $DEPLOY_SSH 'cd beloyal && git pull --ff-only && just deploy-local'
+  ssh $DEPLOY_SSH '. ~/.bashrc && cd beloyal && git pull --ff-only && just deploy-local'
 
 @deploy-local:
   git pull
