@@ -62,7 +62,10 @@ const selectedRoleId = ref<string>();
 const { showOk, showError } = useToast();
 
 const phoneRef = useTemplateRef("phoneRef");
-usePhoneMask(computed(() => phoneRef.value?.inputElRef!));
+usePhoneMask(
+  computed(() => phoneRef.value?.inputElRef!),
+  computed(() => "RU")
+);
 
 const companyRoles = ref<CompanyRole[]>([]);
 

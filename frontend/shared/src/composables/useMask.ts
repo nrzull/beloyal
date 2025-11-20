@@ -6,6 +6,7 @@ import {
 import { watch, ref, type ComputedRef, onUnmounted } from "vue";
 import { maskitoPhoneOptionsGenerator } from "@maskito/phone";
 import metadata from "libphonenumber-js/min/metadata";
+import type { CountryCode } from "libphonenumber-js/core";
 
 export const useMask = (
   el: ComputedRef<HTMLInputElement>,
@@ -33,18 +34,22 @@ export const useMask = (
   });
 };
 
-export const usePhoneMask = (el: ComputedRef<HTMLInputElement>) => {
+export const usePhoneMask = (
+  el: ComputedRef<HTMLInputElement>,
+  countryCode: ComputedRef<CountryCode>
+) => {
   const maskito = ref<Maskito>();
   const unsub = watch(
-    el,
-    (v) => {
+    () => [el.value, countryCode.value] as const,
+    ([v, code]) => {
+      maskito.value?.destroy();
+
       if (v) {
-        maskito.value?.destroy();
         maskito.value = new Maskito(
           v,
           maskitoPhoneOptionsGenerator({
             metadata,
-            countryIsoCode: "RU",
+            countryIsoCode: code,
             strict: true,
           })
         );
