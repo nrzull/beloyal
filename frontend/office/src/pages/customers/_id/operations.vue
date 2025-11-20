@@ -32,7 +32,7 @@
       </template>
 
       <template #amount="{ item }">
-        {{ item.bonus.amount }}
+        {{ item.bonus.amount * bonusOptions?.bonusMultiplier! }}
         <Icon
           :style="{
             color:
@@ -64,12 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Customer, Operation } from "@beloyal/shared";
+import type { CompanyBonusOptions, Customer, Operation } from "@beloyal/shared";
 import { ref } from "vue";
 import { apiCustomersGetOperations } from "~/api/customers";
 import { Table, Icon } from "@beloyal/shared";
 import { formatDate } from "@beloyal/shared";
 import { translatePromotionVariantType } from "~/components/Promotions/utils";
+import { apiCompanyGetBonusOptions } from "~/api/company";
 
 const { customer, loading } = defineProps<{
   customer: Customer;
@@ -77,10 +78,13 @@ const { customer, loading } = defineProps<{
 }>();
 
 const operations = ref<Operation[]>([]);
+const bonusOptions = ref<CompanyBonusOptions>();
 
 apiCustomersGetOperations({ customerId: customer.id }).then(
   (v) => (operations.value = v.data)
 );
+
+apiCompanyGetBonusOptions().then((v) => (bonusOptions.value = v.data));
 </script>
 
 <style module>

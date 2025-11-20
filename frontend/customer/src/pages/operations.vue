@@ -14,7 +14,7 @@
       ]"
     >
       <template #amount="{ item }">
-        {{ item.bonus.amount }}
+        {{ item.bonus.amount * self?.bonusMultiplier! }}
         <Icon
           :style="{
             color:
@@ -57,6 +57,7 @@ import {
 import { apiOperationsGetAll } from "~/api/operations";
 import { computed, ref } from "vue";
 import { NThing } from "naive-ui";
+import { self } from "~/composables/self";
 
 const operations = ref<Operation[]>([]);
 
