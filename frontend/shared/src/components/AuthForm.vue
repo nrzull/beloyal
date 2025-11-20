@@ -1,15 +1,18 @@
 <template>
   <Card :class="$style.authForm">
     <NThing>
-      <template #header>Войти в систему</template>
-
-      <template v-if="expiredAt" #description>
-        <div :class="$style.notice">
-          Мы отправили код подтверждения на указанный вами номер телефона:
-          <span :class="$style.accent">{{ phone }}</span>
-        </div>
+      <template #header>
+        <template v-if="expiredAt">
+          <div>
+            Введите
+            <b :class="$style.accent">последние 4 цифры номера телефона</b>,
+            который вам позвонит
+          </div>
+        </template>
+        <template v-else>Войти в систему</template>
       </template>
-      <template v-else #description>
+
+      <template v-if="!expiredAt" #description>
         <div :class="$style.notice">
           Укажите номер телефона для входа в&nbsp;систему
         </div>
@@ -38,11 +41,12 @@
         </Button>
       </template>
 
-      <NInputOtp
+      <Input
         v-if="expiredAt"
         :disabled="isLoading"
         v-model:value="code"
-        :length="8"
+        placeholder="Последние 4 цифры"
+        :maxlength="4"
       />
       <Input
         v-else
@@ -64,7 +68,7 @@ import Input from "./Input";
 import { useTemplateRef } from "vue";
 import { usePhoneMask } from "../composables/useMask";
 import { unmaskPhone } from "../utils/phone";
-import { NThing, NInputOtp } from "naive-ui";
+import { NThing } from "naive-ui";
 import Space from "./Space";
 
 const { profile, logoutFn, authFn, confirmFn } = defineProps<{
@@ -82,12 +86,12 @@ if (profile) {
 
 const router = useRouter();
 const expiredAt = ref();
-const code = ref<string[]>([]);
+const code = ref<string>();
 const phone = ref();
 
 const reset = () => {
   phone.value = undefined;
-  code.value = [];
+  code.value = undefined;
   expiredAt.value = undefined;
 };
 
@@ -112,7 +116,7 @@ const sendPhone = async () => {
 
     const result = await authFn({ phone: unmaskedPhone });
     expiredAt.value = result.expiredAt;
-    code.value = result.code?.split("") || [];
+    code.value = result.code;
   } catch (e) {
     console.error(e);
   } finally {
@@ -129,7 +133,7 @@ const sendCode = async () => {
 
   try {
     wait.start(sendCode);
-    await confirmFn({ phone: unmaskedPhone, code: code.value.join("") });
+    await confirmFn({ phone: unmaskedPhone, code: code.value });
     router.push("/");
   } catch (e) {
     console.error(e);

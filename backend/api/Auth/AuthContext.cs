@@ -377,7 +377,7 @@ public class AuthContext(ApplicationDbContext dbContext)
   string? GetTokenSecret() => Environment.GetEnvironmentVariable("API_AUTH_SECRET");
 
   string GenCode() =>
-    string.Join("", Enumerable.Range(1, 8).Select(_ => Random.Shared.NextInt64(1, 9)));
+    string.Join("", Enumerable.Range(1, 4).Select(_ => Random.Shared.NextInt64(1, 9)));
 }
 
 public abstract record VerifyTokensResult
