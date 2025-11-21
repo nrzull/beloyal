@@ -2,6 +2,7 @@
   <div
     :class="[
       $style.card,
+      $style[`size-${size}`],
       {
         [$style.withPadding]: withPadding,
         [$style.withShadow]: withShadow,
@@ -18,10 +19,12 @@ const {
   withPadding = true,
   withShadow = true,
   withBorder = false,
+  size = "l",
 } = defineProps<{
   withPadding?: boolean;
   withShadow?: boolean;
   withBorder?: boolean;
+  size?: "s" | "m" | "l";
 }>();
 </script>
 
@@ -36,8 +39,16 @@ const {
   border: 1px solid transparent;
 }
 
-.withPadding {
+.withPadding.size-l {
   padding: 32px 24px;
+}
+
+.withPadding.size-m {
+  padding: 24px 16px;
+}
+
+.withPadding.size-s {
+  padding: 16px 12px;
 }
 
 .withShadow {

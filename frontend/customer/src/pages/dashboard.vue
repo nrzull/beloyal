@@ -1,19 +1,20 @@
 <template>
   <Space v-if="self" vertical :size="[0, 24]">
     <Space vertical :size="[0, 8]">
-      <NAlert type="info" v-if="level">
+      <Card size="s" v-if="level">
         Уровень: <b>{{ level.levelNumber }}</b>
         <br />
         Очки: {{ level.currentPoints }} / {{ level.pointsCapacity }}
-      </NAlert>
+      </Card>
 
-      <NAlert type="info">
-        <template #icon>
-          <Icon variant="coins" />
-        </template>
-
-        У вас <b>{{ bonusAmount }}</b> Бонусов
-      </NAlert>
+      <Card size="s">
+        <Space align="center">
+          <Icon :style="{ color: 'var(--color-primary)' }" variant="coins" />
+          <span
+            >У вас <b>{{ bonusAmount }}</b> Бонусов</span
+          >
+        </Space>
+      </Card>
     </Space>
 
     <div :class="$style.qrWrapper" v-html="qrImage"></div>
@@ -21,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import { NAlert } from "naive-ui";
 import { self, bonusAmount, level } from "~/composables/self";
 import QrcodeGenerator from "qrcode-generator";
 import { publicToken } from "~/composables/publicToken";
 import { computed } from "vue";
 import { Space, Icon } from "@beloyal/shared";
+import { Card } from "@beloyal/shared";
 
 const qrImage = computed(() => {
   const qr = QrcodeGenerator(0, "L");
