@@ -10,7 +10,7 @@
     <div v-if="lastMessage" :class="$style.content">
       <span v-if="isYourLastMessage">Вы:</span>
       <span :class="{ [$style.attachment]: isAttachment }">{{
-        isAttachment ? "Файл" : lastMessage.content || " "
+        isAttachment ? "Файл" : lastMessage.content || "&nbsp;"
       }}</span>
     </div>
   </div>

@@ -52,12 +52,17 @@ public class OnTgMessageHandler(
       }
 
       await chatContext.EnsureConversation(ok.Customer);
-      var newMessage = await chatContext.CreateMessage(
-        ok.Customer,
-        msgText,
-        fileStream is { } ? [new ChatFileStream(mimetype, fileId!, fileStream)] : null
-      );
-      await chatContext.SendMessage(newMessage, [], toCustomer: false);
+
+      if (!string.IsNullOrWhiteSpace(msgText) || fileStream is { })
+      {
+        var newMessage = await chatContext.CreateMessage(
+          ok.Customer,
+          msgText,
+          fileStream is { } ? [new ChatFileStream(mimetype, fileId!, fileStream)] : null
+        );
+
+        await chatContext.SendMessage(newMessage, [], toCustomer: false);
+      }
     }
   }
 
