@@ -1,4 +1,5 @@
 using Beloyal.API.Web.Auth.Confirm;
+using Beloyal.API.Web.Auth.GetLoginVariants;
 using Beloyal.API.Web.Auth.Login;
 using Beloyal.API.Web.Auth.LoginAsTgCustomer;
 
@@ -10,7 +11,7 @@ public static class AuthExtensions
   {
     builder.Services.AddScoped<LoginEndpoint>();
     builder.Services.AddScoped<ConfirmEndpoint>();
-
     builder.Services.AddScoped<LoginAsTgCustomerEndpoint>();
+    builder.Services.AddScoped<GetLoginVariantsEndpoint>();
   }
 }

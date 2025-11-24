@@ -112,7 +112,7 @@ public class ChatContext(
     }
 
     await client.SendMessage(
-      customer.User.TgUserId!,
+      chatId: customer.User.TgUserId!,
       text: content,
       parseMode: Telegram.Bot.Types.Enums.ParseMode.None
     );

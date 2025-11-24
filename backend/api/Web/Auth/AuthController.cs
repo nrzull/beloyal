@@ -1,5 +1,6 @@
 using Beloyal.API.Auth;
 using Beloyal.API.Web.Auth.Confirm;
+using Beloyal.API.Web.Auth.GetLoginVariants;
 using Beloyal.API.Web.Auth.Login;
 using Beloyal.API.Web.Auth.LoginAsTgCustomer;
 using Beloyal.API.Web.Filters;
@@ -12,21 +13,27 @@ namespace Beloyal.API.Web.Auth;
 [Route("/api/auth")]
 public class AuthController(IHostEnvironment env) : ControllerBase
 {
-  public record LoginEndpointResponse(string? Code, DateTimeOffset ExpiredAt);
+  public record LoginEndpointResponse(DateTimeOffset ExpiredAt);
+
+  [HttpGet]
+  public Results<Ok<GetLoginVariantsResponse.Ok>, BadRequest> GetLoginVariants(
+    [FromServices] GetLoginVariantsEndpoint endpoint
+  ) =>
+    endpoint.Handle() switch
+    {
+      GetLoginVariantsResponse.Ok ok => TypedResults.Ok(ok),
+      _ => TypedResults.BadRequest(),
+    };
 
   [HttpPost]
-  public async Task<Results<Ok<LoginEndpointResponse>, BadRequest>> Login(
+  public async Task<Results<Ok<LoginEndpointResponse>, BadRequest, NotFound>> Login(
     [FromBody] LoginRequest req,
     [FromServices] LoginEndpoint endpoint
   ) =>
     await endpoint.Handle(new(req.Phone)) switch
     {
-      LoginResponse.Ok ok => TypedResults.Ok(
-        new LoginEndpointResponse(
-          Code: env.IsProduction() ? null : ok.Code,
-          ExpiredAt: ok.ExpiredAt
-        )
-      ),
+      LoginResponse.UserNotFound => TypedResults.NotFound(),
+      LoginResponse.Ok ok => TypedResults.Ok(new LoginEndpointResponse(ExpiredAt: ok.ExpiredAt)),
       _ => TypedResults.BadRequest(),
     };
 

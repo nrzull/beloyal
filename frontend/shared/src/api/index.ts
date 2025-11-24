@@ -17,3 +17,4 @@ export * from "./shopPromotions/types";
 export * from "./customers/types";
 export * from "./boosters/types";
 export * from "./levels/types";
+export * from "./auth/types";

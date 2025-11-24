@@ -103,6 +103,7 @@ public class Program
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
 
+    builder.Services.AddSingleton<AuthTgBot>();
     builder.Services.AddTransient<HubAuthMiddleware>();
 
     builder.Services.AddScoped<AuthContext>();
@@ -181,11 +182,14 @@ public class Program
     await using var scope = app.Services.CreateAsyncScope();
     var tgContext = scope.ServiceProvider.GetRequiredService<TgContext>();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var authTgBot = app.Services.GetRequiredService<AuthTgBot>();
 
     if (builder.Environment.EnvironmentName != "Test")
     {
       SeedAdminUser.Run(dbContext);
     }
+
+    await authTgBot.Setup(Environment.GetEnvironmentVariable("API_AUTH_TG_BOT_TOKEN")!);
 
     await tgContext.PrepareClients();
 

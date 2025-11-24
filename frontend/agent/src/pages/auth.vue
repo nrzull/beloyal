@@ -4,13 +4,19 @@
       :auth-fn="apiAuth"
       :confirm-fn="apiAuthConfirm"
       :logout-fn="apiAuthLogout"
+      :get-variants-fn="apiAuthGetVariants"
       :profile="self"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { apiAuthLogout, apiAuth, apiAuthConfirm } from "~/api/auth";
+import {
+  apiAuthLogout,
+  apiAuth,
+  apiAuthConfirm,
+  apiAuthGetVariants,
+} from "~/api/auth";
 import { AuthForm } from "@beloyal/shared";
 import { self } from "~/composables/self";
 </script>

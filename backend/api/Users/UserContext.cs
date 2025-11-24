@@ -12,6 +12,9 @@ public class UserContext(ApplicationDbContext dbContext)
       .ThenInclude(v => v!.Role)
       .SingleAsync(v => v.Id == id.Value);
 
+  public async Task<User?> GetByPhone(Phone phone) =>
+    await dbContext.Users.FirstOrDefaultAsync(v => v.Phone == phone.Value);
+
   public async Task<User?> GetByTgUserId(TgUserId id) =>
     await dbContext.Users.FirstOrDefaultAsync(v => v.TgUserId == id.Value);
 

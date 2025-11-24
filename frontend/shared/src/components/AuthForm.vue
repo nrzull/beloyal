@@ -5,8 +5,8 @@
         <template v-if="expiredAt">
           <div>
             Введите
-            <b :class="$style.accent">последние 4 цифры номера телефона</b>,
-            который вам позвонит
+            <b :class="$style.accent">код для входа</b> в систему, который
+            отправили вам в <b :class="$style.accent">мессенджер</b>
           </div>
         </template>
         <template v-else>Войти в систему</template>
@@ -45,15 +45,39 @@
         v-if="expiredAt"
         :disabled="isLoading"
         v-model:value="code"
-        placeholder="Последние 4 цифры"
+        placeholder="Код для входа"
         :maxlength="4"
       />
-      <Input
-        v-else
-        ref="phoneRef"
-        placeholder="Номер телефона"
-        v-model:value="phone"
-      />
+      <Space v-else vertical>
+        <Input
+          ref="phoneRef"
+          placeholder="Номер телефона"
+          v-model:value="phone"
+        />
+
+        <NAlert :show-icon="false" :bordered="false" type="info">
+          <template #header>
+            Для регистрации воспользуйтесь одним из&nbsp;ботов:
+          </template>
+
+          <Space vertical :size="[0, 12]">
+            <template v-for="variant in variants">
+              <a
+                v-if="variant.type === 'telegram'"
+                target="_blank"
+                rel="nofollower"
+                :style="{ color: 'var(--color-primary)' }"
+                :href="`https://t.me/${variant.value}`"
+              >
+                <Space align="center" :size="[4, 0]">
+                  <Icon variant="telegram" />
+                  Telegram Bot
+                </Space>
+              </a>
+            </template>
+          </Space>
+        </NAlert>
+      </Space>
     </NThing>
   </Card>
 </template>
@@ -70,14 +94,19 @@ import { usePhoneMask } from "../composables/useMask";
 import { unmaskPhone } from "../utils/phone";
 import { NThing } from "naive-ui";
 import Space from "./Space";
+import { type LoginVariant } from "../api";
+import { NAlert } from "naive-ui";
+import Icon from "./Icon.vue";
+import { useToast } from "../composables/useToast";
 
-const { profile, logoutFn, authFn, confirmFn } = defineProps<{
+const { showError } = useToast();
+
+const { profile, logoutFn, authFn, confirmFn, getVariantsFn } = defineProps<{
   profile: any;
   logoutFn: () => Promise<any>;
-  authFn: (params: {
-    phone: string;
-  }) => Promise<{ code?: string; expiredAt: string }>;
+  authFn: (params: { phone: string }) => Promise<{ expiredAt: string }>;
   confirmFn: (params: { phone: string; code: string }) => Promise<any>;
+  getVariantsFn: () => Promise<LoginVariant[]>;
 }>();
 
 if (profile) {
@@ -88,6 +117,7 @@ const router = useRouter();
 const expiredAt = ref();
 const code = ref<string>();
 const phone = ref();
+const variants = ref<LoginVariant[]>([]);
 
 const reset = () => {
   phone.value = undefined;
@@ -116,9 +146,12 @@ const sendPhone = async () => {
 
     const result = await authFn({ phone: unmaskedPhone });
     expiredAt.value = result.expiredAt;
-    code.value = result.code;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
+
+    if (e?.response?.status === 404) {
+      showError("Пользователь не найден");
+    }
   } finally {
     wait.end(sendPhone);
   }
@@ -142,6 +175,7 @@ const sendCode = async () => {
   }
 };
 
+getVariantsFn().then((v) => (variants.value = v));
 defineExpose({ isLoading });
 </script>
 
