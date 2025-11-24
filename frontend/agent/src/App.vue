@@ -1,13 +1,15 @@
 <template>
   <NConfigProvider :class="$style.provider" :theme-overrides="theme">
-    <NDialogProvider>
-      <RouterView />
-    </NDialogProvider>
+    <NMessageProvider placement="top-right" closable>
+      <NDialogProvider>
+        <RouterView />
+      </NDialogProvider>
+    </NMessageProvider>
   </NConfigProvider>
 </template>
 
 <script setup lang="ts">
-import { NConfigProvider, NDialogProvider } from "naive-ui";
+import { NConfigProvider, NDialogProvider, NMessageProvider } from "naive-ui";
 import { theme } from "@beloyal/shared";
 import { useMobileVh } from "@beloyal/shared";
 
