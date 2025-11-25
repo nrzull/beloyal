@@ -39,7 +39,7 @@ public class EnsureTgUserHandler(CustomerContext customerContext, UserContext us
       await RequestPhoneNumber(client, msg.Chat.Id);
       return new EnsureTgUserResponse.RequestedPhoneNumber();
     }
-    else if (user is null && msg.Contact is { PhoneNumber: { } phoneNumber })
+    else if ((user is null || customer is null) && msg.Contact is { PhoneNumber: { } phoneNumber })
     {
       customer = await customerContext.EnsureCustomer(tgBot, new Phone(phoneNumber));
       await userContext.EnsureTgUserId(customer.User, TgUserId.From(uid));
@@ -47,6 +47,7 @@ public class EnsureTgUserHandler(CustomerContext customerContext, UserContext us
 
     if (customer is null)
     {
+      await RequestPhoneNumber(client, msg.Chat.Id);
       return new EnsureTgUserResponse.InvalidCustomer();
     }
 
